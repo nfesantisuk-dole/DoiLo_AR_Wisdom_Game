@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Game: แหล่งเรียนรู้และภูมิปัญญา อำเภอดอยหล่อ</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- SheetJS for reading XLSX/Excel files -->
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+
+    <!-- MediaPipe Hands for AR tracking -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Kanit', sans-serif;
+            background-color: #1a202c;
+            color: white;
+        }
+        
+        .video-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+        }
+
+        #input_video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1); /* Mirror camera */
+            filter: brightness(0.6);
+        }
+
+        #output_canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 2;
+            object-fit: cover;
+        }
+
+        .ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .pointer-events-auto {
+            pointer-events: auto;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        /* Custom Scrollbar for modal */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.1); 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.5); 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.8); 
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body class="select-none touch-none">
+
+    <!-- Camera Feed -->
+    <div class="video-container">
+        <video id="input_video" autoplay playsinline muted></video>
+    </div>
+    
+    <!-- Game Canvas -->
+    <canvas id="output_canvas"></canvas>
+
+    <!-- UI Overlay -->
+    <div class="ui-layer flex flex-col justify-between p-3 sm:p-5 md:p-6 min-h-screen">
+        
+        <!-- Responsive Header: Stats & Control Buttons -->
+        <div id="game_stats" class="hidden flex flex-col md:flex-row justify-between items-stretch md:items-center gap-2 sm:gap-3 md:gap-4 w-full max-w-7xl mx-auto">
+            
+            <!-- Top bar on mobile (Level, Score, Controls) -->
+            <div class="flex items-center justify-between gap-2 w-full md:w-auto">
+                <div class="glass-panel px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl sm:rounded-2xl pointer-events-auto text-center flex-1 md:flex-none">
+                    <p class="text-[10px] sm:text-xs text-gray-200">เลเวล</p>
+                    <p id="level_display" class="text-xl sm:text-2xl md:text-3xl font-bold text-yellow-400">1</p>
+                </div>
+
+                <div class="glass-panel px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl sm:rounded-2xl pointer-events-auto text-center flex-1 md:flex-none">
+                    <p class="text-[10px] sm:text-xs text-gray-200">คะแนน</p>
+                    <p class="text-xl sm:text-2xl md:text-3xl font-bold text-green-400"><span id="score_display">0</span> / <span id="target_display">3</span></p>
+                </div>
+
+                <!-- Action Control Buttons -->
+                <div class="flex flex-row gap-1.5 sm:gap-2 pointer-events-auto">
+                    <button id="btn_pause" title="พักเกม" class="glass-panel hover:bg-yellow-500/40 active:scale-95 text-yellow-300 border border-yellow-400/50 p-2 sm:p-2.5 md:p-3 rounded-xl sm:rounded-2xl flex items-center justify-center transition shadow-md min-w-[40px] min-h-[40px]">
+                        <span class="text-lg sm:text-xl md:text-2xl">⏸️</span>
+                    </button>
+                    <button id="btn_restart" title="เล่นใหม่" class="glass-panel hover:bg-blue-500/40 active:scale-95 text-blue-300 border border-blue-400/50 p-2 sm:p-2.5 md:p-3 rounded-xl sm:rounded-2xl flex items-center justify-center transition shadow-md min-w-[40px] min-h-[40px]">
+                        <span class="text-lg sm:text-xl md:text-2xl">🔄</span>
+                    </button>
+                    <button id="btn_exit" title="ออกสู่หน้าหลัก" class="glass-panel hover:bg-red-500/40 active:scale-95 text-red-300 border border-red-400/50 p-2 sm:p-2.5 md:p-3 rounded-xl sm:rounded-2xl flex items-center justify-center transition shadow-md min-w-[40px] min-h-[40px]">
+                        <span class="text-lg sm:text-xl md:text-2xl">❌</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Hint Box -->
+            <div class="glass-panel px-3 py-2 sm:px-5 sm:py-2.5 rounded-xl sm:rounded-2xl pointer-events-auto text-center flex-1 border border-blue-400/50 shadow-[0_0_15px_rgba(66,153,225,0.4)] bg-blue-900/40">
+                <p class="text-[11px] sm:text-xs md:text-sm text-blue-300 font-semibold mb-0.5">🔍 คำใบ้ (สัมผัสฟองสบู่ที่ตรงกัน):</p>
+                <p id="question_text" class="text-sm sm:text-base md:text-lg font-bold text-white leading-tight max-h-[60px] overflow-y-auto">กำลังโหลดคำใบ้...</p>
+            </div>
+            
+        </div>
+
+        <!-- Main Menus & Modals -->
+        <div class="flex-1 flex items-center justify-center pointer-events-auto my-2">
+            
+            <!-- Loading Screen -->
+            <div id="screen_loading" class="glass-panel p-6 sm:p-8 md:p-10 rounded-2xl sm:rounded-3xl text-center max-w-lg w-[92vw] flex flex-col items-center max-h-[85vh] overflow-y-auto">
+                <div class="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-t-4 border-b-4 border-green-500 mb-4 sm:mb-6"></div>
+                <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2">กำลังโหลดระบบ AR...</h1>
+                <p class="text-gray-200 mb-4 text-xs sm:text-sm">กรุณาอนุญาตการเข้าถึงกล้อง เพื่อใช้ฝ่ามือในการเล่นเกม</p>
+                <p id="loading_status" class="text-green-300 text-xs sm:text-sm font-semibold animate-pulse">กำลังเตรียมความพร้อม...</p>
+            </div>
+
+            <!-- Data Loading / Fallback Screen -->
+            <div id="screen_data" class="hidden glass-panel p-6 sm:p-8 md:p-10 rounded-2xl sm:rounded-3xl text-center max-w-2xl w-[92vw] max-h-[85vh] overflow-y-auto">
+                <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 drop-shadow-md">AR : ดอยหล่อ แหล่งเรียนรู้และภูมิปัญญา</h1>
+                <p class="text-sm sm:text-lg text-gray-200 mb-4">ค้นหาและเรียนรู้ภูมิปัญญาท้องถิ่น อำเภอดอยหล่อ จังหวัดเชียงใหม่</p>
+                
+                <div id="csv_status_msg" class="mb-4 p-3 sm:p-4 rounded-xl bg-black/30 text-white text-xs sm:text-sm font-semibold">
+                    กำลังตรวจสอบไฟล์ข้อมูล...
+                </div>
+
+                <div id="upload_section" class="flex flex-col items-center mb-4 border border-white/20 p-3 rounded-xl bg-white/5">
+                    <p class="text-gray-200 text-xs sm:text-sm mb-2">คุณสามารถเลือกหรืออัปโหลดไฟล์ข้อมูล (.xlsx, .csv) เพิ่มเติมได้:</p>
+                    <input type="file" id="csvFileInput" accept=".xlsx, .xls, .csv" class="block w-full text-xs sm:text-sm text-gray-300
+                        file:mr-4 file:py-2 file:px-4
+                        file:rounded-full file:border-0
+                        file:text-xs file:sm:text-sm file:font-semibold
+                        file:bg-green-500 file:text-white
+                        hover:file:bg-green-600 cursor-pointer" />
+                </div>
+                
+                <button id="btn_start" class="bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white font-bold py-3 px-8 sm:py-4 sm:px-12 rounded-full text-lg sm:text-2xl shadow-lg transform transition hover:scale-105 active:scale-95">
+                    เริ่มเกมส์
+                </button>
+            </div>
+
+            <!-- Knowledge Modal (Popup when catching item) -->
+            <div id="modal_knowledge" class="hidden glass-panel p-5 sm:p-8 rounded-2xl sm:rounded-3xl max-w-2xl w-[92vw] max-h-[85vh] flex flex-col shadow-2xl relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-green-400 via-yellow-400 to-blue-500"></div>
+                <div class="text-center mb-4 sm:mb-6 pt-2">
+                    <span class="inline-block py-1 px-3 sm:px-4 rounded-full bg-green-500/30 text-green-300 font-semibold text-xs sm:text-sm mb-1.5">🎉 ตอบถูกต้อง! ค้นพบภูมิปัญญาใหม่</span>
+                    <h2 id="knowledge_title" class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white">ชื่อแหล่งเรียนรู้</h2>
+                </div>
+                
+                <div class="overflow-y-auto pr-2 flex-1 mb-4 max-h-[45vh]">
+                    <ul id="knowledge_details" class="space-y-2.5 sm:space-y-4 text-sm sm:text-base text-gray-100">
+                        <!-- Content dynamically injected here -->
+                    </ul>
+                </div>
+                
+                <!-- Auto-advance status & Progress Bar -->
+                <div class="mb-3 sm:mb-4 text-center">
+                    <p class="text-xs sm:text-sm text-yellow-300 font-semibold mb-1">⚡ กำลังเลื่อนไปข้อถัดไปให้อัตโนมัติ...</p>
+                    <div class="w-full bg-black/40 h-2 sm:h-2.5 rounded-full overflow-hidden p-0.5 border border-white/20">
+                        <div id="auto_advance_bar" class="bg-gradient-to-r from-green-400 via-yellow-300 to-orange-400 h-full rounded-full w-full"></div>
+                    </div>
+                </div>
+
+                <button id="btn_collect" class="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-bold py-2.5 sm:py-3 px-6 sm:px-8 rounded-xl sm:rounded-2xl text-base sm:text-xl shadow-lg transform transition hover:scale-105 active:scale-95 text-center w-full">
+                    ข้ามไปยังข้อถัดไปทันที
+                </button>
+            </div>
+
+            <!-- Pause Screen Modal -->
+            <div id="screen_pause" class="hidden glass-panel p-6 sm:p-8 md:p-10 rounded-2xl sm:rounded-3xl text-center max-w-sm sm:max-w-md w-[90vw] shadow-2xl relative max-h-[85vh] overflow-y-auto">
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-yellow-400 mb-5 drop-shadow-md">⏸️ พักเกมชั่วคราว</h2>
+                <div class="flex flex-col gap-3 sm:gap-4">
+                    <button id="btn_resume_modal" class="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-3 px-5 rounded-xl sm:rounded-2xl text-base sm:text-lg shadow-lg transition transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2">
+                        <span>▶️</span> เล่นต่อ
+                    </button>
+                    <button id="btn_restart_modal" class="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold py-3 px-5 rounded-xl sm:rounded-2xl text-base sm:text-lg shadow-lg transition transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2">
+                        <span>🔄</span> เริ่มเล่นใหม่
+                    </button>
+                    <button id="btn_exit_modal" class="bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white font-bold py-3 px-5 rounded-xl sm:rounded-2xl text-base sm:text-lg shadow-lg transition transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2">
+                        <span>🏠</span> ออกสู่หน้าหลัก
+                    </button>
+                </div>
+            </div>
+
+            <!-- Level Up Screen -->
+            <div id="screen_levelup" class="hidden glass-panel p-6 sm:p-8 md:p-10 rounded-2xl sm:rounded-3xl text-center max-w-lg w-[90vw] transform transition max-h-[85vh] overflow-y-auto">
+                <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold text-yellow-400 mb-3 drop-shadow-xl animate-bounce">LEVEL UP!</h1>
+                <p id="levelup_text" class="text-lg sm:text-2xl text-white mb-6">ความเร็วของเป้าหมายเพิ่มขึ้น</p>
+                <button id="btn_next_level" class="bg-white text-gray-900 hover:bg-gray-200 font-bold py-2.5 sm:py-3 px-8 sm:px-10 rounded-full text-base sm:text-xl shadow-lg transform transition hover:scale-105 active:scale-95">
+                    เล่นต่อ
+                </button>
+            </div>
+
+            <!-- Game Over / Win Screen -->
+            <div id="screen_win" class="hidden glass-panel p-6 sm:p-10 md:p-12 rounded-2xl sm:rounded-3xl text-center max-w-2xl w-[92vw] max-h-[85vh] overflow-y-auto">
+                <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-green-400 mb-4 sm:mb-6">🎉 ยินดีด้วย! 🎉</h1>
+                <p class="text-lg sm:text-2xl text-white mb-3 sm:mb-4">คุณได้เรียนรู้แหล่งเรียนรู้และภูมิปัญญาในอำเภอดอยหล่อครบถ้วนแล้ว</p>
+                <p class="text-sm sm:text-lg text-gray-300 mb-6 sm:mb-8">คุณคือสุดยอดนักสำรวจภูมิปัญญาท้องถิ่น!</p>
+                <button onclick="location.reload()" class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-3 sm:py-4 px-8 sm:px-12 rounded-full text-base sm:text-xl shadow-lg transform transition hover:scale-105 active:scale-95">
+                    เล่นอีกครั้ง
+                </button>
+            </div>
+
+        </div>
+
+        <!-- Instructions (Bottom) -->
+        <div id="game_instruction" class="hidden text-center pb-2 sm:pb-4 pointer-events-auto">
+            <div class="inline-block glass-panel px-4 sm:px-6 py-1.5 sm:py-2 rounded-full text-white text-xs sm:text-base md:text-lg font-medium animate-pulse">
+                ✋ ยกมือขึ้น เลื่อน <span class="text-yellow-300 font-bold">ฝ่ามือ</span> หรือ <span class="text-green-300 font-bold">ใช้นิ้วแตะ</span> ฟองสบู่ที่ตรงกับคำใบ้
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DOM Elements Declaration (Fixes ReferenceError) ---
+        const videoElement = document.getElementById('input_video');
+        const canvasElement = document.getElementById('output_canvas');
+        const canvasCtx = canvasElement.getContext('2d');
+
+        // --- Game State & Variables ---
+        let gameState = 'loading'; // 'loading', 'data_prep', 'playing', 'paused', 'levelup', 'win'
+        let score = 0;
+        let currentLevel = 1;
+        const levelTargets = [3, 7, 12, 18, 25];
+        let baseSpeed = 1.5;
+        let bubbles = [];
+        let wrongFeedbacks = [];
+        let collectedIndices = new Set();
+        let handCursor = { x: 0, y: 0, visible: false };
+        let currentQuestionData = null;
+        let autoAdvanceTimer = null;
+
+        // Resize Canvas dynamically
+        function resizeCanvas() {
+            canvasElement.width = window.innerWidth;
+            canvasElement.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Default Wisdom Data embedded in case local file fetch is blocked by CORS/file protocol
+        let wisdomData = [
+            {
+                "ชื่อแหล่งเรียนรู้": "ผาช่อ (อุทยานแห่งชาติแม่วาง)",
+                "ประเภท": "แหล่งเรียนรู้ทางธรรมชาติ",
+                "รายละเอียด": "ปรากฏการณ์ทางธรรมชาติจากการกัดเซาะของลมและฝน เกิดเป็นประติมากรรมหน้าผาดินสูงใหญ่คล้ายกำแพงเมืองโบราณ",
+                "ที่ตั้ง": "ต.สองแคว อ.ดอยหล่อ จ.เชียงใหม่",
+                "จุดเด่น": "แกรนด์แคนยอนเมืองไทย หน้าผาดินสูงกว่า 30 เมตร"
+            },
+            {
+                "ชื่อแหล่งเรียนรู้": "กลุ่มทอผ้าบ้านใหม่หนองหอย",
+                "ประเภท": "ภูมิปัญญางานหัตถกรรม",
+                "รายละเอียด": "การสืบทอดภูมิปัญญาการทอผ้าซิ่นตีนจก ลวดลายโบราณอันประณีตงดงาม สะท้อนเอกลักษณ์วิถีชีวิตชาวล้านนา",
+                "ที่ตั้ง": "ต.สันติสุข อ.ดอยหล่อ จ.เชียงใหม่",
+                "จุดเด่น": "ผ้าซิ่นตีนจก ย้อมสีธรรมชาติ ลายโบราณเอกลักษณ์ดอยหล่อ"
+            },
+            {
+                "ชื่อแหล่งเรียนรู้": "พิพิธภัณฑ์พระพิฆเนศ ดอยหล่อ",
+                "ประเภท": "แหล่งเรียนรู้ทางศิลปวัฒนธรรม",
+                "รายละเอียด": "สถานที่รวบรวมองค์พระพิฆเนศเทวรูปปั้นและแกะสลักหลากหลายปางจากทั่วโลก เพื่อการศึกษาศิลปะและคติความเชื่อ",
+                "ที่ตั้ง": "ต.ยางคราม อ.ดอยหล่อ จ.เชียงใหม่",
+                "จุดเด่น": "สถาปัตยกรรมเทวาลัยและเทวรูปพระพิฆเนศหลากรูปแบบ"
+            },
+            {
+                "ชื่อแหล่งเรียนรู้": "วัดพระธาตุดอยน้อย",
+                "ประเภท": "โบราณสถานและแหล่งเรียนรู้ประวัติศาสตร์",
+                "รายละเอียด": "วัดเก่าแก่สมัยหริภุญชัย สร้างโดยพระนางจามเทวี ตั้งอยู่บนยอดดอยน้อย มองเห็นทิวทัศน์แม่น้ำพิงค์และอำเภอดอยหล่อ",
+                "ที่ตั้ง": "ต.ดอยหล่อ อ.ดอยหล่อ จ.เชียงใหม่",
+                "จุดเด่น": "องค์พระธาตุโบราณ จุดชมวิวทิวทัศน์โค้งแม่น้ำปิง"
+            },
+            {
+                "ชื่อแหล่งเรียนรู้": "ศูนย์เรียนรู้เกษตรทฤษฎีใหม่และหมอดินอาสา",
+                "ประเภท": "ภูมิปัญญาการเกษตร",
+                "รายละเอียด": "แหล่งถ่ายทอดความรู้การปรับปรุงดิน การทำปุ๋ยหมักชีวภาพ และการทำเกษตรผสมผสานตามแนวพระราชดำริ",
+                "ที่ตั้ง": "ต.ดอยหล่อ อ.ดอยหล่อ จ.เชียงใหม่",
+                "จุดเด่น": "การผลิตปุ๋ยชีวภาพสูตรดั้งเดิมและการปรับปรุงดินเสื่อมโทรม"
+            }
+        ];
+
+        // --- MediaPipe Tracking & Drawing ---
+        function onResults(results) {
+            canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+
+            // Draw hand tracking
+            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                handCursor.visible = true;
+                const landmarks = results.multiHandLandmarks[0];
+                
+                let px = (landmarks[0].x + landmarks[5].x + landmarks[17].x) / 3;
+                let py = (landmarks[0].y + landmarks[5].y + landmarks[17].y) / 3;
+                
+                const videoWidth = videoElement.videoWidth || 1280;
+                const videoHeight = videoElement.videoHeight || 720;
+                const canvasWidth = canvasElement.width;
+                const canvasHeight = canvasElement.height;
+
+                const videoRatio = videoWidth / videoHeight;
+                const canvasRatio = canvasWidth / canvasHeight;
+
+                let scale, offsetX = 0, offsetY = 0;
+
+                if (canvasRatio > videoRatio) {
+                    scale = canvasWidth / videoWidth;
+                    offsetY = (canvasHeight - videoHeight * scale) / 2;
+                } else {
+                    scale = canvasHeight / videoHeight;
+                    offsetX = (canvasWidth - videoWidth * scale) / 2;
+                }
+
+                let rawX = (1 - px) * videoWidth * scale + offsetX;
+                let rawY = py * videoHeight * scale + offsetY;
+
+                handCursor.x = rawX;
+                handCursor.y = rawY;
+
+                if (gameState === 'playing') {
+                    const palmRadius = Math.min(canvasWidth, canvasHeight) * 0.05;
+                    canvasCtx.beginPath();
+                    canvasCtx.arc(handCursor.x, handCursor.y, Math.max(25, palmRadius), 0, 2 * Math.PI);
+                    canvasCtx.fillStyle = 'rgba(72, 187, 120, 0.4)';
+                    canvasCtx.fill();
+                    canvasCtx.lineWidth = 3;
+                    canvasCtx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
+                    canvasCtx.stroke();
+                    
+                    canvasCtx.beginPath();
+                    canvasCtx.arc(handCursor.x, handCursor.y, 8, 0, 2 * Math.PI);
+                    canvasCtx.fillStyle = '#fff';
+                    canvasCtx.fill();
+                }
+            } else {
+                handCursor.visible = false;
+            }
+
+            if (gameState === 'playing') {
+                updateAndDrawBubbles();
+                checkCollisions();
+            }
+        }
+
+        const hands = new Hands({locateFile: (file) => {
+            return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+        }});
+        hands.setOptions({
+            maxNumHands: 1,
+            modelComplexity: 1,
+            minDetectionConfidence: 0.7,
+            minTrackingConfidence: 0.7
+        });
+        hands.onResults(onResults);
+
+        const camera = new Camera(videoElement, {
+            onFrame: async () => {
+                await hands.send({image: videoElement});
+            },
+            width: 1280,
+            height: 720
+        });
+
+        camera.start().then(() => {
+            initDataAndUI();
+        }).catch(err => {
+            document.getElementById('loading_status').innerText = "กล้องทำงานขัดข้อง แต่คุณยังสามารถใช้สัมผัสหน้าจอเล่นได้: " + err.message;
+            document.getElementById('loading_status').classList.replace('text-green-300', 'text-yellow-400');
+            setTimeout(initDataAndUI, 1500);
+        });
+
+        // --- Data Loading & Setup ---
+        function initDataAndUI() {
+            document.getElementById('screen_loading').classList.add('hidden');
+            document.getElementById('screen_data').classList.remove('hidden');
+            
+            // Try fetching local files automatically
+            attemptFetchExcel('แหล่งเรียนรู้และภูมิปัญญา_2.xlsx')
+                .catch(() => attemptFetchExcel('แหล่งเรียนรู้และภูมิปัญญา.xlsx'))
+                .then(success => {
+                    if (success) {
+                        document.getElementById('csv_status_msg').innerHTML = "✅ โหลดข้อมูลจากไฟล์อัตโนมัติสำเร็จ! พร้อมเล่นเกมส์";
+                    } else {
+                        document.getElementById('csv_status_msg').innerHTML = "ℹ️ ใช้ชุดข้อมูลภูมิปัญญาท้องถิ่นดอยหล่อในระบบ (หรือเลือกอัปโหลดไฟล์ของคุณ)";
+                    }
+                });
+        }
+
+        async function attemptFetchExcel(filename) {
+            try {
+                const response = await fetch(filename);
+                if (!response.ok) return false;
+                const arrayBuffer = await response.arrayBuffer();
+                const workbook = XLSX.read(arrayBuffer, {type: 'array'});
+                const firstSheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[firstSheetName];
+                const json = XLSX.utils.sheet_to_json(worksheet);
+                if (json && json.length > 0) {
+                    wisdomData = json;
+                    return true;
+                }
+            } catch (e) {
+                return false;
+            }
+            return false;
+        }
+
+        // File Input Event Listener for Custom Upload
+        document.getElementById('csvFileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                try {
+                    const data = new Uint8Array(evt.target.result);
+                    const workbook = XLSX.read(data, {type: 'array'});
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    const json = XLSX.utils.sheet_to_json(worksheet);
+
+                    if (json && json.length > 0) {
+                        wisdomData = json;
+                        document.getElementById('csv_status_msg').innerHTML = `✅ อัปโหลดสำเร็จ! โหลดข้อมูลได้ ${json.length} รายการ`;
+                    } else {
+                        document.getElementById('csv_status_msg').innerHTML = "⚠️ ไม่พบข้อมูลในไฟล์ที่เลือก";
+                    }
+                } catch (err) {
+                    document.getElementById('csv_status_msg').innerHTML = "❌ เกิดข้อผิดพลาดในการอ่านไฟล์: " + err.message;
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        });
+
+        // --- Classes for Game Objects ---
+        class WrongFeedback {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.life = 1.0;
+            }
+            update() { this.life -= 0.02; this.y -= 2; }
+            draw(ctx) {
+                ctx.save();
+                ctx.globalAlpha = Math.max(0, this.life);
+                ctx.fillStyle = '#ef4444';
+                ctx.font = 'bold 36px Kanit';
+                ctx.textAlign = 'center';
+                ctx.shadowColor = 'black';
+                ctx.shadowBlur = 6;
+                ctx.fillText("❌ ผิด!", this.x, this.y);
+                ctx.restore();
+            }
+        }
+
+        class Bubble {
+            constructor(dataIndex, text) {
+                this.dataIndex = dataIndex;
+                this.text = String(text || "ภูมิปัญญา");
+                
+                const baseDimension = Math.min(canvasElement.width, canvasElement.height);
+                const minRadius = Math.max(42, baseDimension * 0.075);
+                const maxRadius = Math.max(58, baseDimension * 0.105);
+                this.radius = minRadius + Math.random() * (maxRadius - minRadius);
+
+                this.x = Math.random() * (canvasElement.width - this.radius * 2) + this.radius;
+                this.y = -this.radius - (Math.random() * 150); 
+                this.speed = (baseSpeed + (Math.random() * 1.2)) * (1 + (currentLevel * 0.15));
+                this.wobbleOffset = Math.random() * Math.PI * 2;
+                this.color = this.getRandomColor();
+                this.isCorrect = false;
+            }
+
+            getRandomColor() {
+                const colors = [
+                    ['rgba(66, 153, 225, 0.75)', 'rgba(49, 130, 206, 0.95)'],
+                    ['rgba(237, 137, 54, 0.75)', 'rgba(221, 107, 32, 0.95)'],
+                    ['rgba(159, 122, 234, 0.75)', 'rgba(128, 90, 213, 0.95)'],
+                    ['rgba(236, 72, 153, 0.75)', 'rgba(219, 39, 119, 0.95)']
+                ];
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            update() {
+                this.y += this.speed;
+                this.x += Math.sin(this.y * 0.02 + this.wobbleOffset) * 1.8;
+            }
+
+            draw(ctx) {
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+                
+                let gradient = ctx.createRadialGradient(this.x - this.radius/3, this.y - this.radius/3, this.radius/10, this.x, this.y, this.radius);
+                gradient.addColorStop(0, 'rgba(255,255,255,0.85)');
+                gradient.addColorStop(0.25, this.color[0]);
+                gradient.addColorStop(1, this.color[1]);
+                
+                ctx.fillStyle = gradient;
+                ctx.fill();
+                ctx.lineWidth = Math.max(2, this.radius * 0.04);
+                ctx.strokeStyle = 'rgba(255,255,255,0.9)';
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.arc(this.x - this.radius/3, this.y - this.radius/3, this.radius/4, 0, 2*Math.PI);
+                ctx.fillStyle = 'rgba(255,255,255,0.45)';
+                ctx.fill();
+
+                ctx.fillStyle = 'white';
+                
+                const fontSize = Math.max(13, Math.floor(this.radius * 0.28));
+                ctx.font = `bold ${fontSize}px Kanit, sans-serif`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                
+                let maxLen = this.radius < 50 ? 9 : (this.radius < 65 ? 12 : 15);
+                let displayTxt = this.text.length > maxLen ? this.text.substring(0, maxLen - 2) + ".." : this.text;
+                
+                ctx.shadowColor = 'black';
+                ctx.shadowBlur = 4;
+                ctx.fillText(displayTxt, this.x, this.y);
+                
+                ctx.restore();
+            }
+        }
+
+        // --- Core Game Functions ---
+        function setNewQuestion() {
+            if (!wisdomData || wisdomData.length === 0) return;
+            
+            let available = wisdomData.map((_, i) => i).filter(i => !collectedIndices.has(i));
+            if (available.length === 0) {
+                available = wisdomData.map((_, i) => i);
+            }
+            
+            let randomIdx = available[Math.floor(Math.random() * available.length)];
+            currentQuestionData = wisdomData[randomIdx];
+            currentQuestionData.index = randomIdx;
+            
+            let keys = Object.keys(currentQuestionData);
+            let detailKey = keys.find(k => k.includes('ราย') || k.includes('ข้อมูล') || k.includes('จุดเด่น') || k.includes('คำใบ้') || k.includes('ประเภท'));
+            if (!detailKey && keys.length > 1) {
+                detailKey = keys[1];
+            }
+            
+            let hintText = currentQuestionData[detailKey] !== undefined && currentQuestionData[detailKey] !== null 
+                ? String(currentQuestionData[detailKey]) 
+                : "";
+                
+            if (hintText.trim() === '') {
+                hintText = "ค้นหา: " + String(currentQuestionData[keys[0]]);
+            }
+            
+            if(hintText.length > 150) hintText = hintText.substring(0, 150) + "...";
+            document.getElementById('question_text').innerText = hintText;
+            
+            bubbles = []; 
+        }
+
+        function spawnBubble() {
+            if (bubbles.length < 3 + currentLevel && wisdomData.length > 0 && currentQuestionData) {
+                let isCorrectBubble = Math.random() < 0.45;
+                
+                let hasCorrect = bubbles.some(b => b.isCorrect);
+                if (!hasCorrect && bubbles.length >= 2) {
+                    isCorrectBubble = true;
+                }
+
+                let targetData, targetIndex;
+                if (isCorrectBubble) {
+                    targetData = currentQuestionData;
+                    targetIndex = currentQuestionData.index;
+                } else {
+                    let wrongOptions = wisdomData.map((_, i) => i).filter(i => i !== currentQuestionData.index);
+                    if (wrongOptions.length === 0) wrongOptions = [currentQuestionData.index];
+                    targetIndex = wrongOptions[Math.floor(Math.random() * wrongOptions.length)];
+                    targetData = wisdomData[targetIndex];
+                }
+                
+                let titleKey = Object.keys(targetData)[0];
+                let title = targetData[titleKey] || "ภูมิปัญญา";
+                
+                let newBubble = new Bubble(targetIndex, title);
+                newBubble.isCorrect = (targetIndex === currentQuestionData.index);
+                bubbles.push(newBubble);
+            }
+        }
+
+        function updateAndDrawBubbles() {
+            if (Math.random() < 0.025) spawnBubble();
+
+            for (let i = bubbles.length - 1; i >= 0; i--) {
+                let b = bubbles[i];
+                b.update();
+                b.draw(canvasCtx);
+
+                if (b.y - b.radius > canvasElement.height) {
+                    bubbles.splice(i, 1);
+                }
+            }
+
+            for (let i = wrongFeedbacks.length - 1; i >= 0; i--) {
+                let fb = wrongFeedbacks[i];
+                fb.update();
+                fb.draw(canvasCtx);
+                if (fb.life <= 0) wrongFeedbacks.splice(i, 1);
+            }
+        }
+
+        function checkCollisions() {
+            if (!handCursor.visible) return;
+
+            for (let i = bubbles.length - 1; i >= 0; i--) {
+                let b = bubbles[i];
+                let dx = handCursor.x - b.x;
+                let dy = handCursor.y - b.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < b.radius + 25) {
+                    if (b.isCorrect) {
+                        let hitDataIndex = b.dataIndex;
+                        bubbles = [];
+                        showKnowledge(hitDataIndex);
+                    } else {
+                        wrongFeedbacks.push(new WrongFeedback(b.x, b.y));
+                        bubbles.splice(i, 1);
+                    }
+                    break;
+                }
+            }
+        }
+
+        // --- UI Control Listeners ---
+        document.getElementById('btn_pause').addEventListener('click', pauseGame);
+        document.getElementById('btn_restart').addEventListener('click', restartGame);
+        document.getElementById('btn_exit').addEventListener('click', exitToMenu);
+
+        document.getElementById('btn_resume_modal').addEventListener('click', resumeGame);
+        document.getElementById('btn_restart_modal').addEventListener('click', restartGame);
+        document.getElementById('btn_exit_modal').addEventListener('click', exitToMenu);
+
+        function pauseGame() {
+            if (gameState === 'playing') {
+                gameState = 'paused';
+                document.getElementById('screen_pause').classList.remove('hidden');
+            }
+        }
+
+        function resumeGame() {
+            if (gameState === 'paused') {
+                document.getElementById('screen_pause').classList.add('hidden');
+                gameState = 'playing';
+            }
+        }
+
+        function restartGame() {
+            if (autoAdvanceTimer) {
+                clearTimeout(autoAdvanceTimer);
+                autoAdvanceTimer = null;
+            }
+            document.getElementById('screen_pause').classList.add('hidden');
+            document.getElementById('modal_knowledge').classList.add('hidden');
+            document.getElementById('screen_levelup').classList.add('hidden');
+            document.getElementById('screen_win').classList.add('hidden');
+            
+            score = 0;
+            currentLevel = 1;
+            collectedIndices.clear();
+            bubbles = [];
+            wrongFeedbacks = [];
+            
+            gameState = 'playing';
+            document.getElementById('game_stats').classList.remove('hidden');
+            document.getElementById('game_instruction').classList.remove('hidden');
+            setNewQuestion();
+            updateUIStats();
+        }
+
+        function exitToMenu() {
+            if (autoAdvanceTimer) {
+                clearTimeout(autoAdvanceTimer);
+                autoAdvanceTimer = null;
+            }
+            document.getElementById('screen_pause').classList.add('hidden');
+            document.getElementById('modal_knowledge').classList.add('hidden');
+            document.getElementById('screen_levelup').classList.add('hidden');
+            document.getElementById('screen_win').classList.add('hidden');
+            document.getElementById('game_stats').classList.add('hidden');
+            document.getElementById('game_instruction').classList.add('hidden');
+            
+            bubbles = [];
+            wrongFeedbacks = [];
+            gameState = 'data_prep';
+            document.getElementById('screen_data').classList.remove('hidden');
+        }
+
+        document.getElementById('btn_start').addEventListener('click', () => {
+            document.getElementById('screen_data').classList.add('hidden');
+            startGame();
+        });
+
+        function startGame() {
+            gameState = 'playing';
+            document.getElementById('game_stats').classList.remove('hidden');
+            document.getElementById('game_instruction').classList.remove('hidden');
+            score = 0;
+            currentLevel = 1;
+            collectedIndices.clear();
+            setNewQuestion();
+            updateUIStats();
+        }
+
+        function showKnowledge(dataIndex) {
+            gameState = 'paused';
+            collectedIndices.add(dataIndex);
+            score++;
+            updateUIStats();
+
+            const data = wisdomData[dataIndex];
+            const keys = Object.keys(data);
+            const title = String(data[keys[0]] || "ภูมิปัญญาดอยหล่อ"); 
+            
+            document.getElementById('knowledge_title').innerText = title;
+            
+            const detailsList = document.getElementById('knowledge_details');
+            detailsList.innerHTML = '';
+
+            for (let i = 1; i < keys.length; i++) {
+                let key = keys[i];
+                let value = data[key];
+                if (value !== null && value !== undefined && String(value).trim() !== "") {
+                    let li = document.createElement('li');
+                    li.className = "flex items-start bg-black/20 p-3 rounded-lg border border-white/10";
+                    li.innerHTML = `<span class="text-yellow-400 font-bold mr-3 whitespace-nowrap min-w-[80px]">${key} :</span> <span>${value}</span>`;
+                    detailsList.appendChild(li);
+                }
+            }
+
+            document.getElementById('modal_knowledge').classList.remove('hidden');
+
+            const progressBar = document.getElementById('auto_advance_bar');
+            progressBar.style.transition = 'none';
+            progressBar.style.width = '100%';
+            
+            void progressBar.offsetWidth;
+
+            progressBar.style.transition = 'width 2.2s linear';
+            progressBar.style.width = '0%';
+
+            if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
+
+            autoAdvanceTimer = setTimeout(() => {
+                advanceToNext();
+            }, 2200);
+        }
+
+        function advanceToNext() {
+            if (autoAdvanceTimer) {
+                clearTimeout(autoAdvanceTimer);
+                autoAdvanceTimer = null;
+            }
+
+            document.getElementById('modal_knowledge').classList.add('hidden');
+            
+            let target = levelTargets[currentLevel - 1] || 999;
+
+            if (score >= levelTargets[levelTargets.length - 1] || collectedIndices.size >= wisdomData.length) {
+                gameState = 'win';
+                document.getElementById('game_stats').classList.add('hidden');
+                document.getElementById('game_instruction').classList.add('hidden');
+                document.getElementById('screen_win').classList.remove('hidden');
+            } else if (score >= target) {
+                gameState = 'levelup';
+                currentLevel++;
+                document.getElementById('levelup_text').innerText = `เลเวล ${currentLevel}: เป้าหมายและความเร็วเพิ่มขึ้น!`;
+                document.getElementById('screen_levelup').classList.remove('hidden');
+
+                setTimeout(() => {
+                    if (gameState === 'levelup') {
+                        document.getElementById('btn_next_level').click();
+                    }
+                }, 1800);
+            } else {
+                gameState = 'playing';
+                setNewQuestion();
+            }
+        }
+
+        document.getElementById('btn_collect').addEventListener('click', advanceToNext);
+
+        document.getElementById('btn_next_level').addEventListener('click', () => {
+            document.getElementById('screen_levelup').classList.add('hidden');
+            setNewQuestion();
+            updateUIStats();
+            gameState = 'playing';
+        });
+
+        function updateUIStats() {
+            document.getElementById('level_display').innerText = currentLevel;
+            document.getElementById('score_display').innerText = score;
+            let target = levelTargets[currentLevel - 1] || "Max";
+            document.getElementById('target_display').innerText = target;
+        }
+
+        // Touch & Tap fallback for Mobile / Tablet / Mouse interaction
+        function handleScreenTouch(clientX, clientY) {
+            if (gameState !== 'playing') return;
+
+            for (let i = bubbles.length - 1; i >= 0; i--) {
+                let b = bubbles[i];
+                let dx = clientX - b.x;
+                let dy = clientY - b.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < b.radius + 20) {
+                    if (b.isCorrect) {
+                        let hitDataIndex = b.dataIndex;
+                        bubbles = [];
+                        showKnowledge(hitDataIndex);
+                    } else {
+                        wrongFeedbacks.push(new WrongFeedback(b.x, b.y));
+                        bubbles.splice(i, 1);
+                    }
+                    break;
+                }
+            }
+        }
+
+        window.addEventListener('touchstart', (e) => {
+            if (e.touches && e.touches.length > 0) {
+                handleScreenTouch(e.touches[0].clientX, e.touches[0].clientY);
+            }
+        }, { passive: true });
+
+        window.addEventListener('mousedown', (e) => {
+            handleScreenTouch(e.clientX, e.clientY);
+        });
+
+    </script>
+</body>
+</html>
