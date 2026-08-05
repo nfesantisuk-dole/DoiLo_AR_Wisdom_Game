@@ -710,6 +710,7 @@ body {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
+  pointer-events: auto;
 }
 .btn-modal-primary {
   background: linear-gradient(135deg, var(--lv-c1, #F5C842), var(--lv-c2, #FF6B35));
@@ -785,6 +786,7 @@ body {
   box-shadow: 0 8px 30px rgba(245,200,66,0.4);
   transition: all 0.3s;
   text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  pointer-events: auto;
 }
 .btn-next-level:hover { transform: translateY(-3px); }
 
@@ -852,6 +854,7 @@ body {
   cursor: pointer;
   box-shadow: 0 8px 30px rgba(245,200,66,0.4);
   transition: all 0.3s;
+  pointer-events: auto;
 }
 .btn-play-again:hover { transform: translateY(-3px); }
 
@@ -988,10 +991,39 @@ body {
   align-items: center;
   justify-content: center;
   line-height: 1.3;
+  pointer-events: auto;
 }
 .quiz-option:hover { background: rgba(245,200,66,0.1); border-color: rgba(245,200,66,0.4); transform: translateY(-2px); }
 .quiz-option.correct { background: rgba(46,204,113,0.2); border-color: #2ECC71; color: #2ECC71; }
 .quiz-option.wrong { background: rgba(231,76,60,0.2); border-color: #E74C3C; color: #E74C3C; }
+
+/* PAUSE/EXIT BUTTON */
+.control-panel {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 25;
+  display: flex;
+  gap: 10px;
+  pointer-events: auto;
+}
+.btn-control {
+  background: rgba(13,27,42,0.9);
+  border: 2px solid rgba(255,255,255,0.2);
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-family: 'Kanit', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s;
+  backdrop-filter: blur(10px);
+}
+.btn-control:hover {
+  background: rgba(231,76,60,0.3);
+  border-color: rgba(231,76,60,0.6);
+}
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 600px) {
@@ -1014,6 +1046,12 @@ body {
 <!-- HAND CURSOR -->
 <div id="hand-cursor">
   <div class="cursor-inner"></div>
+</div>
+
+<!-- CONTROL PANEL (Pause/Exit) -->
+<div class="control-panel hidden" id="control-panel">
+  <button class="btn-control" id="btn-pause">⏸ หยุด</button>
+  <button class="btn-control" id="btn-exit">🚪 ออก</button>
 </div>
 
 <!-- ===== LOADING SCREEN ===== -->
@@ -1148,7 +1186,6 @@ body {
         <div class="lc-stat-label">คะแนนรวม</div>
       </div>
     </div>
-    <button class="btn-next-level" id="btn-next-level">ถัดไป →</button>
   </div>
 </div>
 
@@ -1191,213 +1228,152 @@ const PLACES = [
   {id:"RES202602206",name:"การปลูกข้าวอินทรีย์ (นายอร่าม)",type:"Learning Resource",tambon:"ดอยหล่อ",owner:"นายอร่าม หล้าทิพย์",desc:"นายอร่าม หล้าทิพย์ นำองค์ความรู้เกษตรทฤษฎีใหม่มาทดลองประสบผลสำเร็จ ได้รับรางวัลรองชนะเลิศ ชาวนาดีเด่นจังหวัดเชียงใหม่ ปี 2559 เป็นวิทยากรการปลูกข้าวอินทรีย์ ที่ตั้ง: 259 ม.21 ต.ดอยหล่อ อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.4946,lng:98.7773,category:"เกษตรกรรม",img:"https://drive.google.com/thumbnail?id=1kZ7Jhj8AvISez0vbStky7ygkA5qXW-eE&sz=w1000",video:"",contact:"084-0427612",gallery:[],level:2},
   {id:"RES202602237",name:"การจักสาน (งานฝีมือ)",type:"Local Wisdom",tambon:"สองแคว",owner:"นางหลง วันวา",desc:"นางหลง วันวา เริ่มเรียนรู้การสานตะกร้า (ก๋วย) จากพ่อแม่ตั้งแต่อายุ 6 ขวบ งานจักสานเป็นหัตถกรรมสำคัญที่ใช้ไม้ไผ่ หวาย ปอมาขัดสานเป็นชิ้นงาน สร้างรายได้ให้ครอบครัว ที่ตั้ง: บ้านท่ามะโอ บ้านเลขที่ 146 หมู่ที่ 3 ต.สองแคว อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5100,lng:98.8523,category:"หัตถกรรม",img:"https://drive.google.com/thumbnail?id=1ih4326qKASMNqAT4JYQI5tzlHo4uwoaz&sz=w1000",video:"https://youtu.be/MGo1kPlVM9k",contact:"088-6416487",gallery:[],level:4},
   {id:"RES202602238",name:"วัดหัวข่วง",type:"Learning Resource",tambon:"สองแคว",owner:"พระปรเมศ ฐิตเมธี",desc:"วัดหัวข่วง ชื่อตามลานกว้าง (ข่วง) ริมแม่น้ำปิง ที่พระภิกษุจากวัดแสนเมืองมาหลวงมาสร้าง ตั้งแต่โบราณ ได้รับอนุญาตตั้งเป็นวัดตาม ร.ศ.121 ที่ตั้ง: บ้านหัวข่วง เลขที่ 60 หมู่ 6 ต.สองแคว อ.ดอยหล่อ จ.เชียงใหม่",lat:18.4944,lng:98.8425,category:"พระพุทธศาสนา",img:"https://drive.google.com/thumbnail?id=1tkX0OszTAOeDpmZG00CzF3wPYp-nqDeC&sz=w1000",video:"",contact:"088-6416487",gallery:[],level:3},
-  {id:"RES202602239",name:"การปลูกผักไฮโดรโปรนิกส์ (สองแคว)",type:"Local Wisdom",tambon:"สองแคว",owner:"นายธัญนพพัทธ์ ล้อมเวียง",desc:"นายธัญนพพัทธ์ ล้อมเวียง ผันตัวมาทำเกษตรปลูกผักสลัดหลายชนิด เช่น กรีนโอ๊ค เรดโอ๊ค ได้รับมาตรฐาน GAP ส่งออกให้ห้างสรรพสินค้า และเป็นวิทยากรให้ความรู้เรื่องปลูกผักไฮโดรโปนิกส์ ที่ตั้ง: บ้านทุ่งท้อ ม.2 ต.สองแคว อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5155,lng:98.8547,category:"เกษตรกรรม",img:"https://drive.google.com/thumbnail?id=173qY8i6VGiEsU7xwsX38U9-y7iJnpWxU&sz=w1000",video:"",contact:"085-5346141",gallery:[],level:2},
-  {id:"RES2026022310",name:"วัดทุ่งท้อ",type:"Learning Resource",tambon:"สองแคว",owner:"พระครูสาธุกิจจานันท์",desc:"วัดทุ่งท้อ สร้างเมื่อ พ.ศ.2410 โดยครูบาเทพ สังกัดมหานิกาย มีวิหาร ศาลาการเปรียญ กุฏิ และอุโบสถ ที่ตั้ง: บ้านทุ่งท้อ ต.สองแคว อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5160,lng:98.8549,category:"พระพุทธศาสนา",img:"https://drive.google.com/thumbnail?id=10bt7Ws63OExtmyvENe1CQmU3DDCumC8T&sz=w1000",video:"",contact:"",gallery:[],level:3},
-  {id:"RES2026022311",name:"วัดหลังถ้ำ",type:"Learning Resource",tambon:"สองแคว",owner:"พระครูประภัสสรโสภฌ",desc:"วัดหลังถ้ำ สร้างเมื่อ พ.ศ.2481 สังกัดมหานิกาย มีวิหาร กุฏิสงฆ์ ศาลาบาตร พระประธานปางมารวิชัย และกลองหลวงแบบล้านนา ที่ตั้ง: บ้านแม่ขาน บ้านเลขที่ 240 ต.สองแคว อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5246,lng:98.8558,category:"พระพุทธศาสนา",img:"https://drive.google.com/thumbnail?id=1IB4VTxLUYIQ30BdDMzl1HaL-f_AoIRdG&sz=w1000",video:"",contact:"",gallery:[],level:3},
-  {id:"WIS2026022312",name:"การทำผ้ามัดย้อม",type:"Local Wisdom",tambon:"สองแคว",owner:"นางจันทร์เพ็ญ ธรรมใจ",desc:"นางจันทร์เพ็ญ ธรรมใจ เริ่มสนใจย้อมผ้า 5 ปี และเป็นวิทยากรให้ สกร.อำเภอดอยหล่อ การย้อมผ้าช่วยเพิ่มมูลค่าสินค้าและสร้างรายได้ให้ตนเองและครอบครัว ที่ตั้ง: บ้านสามหลัง บ้านที่ 159 หมู่ที่ 8 ต.สองแคว อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5150,lng:98.8450,category:"หัตถกรรม",img:"https://drive.google.com/thumbnail?id=1sOQH3w9dkE18p-OZep_WIT045nCP9-ZU&sz=w1000",video:"",contact:"",gallery:[],level:4},
-  {id:"WIS2026022313",name:"การทำไส้อั๋วสมุนไพร",type:"Local Wisdom",tambon:"สองแคว",owner:"นางแดงต้อย ผัดใจ",desc:"นางแดงต้อย ผัดใจ ทำไส้อั่วตั้งแต่ปี 2559 ไส้อั่วสมุนไพรพิเศษผสมตะไคร้ ใบมะกรูด รสอร่อย สะอาด มีประโยชน์ต่อสุขภาพ ที่ตั้ง: บ้านหัวข่วง เลขที่ 50 หมู่ที่ 6 ต.สองแคว อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.4950,lng:98.8421,category:"อาหารและเครื่องดื่ม",img:"https://drive.google.com/thumbnail?id=1U92p2TAquKQHQbOLlg75_Wb3QWGsOImc&sz=w1000",video:"",contact:"085-7066635",gallery:[],level:5},
-  {id:"RES2026022314",name:"สวนพฤกษาสมุนไพรหัวใจรักสุขภาพ",type:"Learning Resource",tambon:"สองแคว",owner:"เทศบาลตำบลสองแคว",desc:"สวนพฤกษาสมุนไพร รวบรวมพันธุ์พืชสมุนไพร เป็นแหล่งเรียนรู้ แลกเปลี่ยนสมุนไพร ปลูกผักอินทรีย์ เลี้ยงไส้เดือนดิน เลี้ยงกบ ผลิตปุ๋ยชีวภาพ สนับสนุนกิจกรรมเศรษฐกิจผู้สูงอายุ ที่ตั้ง: บ้านสามหลัง หมู่ที่ 8 ต.สองแคว อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5193,lng:98.8479,category:"เกษตรกรรม",img:"https://drive.google.com/thumbnail?id=1YMPDKsne9I1LQR7CtIOoUWiKIbb4i-r4&sz=w1000",video:"https://youtu.be/zpZlPMyQupw",contact:"",gallery:[],level:2},
-  {id:"WIS2026022315",name:"การปลูกข้าวอินทรีย์ (ภูมิปัญญา)",type:"Local Wisdom",tambon:"ดอยหล่อ",owner:"นายอร่าม หล้าทิพย์",desc:"ภูมิปัญญาการปลูกข้าวอินทรีย์แบบเกษตรทฤษฎีใหม่ ได้รับรางวัลรองชนะเลิศชาวนาดีเด่น เชียงใหม่ ปี 2559 เป็นวิทยากรให้ความรู้แก่ผู้สนใจ ที่ตั้ง: 259 ม.21 ต.ดอยหล่อ อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.4946,lng:98.7772,category:"เกษตรกรรม",img:"https://drive.google.com/thumbnail?id=1XLyodXoF4KDiDpwKIKqaIVIK6Ppxn_HW&sz=w1000",video:"",contact:"084-0427612",gallery:["https://drive.google.com/thumbnail?id=1oF1Dd2q3u8CKmt235PJB_o5d8TRHnc3V&sz=w1000"],level:2},
-  {id:"RES2026022316",name:"วัดม่อนห้วยแก้ว",type:"Learning Resource",tambon:"ดอยหล่อ",owner:"พระครูกัลยาณปราโมทย์",desc:"เดิมชื่อสำนักสงฆ์รัตนาราม ก่อตั้งปี พ.ศ.2537 ได้รับการยกขึ้นเป็นวัดโดยสมบูรณ์ พ.ศ.2542 ในนาม วัดม่อนห้วยแก้ว ที่ตั้ง: บ้านเลขที่ 889 หมู่ที่ 25 ต.ดอยหล่อ อ.ดอยหล่อ 50160",lat:18.4657,lng:98.7769,category:"พระพุทธศาสนา",img:"https://drive.google.com/thumbnail?id=1xSj65XtuVCecA2NPTYkUK1dLusKaIW0t&sz=w1000",video:"",contact:"",gallery:[],level:3},
-  {id:"RES2026022317",name:"วัดฟ้าหลั่ง",type:"Learning Resource",tambon:"ดอยหล่อ",owner:"พระครูปิยกิจปรีชา ดวงมาลา",desc:"วัดเก่าแก่กว่า 400 ปี สมัยพระเมืองแก้ว เคยร้างในยุคสงคราม ฟื้นฟูขึ้นมาอีกครั้งในปี พ.ศ.2504 ที่ตั้ง: บ้านเลขที่ 191 ต.ดอยหล่อ อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5127,lng:98.8368,category:"พระพุทธศาสนา",img:"https://drive.google.com/thumbnail?id=1MuEn27-p2IH4wWEF7Tz0BzN8-nMIX0gz&sz=w1000",video:"",contact:"",gallery:[],level:3},
-  {id:"RES2026022318",name:"วัดพระธาตุดอยน้อย",type:"Learning Resource",tambon:"ดอยหล่อ",owner:"พระครูสาธุกิจจานันท์",desc:"สร้างโดยพระนางจามเทวี พ.ศ.1201 เสด็จจากลพบุรีมาครองเมืองหริภุญชัย บรรจุพระบรมสารีริกธาตุ สถาปัตยกรรมแบบล้านนา มีจุดชมวิวครอบคลุมถึงลำพูน ที่ตั้ง: บ้านดอยน้อย หมู่ที่ 11 ต.ดอยหล่อ อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.4649,lng:98.8038,category:"พระพุทธศาสนา",img:"https://drive.google.com/thumbnail?id=1a1z8gh5CHS4aEnBiRv2fULJKhdvNp3GT&sz=w1000",video:"https://youtu.be/tFOIv4gMHoM",contact:"",gallery:["https://drive.google.com/thumbnail?id=13nVwaLuhk1RR_WOcNfdpPSOkZzGEz8X3&sz=w1000"],level:3},
-  {id:"WIS2026022319",name:"กองทุนและธุรกิจชุมชน (บ้านเหล่าเป้า)",type:"Local Wisdom",tambon:"ดอยหล่อ",owner:"นางเพียรศรี ประทุมทา",desc:"นางเพียรศรี ประทุมทา ประธานกลุ่มแปรรูปอาหารบ้านเหล่าเป้า ผลิตแหนม จิ้นส้ม และไข่เค็ม เป็นสินค้า OTOP ของตำบลดอยหล่อ ที่ตั้ง: บ้านเหล่าเป้า บ้านเลขที่ 139 ต.ดอยหล่อ อ.ดอยหล่อ จ.เชียงใหม่",lat:18.4885,lng:98.8155,category:"เกษตรกรรม",img:"https://drive.google.com/thumbnail?id=1btuqyXrLmIPH7K8yk16gKImdhyW1hoWW&sz=w1000",video:"",contact:"",gallery:["https://drive.google.com/thumbnail?id=1F-uQEdAekHVVlMmcJApat48dft4hnjtH&sz=w1000"],level:2},
-  {id:"WIS2026022320",name:"ภาษาและวรรณกรรม",type:"Local Wisdom",tambon:"ดอยหล่อ",owner:"นายณัฐกฤชา คำเสน",desc:"นายณัฐกฤชา คำเสน หรือ พ่อน้อยทองคำ นักจัดรายการวิทยุ ค่าวฮ่ำลำนำเพลง ปู๋จ๋านพิธีศาสนาล้านนา ผู้รู้ตัวหนังสือล้านนา ปราชญ์ชาวบ้านที่มีชื่อเสียง ที่ตั้ง: บ้านศิริมังคลาจารย์ บ้านเลขที่ 577 ต.ดอยหล่อ อ.ดอยหล่อ จ.เชียงใหม่",lat:18.4817,lng:98.8014,category:"ภาษาและวรรณกรรม",img:"https://drive.google.com/thumbnail?id=1ts-C8fwD9NJImhYoLDyDm9pRvmIle75e&sz=w1000",video:"",contact:"",gallery:["https://drive.google.com/thumbnail?id=1hPymLVVjOuCuSIUlMwddAdByAVnnGyiN&sz=w1000"],level:5},
-  {id:"WIS2026022321",name:"การปลูกผักหวานป่าในสวนลำไย",type:"Local Wisdom",tambon:"ดอยหล่อ",owner:"นายวิโรจน์ พรมปัญญา",desc:"นายวิโรจน์ พรมปัญญา ภูมิปัญญาการปลูกผักหวานป่าในสวนลำไยและผักสวนครัว เหลือกินนำไปจำหน่ายส่งออกห้างสรรพสินค้าและร้านค้าต่างๆ ที่ตั้ง: บ้านโทกเสือ หมู่ที่ 18 ต.ดอยหล่อ อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5119,lng:98.7927,category:"เกษตรกรรม",img:"https://drive.google.com/thumbnail?id=1eE_Xo1gd4hv_CpxAcXh21kkA9sunmWxl&sz=w1000",video:"",contact:"086-1151144",gallery:[],level:2},
-  {id:"WIS2026022322",name:"การปลูกผักไฮโดรโปนิกส์ (ผู้พิการ)",type:"Local Wisdom",tambon:"สันติสุข",owner:"นางสาวรุ่งรวิภา โปธิวงค์",desc:"นางสาวรุ่งรวิภา โปธิวงค์ ผู้พิการที่ประสบอุบัติเหตุ ผันตัวมาปลูกผักไฮโดรโปนิกส์ เพาะเห็ด และเลี้ยงจิ้งหรีด ปัจจุบันเป็นวิทยากรให้ความรู้แก่ผู้พิการและประชาชนทั่วไป ที่ตั้ง: บ้านหนองหียง 77/2 ม.2 ต.สันติสุข อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5199,lng:98.8298,category:"เกษตรกรรม",img:"https://drive.google.com/thumbnail?id=1ZDS3U6IFVHX1VAKkuE5XdDxf5AEJt_xq&sz=w1000",video:"",contact:"088-4160279",gallery:["https://drive.google.com/thumbnail?id=1TWBM_DVYw8xY7nNk95JkfkzjcFx30CQm&sz=w1000"],level:2},
-  {id:"WIS2026022323",name:"กองทุนและธุรกิจชุมชน (คนพิการ)",type:"Local Wisdom",tambon:"สันติสุข",owner:"นายสมบูรณ์ อิ่นนวล",desc:"นายสมบูรณ์ อิ่นนวล หัวหน้าศูนย์บริการอาชีพอิสระคนพิการ ดูแล 8 อำเภอ ส่งเสริมการฝึกอาชีพ: เพาะเลี้ยงจิ้งหรีด เพาะเห็ดนางฟ้าภูฐาน และปลูกผักไฮโดรโปนิกส์ ที่ตั้ง: บ้านใหม่หนองหอย ม.6 ต.สันติสุข อ.ดอยหล่อ จ.เชียงใหม่",lat:18.5288,lng:98.7905,category:"เกษตรกรรม",img:"https://drive.google.com/thumbnail?id=1o0M8tW5OyRzCg7cwoorNqqIdnXbEP3Mt&sz=w1000",video:"",contact:"",gallery:[],level:2},
-  {id:"RES2026022324",name:"วัดหนองเหียง",type:"Learning Resource",tambon:"สันติสุข",owner:"พระครูวรธรรมนาถ",desc:"วัดหนองเหียง สร้างเมื่อ 19 มีนาคม พ.ศ.2519 ได้รับอนุญาตสร้างวัด พ.ศ.2532 ประกาศตั้งเป็นวัด พ.ศ.2533 ได้รับพระราชทานวิสุงคามสีมา พ.ศ.2541 ที่ตั้ง: บ้านหนองหียง เลขที่ 22 หมู่ที่ 2 ต.สันติสุข อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5195,lng:98.8302,category:"พระพุทธศาสนา",img:"https://drive.google.com/thumbnail?id=1GOuxNS4IXUb61lE2jWpZD60BeCeBbEY6&sz=w1000",video:"",contact:"",gallery:[],level:3},
-  {id:"WIS2026022325",name:"พิธีกรรมและประเพณีทางศาสนา",type:"Local Wisdom",tambon:"สันติสุข",owner:"พระครูวรธรรมนาถ (สมศักดิ์)",desc:"พระครูวรธรรมนาถ เจ้าอาวาสวัดหนองเหียง ผู้เชี่ยวชาญพิธีกรรมและประเพณีทางพระพุทธศาสนาล้านนา ที่ตั้ง: วัดหนองเหียง เลขที่ 22 หมู่ที่ 2 ต.สันติสุข อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5195,lng:98.8302,category:"ศาสนาและประเพณี",img:"https://drive.google.com/thumbnail?id=1kpvLoeUMsJu6Svof4g7u0h45XX34DR7i&sz=w1000",video:"",contact:"087-1774469",gallery:[],level:5},
-  {id:"WIS2026022326",name:"ไส้อั๋วป้าตุ๋ยยาวที่สุดในโลก",type:"Local Wisdom",tambon:"สันติสุข",owner:"นางศรีสมร วรรณใหม่",desc:"ป้าตุ๋ย เริ่มทำไส้อั่วตั้งแต่ปี 2540 รางวัลเชิดชูเกียรติผู้มีผลงานดีเด่น 2544 รางวัลชนะเลิศภูมิปัญญาล้านนา 2554 OTOP 5 ดาว ทำไส้อั่วยาวที่สุดในโลก 1,011 เมตร ถวายสมเด็จพระเทพฯ ที่ตั้ง: หมู่ที่ 9 ต.สันติสุข อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5160,lng:98.8352,category:"อาหารและเครื่องดื่ม",img:"https://drive.google.com/thumbnail?id=1t0rhhdtRTN8vOZHawa7-xHpaDxJg84in&sz=w1000",video:"https://youtu.be/rPszP-iMYg0",contact:"053-367584",gallery:["https://drive.google.com/thumbnail?id=1yzXB5Nyk3pgfZWbfqK8eSxAE5Yg2r45P&sz=w1000"],level:5},
-  {id:"RES2026022327",name:"การทอผ้าบ้านใหม่หนองหอย",type:"Local Wisdom",tambon:"สันติสุข",owner:"นางซอน วงศ์ศรี",desc:"กลุ่มทอผ้าบ้านใหม่หนองหอย ก่อตั้งปี พ.ศ.2535 ทอผ้าแบบล้านนา 9 ชั้น สินค้าOTOP รางวัลสิ่งทอยอดเยี่ยมกรมส่งเสริมส่งออก และรางวัล OTOP 4 ดาว ผ้าคลุมไหล่พระ ที่ตั้ง: บ้านใหม่หนองหอย หมู่ที่ 6 ต.สันติสุข อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5341,lng:98.7989,category:"หัตถกรรม",img:"https://drive.google.com/thumbnail?id=1-dgMPS5LegSUHlMT6CHrP-hwOlwB1ne-&sz=w1000",video:"",contact:"",gallery:["https://drive.google.com/thumbnail?id=1W-M9QdaPv2cQJ2FmF6wJRA9feZ9MfLDH&sz=w1000","https://drive.google.com/thumbnail?id=1FiClhSfHXDbM2GMdB6KZCXHv27-r_tfQ&sz=w1000"],level:4},
-  {id:"RES2026022328",name:"วัดหนองหลั้ว",type:"Learning Resource",tambon:"ยางคราม",owner:"พระพงค์เทพ วชิรานนฺโท",desc:"วัดหนองหลั้ว สร้างเมื่อ พ.ศ.2415 เก่าแก่มีศรัทธา 3 หมู่บ้าน มีโรงเรียนพระปริยัติธรรม แผนกธรรม เปิดสอนตั้งแต่ พ.ศ.2512 และห้องสมุดบริการชุมชน ที่ตั้ง: เลขที่ 103 หมู่ที่ 4 ต.ยางคราม อ.ดอยหล่อ จ.เชียงใหม่",lat:18.5395,lng:98.8310,category:"พระพุทธศาสนา",img:"https://drive.google.com/thumbnail?id=1ns1u4cLErlIvcQohGyCYp9tvDcplwdsf&sz=w1000",video:"",contact:"096-9654248",gallery:[],level:3},
-  {id:"WIS2026022329",name:"การจักสาน (ยางคราม)",type:"Local Wisdom",tambon:"ยางคราม",owner:"นางใส อุ้ยอ้าย",desc:"นางใส อุ้ยอ้าย อายุ 83 ปี สืบทอดการจักสานจากพ่อ สามารถสานก๋วย สานเปล ทำไม้กวาดทางมะพร้าว ขายที่บ้านสร้างรายได้ครอบครัว ที่ตั้ง: บ้านเลขที่ 68 หมู่ 7 ต.ยางคราม อ.ดอยหล่อ จ.เชียงใหม่",lat:18.5461,lng:98.8472,category:"หัตถกรรม",img:"https://drive.google.com/thumbnail?id=1fpLpqZdSGtmecAkBTuIm47FXpSAL5tOG&sz=w1000",video:"https://youtu.be/TQpuI48n48o",contact:"",gallery:[],level:4},
-  {id:"WIS2026022330",name:"การปักผ้าลวดลายผ้าทอชนเผ่า",type:"Local Wisdom",tambon:"ยางคราม",owner:"นายธรรมนูญ จันทร์สีมุ่ย",desc:"สืบทอดภูมิปัญญาชนเผ่าลัวะ การแต่งกายแบบร่วมสมัยผสมผสานกับเอกลักษณ์ชนเผ่า เพื่อสร้างความรักและภูมิใจในชาติพันธุ์ ที่ตั้ง: บ้านยางคราม ม.3 ต.ยางคราม อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5464,lng:98.8391,category:"หัตถกรรม",img:"https://drive.google.com/thumbnail?id=1lv2xOtI_ZfOInaxKxdfIuxKCUna4XdEO&sz=w1000",video:"https://youtu.be/2RdcNXg4UnQ",contact:"089-9559201",gallery:[],level:4},
-  {id:"RES2026022331",name:"วัดศรีทรายมูล-วัดกู่ลายมือ",type:"Learning Resource",tambon:"ยางคราม",owner:"พระอธิการดวง ฐิตตวโร",desc:"วัดศรีทรายมูล (กู่ลายมือ) วัดเก่าแก่สมัยล้านนา สันนิษฐานว่าสร้างในช่วงที่เชียงใหม่ตกเป็นเมืองขึ้นพม่า พ.ศ.2110-2317 ชาวลัวะได้ล่องมาตามน้ำปิงและพบกู่โบราณ ที่ตั้ง: บ้านผะนัง ต.ยางคราม อ.ดอยหล่อ จ.เชียงใหม่",lat:18.5619,lng:98.8271,category:"พระพุทธศาสนา",img:"https://drive.google.com/thumbnail?id=1d9vObWn1KyGL9OVFAYh33E1WA84HCx84&sz=w1000",video:"",contact:"",gallery:[],level:3},
-  {id:"RES2026022332",name:"วัดใหม่พัฒนา",type:"Learning Resource",tambon:"ยางคราม",owner:"พระครูสถาพรพัฒนรังษี",desc:"วัดใหม่พัฒนา ก่อตั้งปี พ.ศ.2514 เดิมชื่อสำนักสงฆ์แสงอรุณ เปลี่ยนชื่อโดยหลวงปู่ครูบาอินเป็นวัดอินทาราม แล้วประกาศเป็นวัดใหม่พัฒนา 31 สิงหาคม พ.ศ.2531 ที่ตั้ง: บ้านใหม่พัฒนา ต.ยางคราม อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5470,lng:98.8182,category:"พระพุทธศาสนา",img:"https://drive.google.com/thumbnail?id=1IBFjMiVx59hMZgFvERGFVOALq420P-bZ&sz=w1000",video:"",contact:"",gallery:[],level:3},
-  {id:"RES2026022333",name:"วัดดอนชัย",type:"Learning Resource",tambon:"ยางคราม",owner:"พระอธิการสุรสีห์ ญาณาสโย",desc:"วัดดอนชัย เลขที่ 137 ม.5 ต.ยางคราม ตั้งชื่อตามดอนที่ดินของพ่อหนานจัย มีสำนักเรียนพระปริยัติธรรมตั้งแต่ พ.ศ.2480 เป็นโรงเรียนประชาบาลแห่งแรกของตำบลยางคราม ที่ตั้ง: บ้านดอนชัย ต.ยางคราม อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5538,lng:98.8341,category:"พระพุทธศาสนา",img:"https://drive.google.com/thumbnail?id=1HTOlpmARFePZWjB90rpd3TGvTWst_iXr&sz=w1000",video:"",contact:"",gallery:[],level:3},
-  {id:"WIS2026022334",name:"การทำโคมล้านนา",type:"Local Wisdom",tambon:"ยางคราม",owner:"นายวัน ยี่ทะรา",desc:"นายวัน ยี่ทะรา ประธานผู้สูงอายุบ้านใหม่พัฒนา ม.2 ต.ยางคราม นำผู้สูงอายุรวมกลุ่มทำโคมล้านนา ก่อให้เกิดรายได้แก่กลุ่มตลอดทั้งปี ที่ตั้ง: บ้านใหม่พัฒนา บ้านเลขที่ 59 ต.ยางคราม อ.ดอยหล่อ 50160",lat:18.5472,lng:98.8181,category:"หัตถกรรม",img:"https://drive.google.com/thumbnail?id=1xFHnec-mnmwT8t7CE_ItA-3uggdQ39WH&sz=w1000",video:"",contact:"093-2630593",gallery:[],level:4},
-  {id:"RES2026051335",name:"บ้านหนังสือชุมชนร้านข้างบ้านคาเฟ่",type:"Learning Resource",tambon:"สันติสุข",owner:"นางสาวเกียรติยาภรณ์ กัญญเทพ",desc:"แหล่งเรียนรู้บ้านหนังสือชุมชน เกี่ยวกับการประกอบอาชีพด้านอาหารและเครื่องดื่ม ให้ความรู้และแลกเปลี่ยนประสบการณ์ด้านการทำอาหารและเครื่องดื่มในชุมชน ที่ตั้ง: ต.สันติสุข อ.ดอยหล่อ จ.เชียงใหม่",lat:18.5221,lng:98.8287,category:"อาหารและเครื่องดื่ม",img:"https://drive.google.com/thumbnail?id=1F83qSWL7GBHGODDEl40nc5BE4T1a_Mz1&sz=w1000",video:"",contact:"095-807-1166",gallery:["https://drive.google.com/thumbnail?id=1PMWYbNLwXwTyCXFiKpQrasG78o-9ZHlX&sz=w1000"],level:5}
 ];
 
-// QUIZ QUESTIONS (based on the data)
-const QUIZ_QUESTIONS = [
-  {q:"สถานที่ใดได้รับสมญานามว่า 'แกรนด์แคนยอนเมืองไทย'?",img:"https://drive.google.com/thumbnail?id=1V--4Ezj1k_fybZdlRi1tiWZV3TRb3n9_&sz=w1000",options:["ผาช่อ อุทยานแห่งชาติแม่วาง","วัดพระธาตุดอยน้อย","สวนพฤกษาสมุนไพร","วัดฟ้าหลั่ง"],correct:0},
-  {q:"ไส้อั๋วป้าตุ๋ยทำสถิติโลกอะไร?",img:"https://drive.google.com/thumbnail?id=1t0rhhdtRTN8vOZHawa7-xHpaDxJg84in&sz=w1000",options:["ไส้อั่วยาวที่สุดในโลก 1,011 เมตร","ไส้อั่วเผ็ดที่สุดในโลก","ไส้อั่วหนักที่สุดในโลก","ไส้อั่วแพงที่สุดในโลก"],correct:0},
-  {q:"วัดพระธาตุดอยน้อยสร้างโดยใคร?",img:"https://drive.google.com/thumbnail?id=1a1z8gh5CHS4aEnBiRv2fULJKhdvNp3GT&sz=w1000",options:["พระนางจามเทวี","พระเมืองแก้ว","ครูบาศรีวิชัย","พ่อขุนมังราย"],correct:0},
-  {q:"วัดฟ้าหลั่งมีอายุกี่ปีโดยประมาณ?",img:"https://drive.google.com/thumbnail?id=1MuEn27-p2IH4wWEF7Tz0BzN8-nMIX0gz&sz=w1000",options:["มากกว่า 400 ปี","มากกว่า 200 ปี","มากกว่า 100 ปี","มากกว่า 50 ปี"],correct:0},
-  {q:"กลุ่มทอผ้าบ้านใหม่หนองหอยก่อตั้งในปีใด?",img:"https://drive.google.com/thumbnail?id=1-dgMPS5LegSUHlMT6CHrP-hwOlwB1ne-&sz=w1000",options:["พ.ศ. 2535","พ.ศ. 2510","พ.ศ. 2550","พ.ศ. 2500"],correct:0},
-  {q:"นางใส อุ้ยอ้าย เชี่ยวชาญงานอะไร?",img:"https://drive.google.com/thumbnail?id=1fpLpqZdSGtmecAkBTuIm47FXpSAL5tOG&sz=w1000",options:["การจักสานก๋วยและสานเปล","การทอผ้าล้านนา","การทำโคมล้านนา","การมัดย้อมผ้า"],correct:0}
-];
-
-// LEVELS CONFIG
 const LEVELS = [
-  {id:1,name:"ธรรมชาติ",icon:"🌿",color1:"#2ECC71",color2:"#1ABC9C",desc:"สำรวจสถานที่ทางธรรมชาติ"},
-  {id:2,name:"เกษตรกรรม",icon:"🌾",color1:"#F5C842",color2:"#FF9500",desc:"แหล่งเรียนรู้ด้านการเกษตร"},
-  {id:3,name:"พระพุทธศาสนา",icon:"⛩️",color1:"#FF6B35",color2:"#E74C3C",desc:"วัดและสถานที่ศักดิ์สิทธิ์"},
-  {id:4,name:"หัตถกรรม",icon:"🧵",color1:"#9B59B6",color2:"#6C3483",desc:"งานฝีมือและภูมิปัญญา"},
-  {id:5,name:"ภูมิปัญญารวม",icon:"🏆",color1:"#3498DB",color2:"#1A5276",desc:"ความรู้และประเพณีท้องถิ่น"}
+  {id:1,name:'ธรรมชาติ',desc:'ธรรมชาติและสิ่งแวดล้อม',icon:'🌿',color1:'#2ECC71',color2:'#1ABC9C'},
+  {id:2,name:'เกษตรกรรม',desc:'การเกษตรสมัยใหม่',icon:'🌾',color1:'#F5C842',color2:'#FF6B35'},
+  {id:3,name:'พระพุทธศาสนา',desc:'วัดและศาสนสถาน',icon:'🏯',color1:'#9B59B6',color2:'#8E44AD'},
+  {id:4,name:'หัตถกรรม',desc:'ศิลปะและงานฝีมือ',icon:'🎨',color1:'#E74C3C',color2:'#C0392B'},
+  {id:5,name:'ทดสอบความรู้',desc:'ตอบคำถามเกี่ยวกับดอยหล่อ',icon:'🧠',color1:'#3498DB',color2:'#2980B9'},
 ];
 
-// CATEGORY EMOJI MAP
+const QUIZ_QUESTIONS = [
+  {img:'https://drive.google.com/thumbnail?id=1V--4Ezj1k_fybZdlRi1tiWZV3TRb3n9_&sz=w1000',q:'ผาช่อตั้งอยู่ที่ตำบลใด',options:['สันติสุข','ดอยหล่อ','สองแคว','ห้วยขาม'],correct:0},
+];
+
 const CAT_EMOJI = {
-  "ธรรมชาติและสิ่งแวดล้อม":"🌿","เกษตรกรรม":"🌾","สาขา เกษตรกรรม":"🌾",
-  "พระพุทธศาสนา":"⛩️","แหล่งการเรียนรู้ด้านทางพระพุทธศาสนา":"⛩️","ด้านพระพุทธศาสนา":"⛩️",
-  "แหล่งการเรียนรู้ ด้านทางพระพุทธศาสนา":"⛩️","แหล่งเรียนรู้ด้านพระพุทธศาสนา":"⛩️",
-  "หัตถกรรม":"🧵","ศิลปกรรมด้านหัตถกรรม (งานฝีมือ)":"🧵","สาขา หัตถกรรม":"🧵",
-  "ภูมิปัญญา สาขา ศิลปกรรมด้าน  หัตถกรรม (งานฝีมือ)":"🧵",
-  "สาขาอุตสาหกรรมและหัตกรรม (ด้านการผลิตและการบริโภค)":"🏺",
-  "อาหารและเครื่องดื่ม":"🍜","สาขา การแปรรูปอาหาร":"🍜",
-  "ภาษาและวรรณกรรม":"📜","สาขา ภาษาและวรรณกรรม":"📜",
-  "ศาสนาและประเพณี":"🙏","สาขา ศาสนาและประเพณี":"🙏",
-  "สาขา กองทุนและธุรกิจชุมชน":"💰","ด้านการจักสาน":"🧺",
-  "สาขาศิลปกรรม (ด้านงานประดิษฐ์)":"🏮"
+  'ธรรมชาติและสิ่งแวดล้อม':'🌿',
+  'เกษตรกรรม':'🌾',
+  'พระพุทธศาสนา':'🏯',
+  'หัตถกรรม':'🎨',
 };
 
 // ============================================================
-// GAME STATE
+// STATE
 // ============================================================
 const state = {
-  score: 0,
-  currentLevel: 1,
-  collectedIds: new Set(),
+  gameRunning: false,
+  currentLevel: 0,
   levelCollected: 0,
-  currentLevelItems: [],
-  cameraReady: false,
+  levelCompleted: false,
+  score: 0,
+  collectedIds: new Set(),
   handActive: false,
   handX: 0, handY: 0,
-  pinching: false,
-  gestureVic: false,
-  gestureOpen: false,
   hoveredCard: null,
-  dwellTimer: null,
-  dwellProgress: 0,
   dwellStartTime: null,
-  activeCards: [],
-  gameRunning: false,
+  dwellTimer: null,
+  pinching: false,
+  gestureOpen: false,
+  gestureVic: false,
+  currentLevelItems: [],
   quizIndex: 0,
   quizScore: 0,
-  levelCompleted: false,
+  levelAutoProgressTimer: null,
 };
 
 // ============================================================
-// DOM REFS
+// HELPERS
 // ============================================================
-const $ = id => document.getElementById(id);
+const $ = (id) => document.getElementById(id);
+const showScreen = (id) => {
+  document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+  if (id) $(id).classList.remove('hidden');
+};
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('DOMContentLoaded', () => {
+  showScreen('loading-screen');
+  setTimeout(initGame, 500);
+});
+
+async function initGame() {
+  // Level preview
+  const preview = $('level-preview');
+  LEVELS.forEach(lv => {
+    const dot = document.createElement('div');
+    dot.className = 'level-dot';
+    dot.innerHTML = `
+      <div class="level-dot-circle" style="background:linear-gradient(135deg,${lv.color1},${lv.color2});color:white;border-color:${lv.color1}">${lv.icon}</div>
+      <div class="level-dot-label">${lv.name}</div>
+    `;
+    preview.appendChild(dot);
+  });
+
+  // Welcome screen
+  showScreen('welcome-screen');
+
+  $('btn-start-game').addEventListener('click', () => {
+    showScreen('permission-screen');
+  });
+
+  $('btn-allow-camera').addEventListener('click', async () => {
+    try {
+      await initCamera();
+      showScreen(null);
+      startLevel(1);
+    } catch (e) {
+      alert('ไม่สามารถเข้าถึงกล้องได้');
+    }
+  });
+
+  // Control buttons (Pause/Exit)
+  $('btn-pause').addEventListener('click', () => {
+    state.gameRunning = !state.gameRunning;
+    $('btn-pause').textContent = state.gameRunning ? '⏸ หยุด' : '▶ ทำต่อ';
+  });
+
+  $('btn-exit').addEventListener('click', () => {
+    if (confirm('ต้องการออกจากเกมหรือไม่?')) {
+      state.gameRunning = false;
+      showScreen('welcome-screen');
+      $('control-panel').classList.add('hidden');
+      $('hud').classList.add('hidden');
+      $('gesture-status').classList.add('hidden');
+      $('progress-wrap').classList.add('hidden');
+      $('ar-cards-container').innerHTML = '';
+    }
+  });
+
+  $('btn-play-again').addEventListener('click', () => {
+    state.score = 0;
+    state.collectedIds.clear();
+    showScreen(null);
+    startLevel(1);
+  });
+}
+
+// ============================================================
+// CAMERA SETUP
+// ============================================================
 const videoBg = $('video-bg');
 const canvasOverlay = $('canvas-overlay');
 const ctx = canvasOverlay.getContext('2d');
 const handCursor = $('hand-cursor');
 const arContainer = $('ar-cards-container');
 
-// ============================================================
-// INIT
-// ============================================================
-window.addEventListener('DOMContentLoaded', () => {
-  createStars();
-  createLevelPreview();
-  setTimeout(() => {
-    $('loading-screen').classList.add('hidden');
-    $('welcome-screen').classList.remove('hidden');
-  }, 1200);
-});
+canvasOverlay.width = window.innerWidth;
+canvasOverlay.height = window.innerHeight;
 
-function createStars() {
-  const bg = $('welcome-bg-art');
-  for (let i=0; i<60; i++) {
-    const star = document.createElement('div');
-    star.className = 'star';
-    star.style.cssText = `
-      left:${Math.random()*100}%;
-      top:${Math.random()*70}%;
-      --d:${2+Math.random()*4}s;
-      animation-delay:${Math.random()*3}s;
-      width:${Math.random()>0.8?4:2}px;
-      height:${Math.random()>0.8?4:2}px;
-    `;
-    bg.appendChild(star);
-  }
-}
-
-function createLevelPreview() {
-  const wrap = $('level-preview');
-  LEVELS.forEach(lv => {
-    const dot = document.createElement('div');
-    dot.className = 'level-dot';
-    dot.innerHTML = `
-      <div class="level-dot-circle" style="background:rgba(${hexToRgb(lv.color1)},0.15);border-color:${lv.color1};color:${lv.color1}">
-        ${lv.icon}
-      </div>
-      <div class="level-dot-label">${lv.name}</div>
-    `;
-    wrap.appendChild(dot);
-  });
-}
-
-function hexToRgb(hex) {
-  const r = parseInt(hex.slice(1,3),16);
-  const g = parseInt(hex.slice(3,5),16);
-  const b = parseInt(hex.slice(5,7),16);
-  return `${r},${g},${b}`;
-}
-
-// ============================================================
-// SCREEN NAVIGATION
-// ============================================================
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-  if (id) $(id)?.classList.remove('hidden');
-}
-
-$('btn-start-game').addEventListener('click', () => {
-  showScreen('permission-screen');
-});
-
-$('btn-allow-camera').addEventListener('click', startCamera);
-
-$('btn-play-again').addEventListener('click', () => {
-  state.score = 0;
-  state.currentLevel = 1;
-  state.collectedIds.clear();
-  showScreen('welcome-screen');
-});
-
-// ============================================================
-// CAMERA + MEDIAPIPE
-// ============================================================
-async function startCamera() {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } }
-    });
-    videoBg.srcObject = stream;
-    videoBg.style.display = 'block';
-    canvasOverlay.style.display = 'block';
-    videoBg.onloadedmetadata = () => {
-      canvasOverlay.width = window.innerWidth;
-      canvasOverlay.height = window.innerHeight;
-      state.cameraReady = true;
-      initMediaPipe();
-    };
-    showScreen(null);
-    startLevel(1);
-  } catch(e) {
-    showToast('❌ ไม่สามารถเปิดกล้องได้ กรุณาอนุญาตการใช้กล้อง');
-    showScreen('permission-screen');
-  }
-}
-
-function initMediaPipe() {
+async function initCamera() {
   const hands = new Hands({
-    locateFile: f => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${f}`
+    locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`,
   });
+
   hands.setOptions({
     maxNumHands: 1,
     modelComplexity: 1,
-    minDetectionConfidence: 0.7,
-    minTrackingConfidence: 0.5
+    minDetectionConfidence: 0.5,
+    minTrackingConfidence: 0.5,
   });
+
   hands.onResults(onHandResults);
+
+  videoBg.style.display = 'block';
+  canvasOverlay.style.display = 'block';
 
   const camera = new Camera(videoBg, {
     onFrame: async () => { await hands.send({ image: videoBg }); },
@@ -1452,10 +1428,12 @@ function onHandResults(results) {
 
   updateGestureUI(isPinching ? 'pinch' : isVic ? 'vic' : isOpen ? 'open' : null);
 
-  // Victory gesture = close modal / next level
+  // Victory gesture = close modal / next level (auto-progress)
   if (isVic && !prevPinch) {
     const modal = $('detail-modal');
-    if (modal.classList.contains('visible')) closeModal();
+    if (modal.classList.contains('visible')) {
+      closeModal();
+    }
   }
 
   // Check card hover / pinch interactions
@@ -1671,10 +1649,11 @@ function startARLevel(levelId) {
   const items = getLevelItems(levelId);
   state.currentLevelItems = items;
 
-  // Show HUD
+  // Show HUD and controls
   $('hud').classList.remove('hidden');
   $('gesture-status').classList.remove('hidden');
   $('progress-wrap').classList.remove('hidden');
+  $('control-panel').classList.remove('hidden');
 
   $('level-badge').textContent = `${lv.icon} เลเวล ${levelId}`;
   $('level-name-hud').textContent = lv.name;
@@ -1806,7 +1785,7 @@ function showDetail(place, points) {
 
       ${videoHTML}
 
-      <div class="info-grid" style="margin-top:20px">
+      <div class="info-grid">
         <div class="info-item">
           <div class="info-item-label">👤 ผู้รับผิดชอบ</div>
           <div class="info-item-value">${place.owner || '-'}</div>
@@ -1843,12 +1822,13 @@ function closeModal() {
 }
 
 // ============================================================
-// LEVEL COMPLETE
+// LEVEL COMPLETE — AUTO PROGRESS
 // ============================================================
 function showLevelComplete() {
   $('hud').classList.add('hidden');
   $('gesture-status').classList.add('hidden');
   $('progress-wrap').classList.add('hidden');
+  $('control-panel').classList.add('hidden');
   arContainer.innerHTML = '';
 
   const lv = LEVELS[state.currentLevel - 1];
@@ -1858,23 +1838,20 @@ function showLevelComplete() {
   $('lc-collected').textContent = state.levelCollected;
   $('lc-points').textContent = state.score.toLocaleString();
 
-  const nextLv = LEVELS[state.currentLevel];
-  $('btn-next-level').textContent = nextLv
-    ? `${nextLv.icon} เลเวล ${state.currentLevel + 1}: ${nextLv.name} →`
-    : '🏆 ดูผลการเล่น';
-
   showScreen('level-complete');
-}
 
-$('btn-next-level').addEventListener('click', () => {
-  showScreen(null);
-  const next = state.currentLevel + 1;
-  if (next > LEVELS.length) {
-    showGameComplete();
-  } else {
-    startLevel(next);
-  }
-});
+  // AUTO PROGRESS: เลื่อนเลเวลถัดไปอัตโนมัติหลังจาก 3 วินาที
+  if (state.levelAutoProgressTimer) clearTimeout(state.levelAutoProgressTimer);
+  state.levelAutoProgressTimer = setTimeout(() => {
+    showScreen(null);
+    const next = state.currentLevel + 1;
+    if (next > LEVELS.length) {
+      showGameComplete();
+    } else {
+      startLevel(next);
+    }
+  }, 3000);
+}
 
 // ============================================================
 // QUIZ LEVEL (Level 5)
@@ -1890,6 +1867,7 @@ function startQuizLevel() {
   $('gesture-status').classList.add('hidden');
   $('progress-wrap').classList.remove('hidden');
   $('progress-text').textContent = 'คำถาม';
+  $('control-panel').classList.remove('hidden');
 
   $('level-badge').textContent = `${lv.icon} เลเวล 5`;
   $('level-name-hud').textContent = 'ทดสอบความรู้';
@@ -1962,6 +1940,7 @@ function showGameComplete() {
   $('hud').classList.add('hidden');
   $('gesture-status').classList.add('hidden');
   $('progress-wrap').classList.add('hidden');
+  $('control-panel').classList.add('hidden');
 
   $('gc-score').textContent = state.score.toLocaleString();
 
@@ -2016,6 +1995,30 @@ window.addEventListener('resize', () => {
   canvasOverlay.width = window.innerWidth;
   canvasOverlay.height = window.innerHeight;
 });
+
+// ============================================================
+// DISABLE MOUSE INTERACTIONS (except control buttons)
+// ============================================================
+document.addEventListener('click', (e) => {
+  // Allow clicks only on control buttons and modal buttons
+  const allowedElements = ['btn-pause', 'btn-exit', 'btn-modal', 'modal-close', 'btn-play-again', 'quiz-option'];
+  const isAllowed = allowedElements.some(cls => 
+    e.target.id === cls || e.target.closest(`.${cls}`) || e.target.closest(`#${cls}`)
+  );
+  
+  if (!isAllowed && state.gameRunning) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+}, true);
+
+// Disable mouse hover effects on cards during gameplay
+document.addEventListener('mouseover', (e) => {
+  if (state.gameRunning && e.target.closest('.ar-card')) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+}, true);
 </script>
 </body>
 </html>
