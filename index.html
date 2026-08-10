@@ -1,152 +1,2239 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-  <title>เปิดมือ เปิดโลก ดอยหล่อ</title>
-  <meta name="description" content="เกมสำรวจแหล่งเรียนรู้และภูมิปัญญาดอยหล่อด้วยท่าทางมือ">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700;800&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root{--ink:#122b35;--cream:#f5efd9;--gold:#e2ad3d;--fern:#75a975;--coral:#d7785d;--sky:#65aabd;--violet:#aa8bc1;--line:#ffffff2b}
-    *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}
-    body{font-family:Sarabun,sans-serif;color:var(--cream);background:var(--ink);user-select:none}
-    button{font:inherit;color:inherit;border:0;cursor:pointer}
-    .screen{position:fixed;inset:0;display:grid;place-items:center;overflow:auto}
-    .hidden{display:none!important}
-    .welcome,.permission{background:radial-gradient(circle at 80% 7%,#e0b34f 0 14%,transparent 14.2%),linear-gradient(140deg,#112b35 0%,#173d43 52%,#102e32 100%);isolation:isolate}
-    .welcome:before,.permission:before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,transparent 58%,#1f5149 58.2% 73%,transparent 73.2%),linear-gradient(27deg,transparent 60%,#163e40 60.2% 78%,transparent 78.2%);opacity:.8;z-index:-1}
-    .welcome-content{width:min(760px,92vw);padding:48px 0 34px;position:relative}
-    .eyebrow{font:600 13px Kanit,sans-serif;letter-spacing:.16em;color:var(--gold);text-transform:uppercase}
-    .eyebrow:before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--coral);margin:0 10px 1px 0}
-    h1,h2,h3,p{margin:0}.welcome h1{font:800 clamp(60px,10vw,126px)/.82 Kanit,sans-serif;letter-spacing:-.06em;margin:35px 0 28px}
-    .welcome h1 span{color:var(--gold)}.welcome h1 em,.permission h1 em{font-style:normal;color:var(--sky)}
-    .lead{font-size:clamp(17px,2vw,22px);line-height:1.65;color:#f5efd9cc;margin-bottom:28px}
-    .rule{width:68px;height:3px;background:var(--coral);margin:24px 0}
-    .gesture-guide{display:flex;gap:0;margin:20px 0 30px;border-block:1px solid var(--line);width:max-content;max-width:100%}
-    .gesture-guide div{display:grid;gap:3px;padding:14px 22px;border-right:1px solid var(--line);font-family:Kanit,sans-serif}
-    .gesture-guide div:last-child{border-right:0}.gesture-guide strong{color:var(--gold);font-size:16px}.gesture-guide small{color:#f5efd999;font-size:12px}
-    .primary{display:inline-flex;align-items:center;gap:12px;background:var(--gold);color:var(--ink);padding:14px 23px;box-shadow:6px 6px 0 #af604f;font:600 18px Kanit,sans-serif;transition:transform .2s,box-shadow .2s}
-    .primary:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 #af604f}.primary:disabled{opacity:.6;cursor:wait}
-    .routes{display:flex;gap:8px;margin-top:38px;flex-wrap:wrap}.routes span{border:1px solid;padding:8px 12px;min-width:100px;display:grid;gap:3px}.routes b{font:500 12px Kanit,sans-serif}.routes small{font-size:11px;color:#f5efd9b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    footer{position:fixed;left:4.5vw;right:4.5vw;bottom:24px;display:flex;justify-content:space-between;color:#f5efd980;font:12px Kanit,sans-serif;letter-spacing:.12em}
-    footer span{letter-spacing:0}
-    .permission-card{width:min(510px,90vw);background:#183943e8;border:1px solid var(--line);padding:38px;border-radius:24px;box-shadow:0 25px 80px #06181d99;position:relative}
-    .permission h1{font:700 clamp(38px,6vw,70px)/.95 Kanit,sans-serif;margin:22px 0}.permission-card p{color:#f5efd9c7;line-height:1.8;font-size:17px}
-    .checklist{display:grid;gap:10px;margin:24px 0;color:#f5efd9dd}.checklist span:before{content:"✓";display:inline-grid;place-items:center;width:20px;height:20px;background:var(--fern);border-radius:50%;margin-right:8px}
-    .back{display:block;margin:20px auto 0;background:none;color:#f5efd999;text-decoration:underline}
-    .error{background:#d7785d22;border:1px solid #d7785d88;padding:12px 14px;margin:15px 0;line-height:1.5}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>AR แหล่งเรียนรู้ดอยหล่อ 🏔️</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    .game{background:#102f35}.camera{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1);opacity:.5;filter:saturate(.72) contrast(1.05)}.shade{position:absolute;inset:0;background:linear-gradient(180deg,#0c252dcc 0%,#0c252d55 34%,#0c252d99 100%);pointer-events:none}
-    .hud{position:absolute;top:0;left:0;right:0;display:flex;align-items:flex-start;justify-content:space-between;padding:20px 28px;z-index:5;gap:20px}
-    .brand{display:flex;align-items:center;gap:10px;font-family:Kanit,sans-serif}.brand-mark{width:25px;height:25px;border:4px solid var(--gold);border-radius:50%;display:block}.brand small{display:block;color:#f5efd980;font:10px Kanit,sans-serif;letter-spacing:.14em}
-    .level-name{text-align:center}.level-name span{font-size:11px;color:#f5efd980;display:block}.level-name b{font:600 20px Kanit,sans-serif;color:var(--cream)}
-    .actions{display:flex;align-items:center;gap:9px}.score{padding:8px 13px;border:1px solid var(--line);background:#102f35bb;font:600 16px Kanit,sans-serif;color:var(--gold)}.score small{font:400 11px Sarabun;color:#f5efd980}
-    .icon-button{width:40px;height:40px;background:#102f35d9;border:1px solid var(--line);display:grid;place-items:center;font-size:20px}.icon-button:hover{border-color:var(--gold);color:var(--gold)}.icon-button.exit:hover{border-color:var(--coral);color:var(--coral)}
-    .title{position:absolute;top:118px;left:6vw;z-index:3;max-width:440px}.title span{color:var(--gold);font:600 13px Kanit,sans-serif;letter-spacing:.08em}.title h1{font:700 clamp(32px,5vw,62px)/1.02 Kanit,sans-serif;margin:13px 0}.title p{color:#f5efd9bb;line-height:1.6}
-    .gesture-rail{position:absolute;top:120px;right:28px;z-index:3;display:grid;gap:8px}.gesture-rail div{display:grid;grid-template-columns:24px 1fr;align-items:center;column-gap:7px;padding:9px 11px;border:1px solid var(--line);background:#102f35c7;color:#f5efd980;font:500 13px Kanit,sans-serif}.gesture-rail small{grid-column:2;color:#f5efd966;font:11px Sarabun}.gesture-rail div.active{color:var(--cream);border-color:var(--gold);box-shadow:0 0 22px #e2ad3d55}.gesture-rail div.active b{color:var(--gold)}
-    .field{position:absolute;inset:270px 6vw 150px;display:flex;align-items:center;justify-content:center;gap:18px;z-index:2}.card{width:min(285px,29vw);background:#102f35e8;border:1px solid var(--tone);box-shadow:0 16px 36px #06181d66;position:relative;transition:transform .25s,opacity .25s;animation:rise .65s both;animation-delay:var(--delay)}.card.target{transform:translateY(-10px) scale(1.03);box-shadow:0 0 0 2px var(--tone),0 22px 44px #06181d99}.card.collected{opacity:.25;filter:grayscale(.8)}.card-image{height:155px;position:relative;overflow:hidden;background:#20474b}.card-image img{width:100%;height:100%;object-fit:cover;opacity:.78}.card-num{position:absolute;top:10px;left:10px;background:#102f35d9;border:1px solid var(--line);padding:3px 7px;font:12px Kanit;color:var(--gold)}.tag{position:absolute;right:10px;top:10px;background:var(--fern);padding:4px 7px;font:11px Kanit}.card-body{padding:15px}.card-body small{color:var(--tone);font:500 12px Kanit}.card-body h2{font:600 19px/1.2 Kanit;margin:8px 0 11px}.card-body p{color:#f5efd980;font-size:12px}.card-foot{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);margin-top:16px;padding-top:11px;color:#f5efd980;font-size:12px}.card-foot b{color:var(--gold);font:600 16px Kanit}.dwell{position:absolute;left:0;bottom:0;height:5px;background:var(--tone);transition:width .1s}
-    .cursor{position:absolute;z-index:9;transform:translate(-50%,-50%);pointer-events:none;transition:left .07s linear,top .07s linear;text-align:center}.cursor:before{content:"";display:block;width:52px;height:52px;border:2px solid var(--gold);border-radius:50%;box-shadow:0 0 0 7px #e2ad3d33,0 0 23px #e2ad3d99}.cursor.pinch:before{background:#e2ad3d99;transform:scale(.72)}.cursor b{display:block;margin-top:7px;background:#102f35e8;border:1px solid var(--line);padding:3px 8px;font:12px Kanit;color:var(--cream);white-space:nowrap}
-    .bottom{position:absolute;left:6vw;right:6vw;bottom:22px;z-index:4}.progress-text{display:flex;justify-content:space-between;font:500 13px Kanit;color:#f5efd9b8}.progress{height:6px;background:#f5efd926;margin:8px 0 9px}.progress i{display:block;height:100%;background:var(--tone);transition:width .4s}.bottom p{font-size:12px;color:#f5efd966;text-align:center}
-    .panel-layer,.pause-layer,.transition-layer{position:absolute;inset:0;z-index:20;background:#0b2229e8;backdrop-filter:blur(12px);display:grid;place-items:center;padding:25px}.detail{width:min(720px,92vw);max-height:90vh;overflow:auto;background:#153a42;border:1px solid var(--tone);box-shadow:0 24px 90px #0008}.detail-hero{height:220px;position:relative;background:#214e50}.detail-hero img{width:100%;height:100%;object-fit:cover;opacity:.65}.detail-hero label{position:absolute;left:18px;bottom:16px;background:#102f35e8;padding:5px 9px;font:500 13px Kanit;color:var(--gold)}.detail-close{position:absolute;right:18px;top:16px;color:#f5efd9c7;font:12px Kanit;background:#102f35cc;padding:7px 10px}.detail-content{padding:25px}.detail-content h1{font:700 34px/1.1 Kanit;margin:11px 0}.detail-content .meta{color:#f5efd980;font-size:13px}.detail-content h3{font:600 15px Kanit;color:var(--gold);margin:24px 0 9px}.detail-content .desc{line-height:1.8;color:#f5efd9dd}.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}.detail-grid div{border:1px solid var(--line);padding:12px}.detail-grid small{display:block;color:#f5efd966}.detail-grid b{font-size:14px}
-    .pause-card,.transition-card,.complete-card{width:min(500px,90vw);text-align:center;background:#153a42;border:1px solid var(--line);padding:35px;border-radius:18px;box-shadow:0 20px 80px #0008}.pause-card h1,.transition-card h1,.complete-card h1{font:700 40px Kanit;margin:14px 0}.pause-card p,.transition-card p,.complete-card p{color:#f5efd9b8;line-height:1.7}.pause-guide{display:flex;justify-content:center;gap:24px;margin:24px 0}.pause-guide span{display:grid;gap:4px}.pause-guide b{font:500 14px Kanit;color:var(--gold)}.pause-guide small{font-size:11px;color:#f5efd980}.transition-orb{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;margin:0 auto 18px;color:var(--ink)}.count{font:800 70px Kanit;color:var(--gold);margin-top:15px}.complete{background:radial-gradient(circle at 50% 15%,#e2ad3d55,transparent 28%),linear-gradient(140deg,#112b35,#174b4a)}.complete-card h1{font-size:clamp(38px,7vw,70px);line-height:.95}.complete-card h1 em{font-style:normal;color:var(--sky)}.final{margin:22px auto;background:#e2ad3d1c;border:1px solid #e2ad3d66;padding:18px}.final small,.final span{display:block;color:#f5efd980}.final strong{display:block;color:var(--gold);font:800 62px Kanit}
-    .quiz-layer{position:absolute;inset:260px 6vw 125px;display:grid;place-items:center;z-index:2}.quiz{width:min(720px,90vw);background:#153a42ee;border:1px solid var(--sky);padding:25px}.quiz-top{display:flex;justify-content:space-between;color:#f5efd980;font:12px Kanit}.quiz h1{font:600 clamp(23px,3vw,34px)/1.2 Kanit;margin:22px 0}.options{display:grid;grid-template-columns:1fr 1fr;gap:12px}.option{border:1px solid var(--line);padding:16px;display:flex;gap:12px;align-items:center;position:relative;overflow:hidden}.option span{width:28px;height:28px;border:1px solid var(--sky);display:grid;place-items:center;color:var(--sky);font:600 13px Kanit}.option b{font:500 15px Kanit}.option.target{border-color:var(--gold);box-shadow:0 0 0 2px #e2ad3d55}.option.correct{border-color:var(--fern);background:#75a97533}.option.wrong{border-color:var(--coral);background:#d7785d33}.option i{position:absolute;left:0;bottom:0;height:4px;background:var(--gold)}.quiz-hint{text-align:center;margin-top:18px;color:#f5efd966;font-size:12px}
-    @keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
-    @media(max-width:700px){.welcome-content{padding:30px 22px}.welcome h1{font-size:64px}.gesture-guide div{padding:10px 12px}.gesture-guide{width:100%}.gesture-guide div{flex:1}.hud{padding:14px}.brand,.level-name{display:none}.title{top:85px;left:18px}.title h1{font-size:36px}.gesture-rail{top:86px;right:14px}.field{inset:245px 14px 145px;align-items:stretch;flex-wrap:wrap;overflow:auto;padding:15px 0}.card{width:calc(50% - 9px);min-width:150px}.card-image{height:110px}.card-body h2{font-size:15px}.quiz-layer{inset:220px 14px 140px}.options{grid-template-columns:1fr}.bottom{left:14px;right:14px}.detail-grid{grid-template-columns:1fr}.pause-guide{gap:12px}.footer{display:none}}
-  </style>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --gold: #F5C842;
+  --orange: #FF6B35;
+  --green: #2ECC71;
+  --blue: #3498DB;
+  --purple: #9B59B6;
+  --red: #E74C3C;
+  --teal: #1ABC9C;
+  --dark: #0D1B2A;
+  --dark2: #1A2A3A;
+  --glass: rgba(255,255,255,0.08);
+  --glass-border: rgba(255,255,255,0.15);
+}
+
+body {
+  font-family: 'Sarabun', sans-serif;
+  background: #0D1B2A;
+  color: white;
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ===== VIDEO & CANVAS ===== */
+#video-bg {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+  z-index: 0;
+  display: none;
+}
+#canvas-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  display: none;
+}
+
+/* ===== SCREENS ===== */
+.screen {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease;
+}
+.screen.hidden { opacity: 0; pointer-events: none; }
+
+/* ===== WELCOME SCREEN ===== */
+#welcome-screen {
+  background: linear-gradient(135deg, #0D1B2A 0%, #1A2A3A 40%, #0D3B2A 100%);
+}
+.welcome-bg-art {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.mountain {
+  position: absolute;
+  bottom: 0;
+  border-style: solid;
+  border-color: transparent;
+}
+.mountain-1 {
+  border-width: 0 200px 300px;
+  border-bottom-color: rgba(245,200,66,0.06);
+  left: -50px; bottom: 0;
+}
+.mountain-2 {
+  border-width: 0 300px 450px;
+  border-bottom-color: rgba(46,204,113,0.05);
+  left: 100px; bottom: 0;
+}
+.mountain-3 {
+  border-width: 0 250px 380px;
+  border-bottom-color: rgba(52,152,219,0.06);
+  right: 50px; bottom: 0;
+}
+.mountain-4 {
+  border-width: 0 180px 280px;
+  border-bottom-color: rgba(155,89,182,0.06);
+  right: 200px; bottom: 0;
+}
+
+.star {
+  position: absolute;
+  width: 3px; height: 3px;
+  background: white;
+  border-radius: 50%;
+  animation: twinkle var(--d, 3s) infinite ease-in-out;
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.5); }
+}
+
+.welcome-content {
+  text-align: center;
+  z-index: 2;
+  padding: 20px;
+}
+.welcome-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(245,200,66,0.15);
+  border: 1px solid rgba(245,200,66,0.3);
+  border-radius: 50px;
+  padding: 8px 20px;
+  font-size: 13px;
+  color: #F5C842;
+  font-family: 'Kanit', sans-serif;
+  font-weight: 500;
+  letter-spacing: 1px;
+  margin-bottom: 24px;
+  text-transform: uppercase;
+}
+.welcome-title {
+  font-family: 'Kanit', sans-serif;
+  font-size: clamp(32px, 6vw, 64px);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+.title-line1 { color: #F5C842; text-shadow: 0 0 40px rgba(245,200,66,0.5); }
+.title-line2 { color: white; }
+.title-line3 {
+  background: linear-gradient(90deg, #2ECC71, #3498DB);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.welcome-subtitle {
+  font-size: 18px;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 40px;
+  font-weight: 300;
+}
+.gesture-guide {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+.gesture-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 16px 20px;
+  min-width: 120px;
+}
+.gesture-emoji { font-size: 32px; }
+.gesture-label { font-size: 13px; color: rgba(255,255,255,0.8); text-align: center; line-height: 1.3; }
+.btn-start {
+  background: linear-gradient(135deg, #F5C842, #FF6B35);
+  border: none;
+  border-radius: 50px;
+  padding: 18px 50px;
+  font-family: 'Kanit', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 8px 30px rgba(245,200,66,0.4);
+  transition: all 0.3s ease;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+.btn-start:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(245,200,66,0.5); }
+.btn-start:active { transform: translateY(0); }
+
+.level-preview {
+  display: flex;
+  gap: 10px;
+  margin-top: 30px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.level-dot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.level-dot-circle {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  border: 2px solid;
+  font-family: 'Kanit', sans-serif;
+}
+.level-dot-label { font-size: 10px; color: rgba(255,255,255,0.6); text-align: center; max-width: 60px; }
+
+/* ===== CAMERA PERMISSION ===== */
+#permission-screen {
+  background: linear-gradient(135deg, #0D1B2A, #1A2A3A);
+}
+.perm-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  padding: 40px;
+  text-align: center;
+  max-width: 400px;
+  backdrop-filter: blur(10px);
+}
+.perm-icon { font-size: 60px; margin-bottom: 20px; }
+.perm-title {
+  font-family: 'Kanit', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.perm-desc { color: rgba(255,255,255,0.7); font-size: 16px; line-height: 1.6; margin-bottom: 30px; }
+.btn-perm {
+  background: linear-gradient(135deg, #2ECC71, #1ABC9C);
+  border: none;
+  border-radius: 50px;
+  padding: 14px 40px;
+  font-family: 'Kanit', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.3s;
+}
+.btn-perm:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(46,204,113,0.4); }
+
+/* ===== GAME SCREEN (AR) ===== */
+#game-screen {
+  z-index: 5;
+  background: transparent;
+  pointer-events: none;
+}
+
+/* HUD */
+.hud {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 20;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  pointer-events: none;
+}
+.hud-left, .hud-right { display: flex; flex-direction: column; gap: 8px; }
+.hud-card {
+  background: rgba(13,27,42,0.85);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 8px 14px;
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 120px;
+}
+.hud-label { font-size: 11px; color: rgba(255,255,255,0.5); font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; }
+.hud-value { font-family: 'Kanit', sans-serif; font-size: 18px; font-weight: 700; color: white; }
+.score-display { color: #F5C842; }
+.level-badge {
+  background: linear-gradient(135deg, var(--lv-c1, #F5C842), var(--lv-c2, #FF6B35));
+  border-radius: 50px;
+  padding: 6px 14px;
+  font-family: 'Kanit', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+}
+
+.progress-bar-wrap {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 20;
+  padding: 12px 20px 20px;
+  background: linear-gradient(transparent, rgba(13,27,42,0.8));
+  pointer-events: none;
+}
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.7);
+}
+.progress-track {
+  height: 6px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--lv-c1, #F5C842), var(--lv-c2, #FF6B35));
+  border-radius: 10px;
+  transition: width 0.5s ease;
+}
+
+/* GESTURE STATUS */
+.gesture-status {
+  position: fixed;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+.gesture-indicator {
+  background: rgba(13,27,42,0.85);
+  border: 1px solid;
+  border-radius: 12px;
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.3s;
+  opacity: 0.4;
+  backdrop-filter: blur(10px);
+}
+.gesture-indicator.active {
+  opacity: 1;
+  box-shadow: 0 0 15px currentColor;
+}
+.gesture-indicator.pinch { color: #F5C842; border-color: rgba(245,200,66,0.4); }
+.gesture-indicator.open { color: #2ECC71; border-color: rgba(46,204,113,0.4); }
+.gesture-indicator.fist { color: #E74C3C; border-color: rgba(231,76,60,0.4); }
+
+/* FLOATING AR CARDS */
+.ar-card {
+  position: fixed;
+  transform: translate(-50%, -50%);
+  z-index: 15;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: transform 0.2s ease, opacity 0.3s ease;
+}
+.ar-card-inner {
+  background: rgba(13,27,42,0.88);
+  border: 2px solid;
+  border-radius: 20px;
+  padding: 16px;
+  width: 200px;
+  backdrop-filter: blur(12px);
+  position: relative;
+  overflow: hidden;
+  animation: card-float var(--float-d, 3s) ease-in-out infinite;
+}
+@keyframes card-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.ar-card-inner::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: conic-gradient(from 0deg, transparent 0deg, rgba(255,255,255,0.03) 30deg, transparent 60deg);
+  animation: card-shimmer 4s linear infinite;
+}
+@keyframes card-shimmer { to { transform: rotate(360deg); } }
+
+.ar-card-img {
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  background: rgba(255,255,255,0.05);
+}
+.ar-card-cat {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  opacity: 0.9;
+}
+.ar-card-name {
+  font-family: 'Kanit', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  line-height: 1.3;
+  margin-bottom: 8px;
+}
+.ar-card-tambon {
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* DWELL RING */
+.dwell-ring {
+  position: absolute;
+  top: -8px; left: -8px; right: -8px; bottom: -8px;
+  border-radius: 28px;
+  border: 3px solid transparent;
+  pointer-events: none;
+  transition: border-color 0.2s;
+}
+.ar-card.hovering .dwell-ring {
+  border-color: rgba(245,200,66,0.7);
+  box-shadow: 0 0 20px rgba(245,200,66,0.4);
+  animation: pulse-ring 1s ease-in-out infinite;
+}
+@keyframes pulse-ring {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+
+.dwell-progress {
+  position: absolute;
+  bottom: 8px;
+  left: 12px; right: 12px;
+  height: 3px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 10px;
+  overflow: hidden;
+  display: none;
+}
+.ar-card.hovering .dwell-progress { display: block; }
+.dwell-fill {
+  height: 100%;
+  background: #F5C842;
+  border-radius: 10px;
+  width: 0%;
+  transition: width 0.1s linear;
+}
+
+/* COLLECTED EFFECT */
+.ar-card.collected {
+  animation: card-collect 0.5s forwards !important;
+}
+@keyframes card-collect {
+  0% { transform: translate(-50%,-50%) scale(1); opacity: 1; }
+  50% { transform: translate(-50%,-50%) scale(1.3); opacity: 0.8; }
+  100% { transform: translate(-50%,-50%) scale(0); opacity: 0; }
+}
+
+/* COLLECT BURST */
+.collect-burst {
+  position: fixed;
+  width: 100px; height: 100px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 25;
+  animation: burst-anim 0.6s forwards;
+}
+@keyframes burst-anim {
+  0% { transform: translate(-50%,-50%) scale(0); opacity: 1; border: 3px solid #F5C842; }
+  100% { transform: translate(-50%,-50%) scale(3); opacity: 0; border: 1px solid transparent; }
+}
+
+/* SCORE POP */
+.score-pop {
+  position: fixed;
+  font-family: 'Kanit', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: #F5C842;
+  text-shadow: 0 0 20px rgba(245,200,66,0.8);
+  pointer-events: none;
+  z-index: 25;
+  animation: score-fly 1.2s forwards;
+}
+@keyframes score-fly {
+  0% { transform: translate(-50%,-50%) scale(0.5); opacity: 1; }
+  60% { transform: translate(-50%,-120%) scale(1.2); opacity: 1; }
+  100% { transform: translate(-50%,-180%) scale(0.8); opacity: 0; }
+}
+
+/* HAND CURSOR */
+#hand-cursor {
+  position: fixed;
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 30;
+  transform: translate(-50%, -50%);
+  transition: width 0.15s, height 0.15s, background 0.15s;
+  display: none;
+}
+.cursor-inner {
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  background: rgba(245,200,66,0.3);
+  border: 2px solid rgba(245,200,66,0.8);
+  backdrop-filter: blur(4px);
+  transition: all 0.15s;
+}
+.cursor-pinch .cursor-inner {
+  background: rgba(245,200,66,0.6);
+  transform: scale(0.7);
+}
+
+/* ===== DETAIL MODAL ===== */
+#detail-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(13,27,42,0.92);
+  backdrop-filter: blur(16px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+#detail-modal.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.modal-card {
+  background: linear-gradient(135deg, #0D1B2A, #1A2A3A);
+  border: 1px solid var(--glass-border);
+  border-radius: 28px;
+  max-width: 680px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  animation: modal-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+@keyframes modal-in {
+  from { transform: scale(0.8) translateY(30px); opacity: 0; }
+  to { transform: scale(1) translateY(0); opacity: 1; }
+}
+.modal-card::-webkit-scrollbar { width: 4px; }
+.modal-card::-webkit-scrollbar-track { background: transparent; }
+.modal-card::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+
+.modal-hero { position: relative; height: 220px; }
+.modal-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 28px 28px 0 0;
+}
+.modal-hero-overlay {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 120px;
+  background: linear-gradient(transparent, #0D1B2A);
+}
+.modal-type-badge {
+  position: absolute;
+  top: 16px; left: 16px;
+  border-radius: 50px;
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-family: 'Kanit', sans-serif;
+}
+.modal-close {
+  position: absolute;
+  top: 16px; right: 16px;
+  width: 36px; height: 36px;
+  background: rgba(13,27,42,0.8);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  color: white;
+  transition: all 0.2s;
+  pointer-events: auto;
+}
+.modal-close:hover { background: rgba(231,76,60,0.4); }
+.modal-body { padding: 20px 24px 30px; }
+.modal-cat-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.modal-name {
+  font-family: 'Kanit', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  color: white;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+.modal-tambon {
+  font-size: 14px;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.modal-section-title {
+  font-family: 'Kanit', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.modal-section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,0.1);
+}
+.modal-desc {
+  font-size: 15px;
+  line-height: 1.8;
+  color: rgba(255,255,255,0.85);
+}
+
+/* Info Grid */
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
+.info-item {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 12px;
+}
+.info-item-label { font-size: 11px; color: rgba(255,255,255,0.4); margin-bottom: 4px; font-weight: 600; letter-spacing: 0.5px; }
+.info-item-value { font-size: 14px; color: white; font-weight: 500; line-height: 1.4; }
+
+/* Gallery */
+.gallery-scroll {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  margin-top: 8px;
+}
+.gallery-scroll::-webkit-scrollbar { height: 3px; }
+.gallery-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+.gallery-img {
+  width: 120px; height: 80px;
+  object-fit: cover;
+  border-radius: 10px;
+  flex-shrink: 0;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.modal-btn-group { display: flex; gap: 12px; margin-top: 24px; }
+.btn-modal {
+  flex: 1;
+  border: none;
+  border-radius: 50px;
+  padding: 13px;
+  font-family: 'Kanit', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-modal-primary {
+  background: linear-gradient(135deg, var(--lv-c1, #F5C842), var(--lv-c2, #FF6B35));
+  color: white;
+}
+.btn-modal-secondary {
+  background: rgba(255,255,255,0.08);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.15);
+}
+.btn-modal:hover { transform: translateY(-2px); }
+
+/* POINTS CARD IN MODAL */
+.modal-points-banner {
+  background: linear-gradient(135deg, rgba(245,200,66,0.15), rgba(255,107,53,0.15));
+  border: 1px solid rgba(245,200,66,0.3);
+  border-radius: 12px;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.modal-points-text { font-family: 'Kanit', sans-serif; font-size: 14px; color: rgba(255,255,255,0.8); }
+.modal-points-value { font-family: 'Kanit', sans-serif; font-size: 24px; font-weight: 800; color: #F5C842; }
+
+/* ===== LEVEL COMPLETE ===== */
+#level-complete {
+  background: rgba(13,27,42,0.95);
+  backdrop-filter: blur(20px);
+}
+.lc-card {
+  text-align: center;
+  max-width: 480px;
+  padding: 20px;
+}
+.lc-icon { font-size: 80px; margin-bottom: 20px; animation: bounce-in 0.6s cubic-bezier(0.34,1.56,0.64,1); }
+@keyframes bounce-in {
+  from { transform: scale(0); }
+  to { transform: scale(1); }
+}
+.lc-title {
+  font-family: 'Kanit', sans-serif;
+  font-size: 36px;
+  font-weight: 800;
+  background: linear-gradient(90deg, #F5C842, #FF6B35);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+}
+.lc-subtitle { font-size: 16px; color: rgba(255,255,255,0.7); margin-bottom: 30px; }
+.lc-stats { display: flex; justify-content: center; gap: 30px; margin-bottom: 30px; }
+.lc-stat { text-align: center; }
+.lc-stat-value {
+  font-family: 'Kanit', sans-serif;
+  font-size: 40px;
+  font-weight: 800;
+  color: #F5C842;
+}
+.lc-stat-label { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 4px; }
+
+.btn-next-level {
+  background: linear-gradient(135deg, var(--lv-c1, #F5C842), var(--lv-c2, #FF6B35));
+  border: none;
+  border-radius: 50px;
+  padding: 16px 44px;
+  font-family: 'Kanit', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 8px 30px rgba(245,200,66,0.4);
+  transition: all 0.3s;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+.btn-next-level:hover { transform: translateY(-3px); }
+
+/* ===== GAME COMPLETE ===== */
+#game-complete {
+  background: linear-gradient(135deg, #0D1B2A, #1A2A3A, #0D3B2A);
+}
+.gc-firework {
+  position: absolute;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  animation: firework-anim var(--d) ease-out forwards;
+}
+@keyframes firework-anim {
+  0% { transform: translate(0,0) scale(0); opacity: 1; }
+  100% { transform: translate(var(--tx), var(--ty)) scale(1); opacity: 0; }
+}
+.gc-card {
+  text-align: center;
+  max-width: 520px;
+  padding: 20px;
+  z-index: 2;
+}
+.gc-crown { font-size: 80px; margin-bottom: 16px; animation: float-slow 2s ease-in-out infinite; }
+@keyframes float-slow {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.gc-title {
+  font-family: 'Kanit', sans-serif;
+  font-size: 40px;
+  font-weight: 800;
+  color: #F5C842;
+  text-shadow: 0 0 40px rgba(245,200,66,0.6);
+  margin-bottom: 8px;
+}
+.gc-subtitle { font-size: 17px; color: rgba(255,255,255,0.7); margin-bottom: 30px; }
+.gc-score-display {
+  background: linear-gradient(135deg, rgba(245,200,66,0.15), rgba(255,107,53,0.15));
+  border: 2px solid rgba(245,200,66,0.3);
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 30px;
+}
+.gc-score-label { font-size: 14px; color: rgba(255,255,255,0.5); margin-bottom: 8px; letter-spacing: 2px; text-transform: uppercase; }
+.gc-score-value {
+  font-family: 'Kanit', sans-serif;
+  font-size: 64px;
+  font-weight: 800;
+  background: linear-gradient(90deg, #F5C842, #FF6B35);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.gc-rank { font-size: 20px; color: white; font-weight: 600; }
+.btn-play-again {
+  background: linear-gradient(135deg, #F5C842, #FF6B35);
+  border: none;
+  border-radius: 50px;
+  padding: 16px 50px;
+  font-family: 'Kanit', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 8px 30px rgba(245,200,66,0.4);
+  transition: all 0.3s;
+}
+.btn-play-again:hover { transform: translateY(-3px); }
+
+/* ===== TRANSITION OVERLAY ===== */
+#transition-overlay {
+  position: fixed;
+  inset: 0;
+  background: #0D1B2A;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+#transition-overlay.active { opacity: 1; pointer-events: auto; }
+.transition-content {
+  text-align: center;
+}
+.transition-level-icon { font-size: 60px; margin-bottom: 16px; }
+.transition-title {
+  font-family: 'Kanit', sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  color: white;
+}
+.transition-sub { font-size: 16px; color: rgba(255,255,255,0.6); margin-top: 8px; }
+
+/* TOAST */
+#toast {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: rgba(13,27,42,0.95);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 50px;
+  padding: 12px 24px;
+  font-family: 'Kanit', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: white;
+  z-index: 80;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  white-space: nowrap;
+  max-width: 90vw;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+#toast.show { transform: translateX(-50%) translateY(0); }
+
+/* LOADING */
+#loading-screen {
+  background: #0D1B2A;
+  z-index: 200;
+}
+.loader-ring {
+  width: 60px; height: 60px;
+  border: 4px solid rgba(245,200,66,0.2);
+  border-top-color: #F5C842;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ===== QUIZ MODE (Level 5) ===== */
+.quiz-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(13,27,42,0.97);
+  backdrop-filter: blur(20px);
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+.quiz-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.quiz-card {
+  max-width: 600px;
+  width: 100%;
+  background: linear-gradient(135deg, #0D1B2A, #1A2A3A);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 24px;
+  padding: 32px;
+}
+.quiz-q-num {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  font-family: 'Kanit', sans-serif;
+  font-weight: 600;
+}
+.quiz-img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 16px;
+  margin-bottom: 20px;
+}
+.quiz-question {
+  font-family: 'Kanit', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 24px;
+  line-height: 1.4;
+}
+.quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.quiz-option {
+  background: rgba(255,255,255,0.06);
+  border: 2px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  padding: 16px;
+  text-align: center;
+  cursor: pointer;
+  font-family: 'Sarabun', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: white;
+  transition: all 0.2s;
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.3;
+}
+.quiz-option:hover { background: rgba(245,200,66,0.1); border-color: rgba(245,200,66,0.4); transform: translateY(-2px); }
+.quiz-option.correct { background: rgba(46,204,113,0.2); border-color: #2ECC71; color: #2ECC71; }
+.quiz-option.wrong { background: rgba(231,76,60,0.2); border-color: #E74C3C; color: #E74C3C; }
+
+/* ===== HAND-CLICKABLE UI (dwell-to-click for all non-mouse buttons) ===== */
+.hand-clickable { position: relative; }
+.hand-clickable.dwelling {
+  box-shadow: 0 0 0 3px rgba(245,200,66,0.75), 0 0 25px rgba(245,200,66,0.5) !important;
+  transform: translateY(-2px);
+}
+.hand-clickable.dwelling::after {
+  content: '';
+  position: absolute;
+  left: 10%; right: 10%; bottom: -10px;
+  height: 4px;
+  border-radius: 4px;
+  background: #F5C842;
+  transform-origin: left;
+  transform: scaleX(var(--dwell-pct, 0));
+  transition: transform 0.05s linear;
+}
+
+/* ===== STOP / EXIT (mouse only, never hand-controlled) ===== */
+#btn-stop-exit {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 90;
+  background: rgba(231,76,60,0.85);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 50px;
+  padding: 8px 16px;
+  font-family: 'Kanit', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  pointer-events: auto;
+  transition: all 0.2s;
+}
+#btn-stop-exit:hover { background: rgba(231,76,60,1); transform: translateY(-1px); }
+#btn-stop-exit.hidden { display: none; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+  .ar-card-inner { width: 160px; }
+  .ar-card-img { height: 85px; }
+  .ar-card-name { font-size: 12px; }
+  .gesture-guide { gap: 12px; }
+  .gesture-item { min-width: 90px; padding: 12px; }
+  .info-grid { grid-template-columns: 1fr; }
+  .quiz-options { grid-template-columns: 1fr; }
+}
+</style>
 </head>
 <body>
-  <section id="welcome" class="screen welcome">
-    <div class="welcome-content">
-      <div class="eyebrow">ห้องเรียนมีชีวิต • อำเภอดอยหล่อ</div>
-      <h1><span>เปิดมือ</span><br>เปิดโลก<br><em>ดอยหล่อ</em></h1>
-      <p class="lead">เกมสำรวจแหล่งเรียนรู้และภูมิปัญญาท้องถิ่น<br>ผ่านมือของคุณเอง</p>
-      <div class="rule"></div>
-      <div class="gesture-guide">
-        <div><strong>เปิดมือ</strong><small>เลื่อนดู</small></div>
-        <div><strong>จีบนิ้ว</strong><small>เก็บความรู้</small></div>
-        <div><strong>ท่า V</strong><small>ปิดหน้าต่าง</small></div>
+
+<!-- VIDEO BACKGROUND -->
+<video id="video-bg" autoplay muted playsinline></video>
+<canvas id="canvas-overlay"></canvas>
+
+<!-- HAND CURSOR -->
+<div id="hand-cursor">
+  <div class="cursor-inner"></div>
+</div>
+
+<!-- STOP / EXIT — mouse-only control, never hand-triggered -->
+<button id="btn-stop-exit" class="hidden">⏹ หยุด/ออกจากเกม</button>
+
+<!-- ===== LOADING SCREEN ===== -->
+<div class="screen" id="loading-screen">
+  <div class="loader-ring"></div>
+  <p style="font-family:'Kanit',sans-serif;font-size:18px;color:rgba(255,255,255,0.7)">กำลังโหลด...</p>
+</div>
+
+<!-- ===== WELCOME SCREEN ===== -->
+<div class="screen hidden" id="welcome-screen">
+  <div class="welcome-bg-art" id="welcome-bg-art">
+    <div class="mountain mountain-1"></div>
+    <div class="mountain mountain-2"></div>
+    <div class="mountain mountain-3"></div>
+    <div class="mountain mountain-4"></div>
+  </div>
+  <div class="welcome-content">
+    <div class="welcome-badge">🏔️ &nbsp; อำเภอดอยหล่อ · เชียงใหม่</div>
+    <div class="welcome-title">
+      <div class="title-line1">AR</div>
+      <div class="title-line2">แหล่งเรียนรู้</div>
+      <div class="title-line3">และภูมิปัญญา</div>
+    </div>
+    <p class="welcome-subtitle">สำรวจ 34 แห่ง ใน 5 เลเวล ด้วยฝ่ามือ</p>
+
+    <div class="gesture-guide">
+      <div class="gesture-item">
+        <div class="gesture-emoji">🖐️</div>
+        <div class="gesture-label">กางมือ<br>เพื่อชี้เป้า</div>
       </div>
-      <button id="start" class="primary">เปิดกล้องเพื่อเริ่ม&nbsp; →</button>
-      <div id="routes" class="routes"></div>
+      <div class="gesture-item">
+        <div class="gesture-emoji">🤏</div>
+        <div class="gesture-label">บีบนิ้ว<br>เพื่อเก็บ</div>
+      </div>
+      <div class="gesture-item">
+        <div class="gesture-emoji">✋</div>
+        <div class="gesture-label">ค้างไว้<br>1.5 วิ เปิดอ่าน</div>
+      </div>
+      <div class="gesture-item">
+        <div class="gesture-emoji">✌️</div>
+        <div class="gesture-label">วีคือ<br>ปิด/ถัดไป</div>
+      </div>
     </div>
-    <footer><span>DOI LO • CHIANG MAI</span><span>พื้นที่เรียนรู้ที่ยังมีลมหายใจ</span></footer>
-  </section>
 
-  <section id="permission" class="screen permission hidden">
-    <div class="permission-card">
-      <div class="eyebrow">ขั้นตอนที่ 1 จาก 1</div>
-      <h1>ให้มือของคุณ<br><em>เป็นเข็มทิศ</em></h1>
-      <p>เกมนี้ใช้กล้องเพื่อมองเห็นการเคลื่อนไหวของมือ ภาพจากกล้องอยู่ในอุปกรณ์ของคุณ และใช้เพื่อควบคุมเกมเท่านั้น</p>
-      <div class="checklist"><span>ไม่บันทึกภาพ</span><span>ไม่ใช้เมาส์ระหว่างเล่น</span><span>เปิดมือเพื่อเล็ง</span></div>
-      <div id="error" class="error hidden"></div>
-      <button id="allow" class="primary">อนุญาตกล้องและเริ่ม</button>
-      <button id="back" class="back">กลับหน้าต้อนรับ</button>
+    <button class="btn-start hand-clickable" id="btn-start-game">🎮 เริ่มเล่น</button>
+    <p style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:12px">ชี้มือมาที่ปุ่มค้างไว้ หรือบีบนิ้วเพื่อเริ่ม</p>
+
+    <div class="level-preview" id="level-preview"></div>
+  </div>
+</div>
+
+<!-- ===== CAMERA PERMISSION ===== -->
+<div class="screen hidden" id="permission-screen">
+  <div class="perm-card">
+    <div class="perm-icon">📷</div>
+    <div class="perm-title" id="perm-title">กำลังขอสิทธิ์ใช้กล้อง</div>
+    <p class="perm-desc" id="perm-desc">เกมนี้ใช้กล้องหน้าเพื่อจับการเคลื่อนไหวของฝ่ามือในการควบคุมทั้งหมด<br>กรุณากด "อนุญาต" ที่หน้าต่างเบราว์เซอร์</p>
+    <div class="loader-ring" id="perm-spinner" style="margin:0 auto 10px"></div>
+    <!-- ปุ่มนี้เป็นข้อยกเว้นเดียว: ใช้เมาส์/แตะได้เท่านั้น เพราะยังไม่มีสัญญาณกล้องให้ตรวจจับมือ -->
+    <button class="btn-perm hidden" id="btn-retry-camera">📸 ลองขอสิทธิ์กล้องอีกครั้ง</button>
+  </div>
+</div>
+
+<!-- ===== HUD (ขณะเล่น) ===== -->
+<div class="hud hidden" id="hud">
+  <div class="hud-left">
+    <div class="hud-card">
+      <div>
+        <div class="hud-label">คะแนน</div>
+        <div class="hud-value score-display" id="hud-score">0</div>
+      </div>
     </div>
-  </section>
+    <div class="hud-card">
+      <div>
+        <div class="hud-label">สะสมแล้ว</div>
+        <div class="hud-value" id="hud-collected">0/0</div>
+      </div>
+    </div>
+  </div>
+  <div class="hud-right">
+    <div class="level-badge" id="level-badge">เลเวล 1</div>
+    <div class="hud-card" style="justify-content:center">
+      <div style="text-align:center">
+        <div class="hud-label" id="level-name-hud">ธรรมชาติ</div>
+        <div class="hud-value" id="level-icon-hud" style="font-size:24px">🌿</div>
+      </div>
+    </div>
+  </div>
+</div>
 
-  <section id="game" class="screen game hidden">
-    <video id="camera" class="camera" autoplay muted playsinline></video><div class="shade"></div>
-    <header class="hud">
-      <div class="brand"><span class="brand-mark"></span><div><b>ดอยหล่อ</b><small>HAND EXPLORER</small></div></div>
-      <div id="levelName" class="level-name"></div>
-      <div class="actions"><div class="score"><span id="score">0</span> <small>คะแนน</small></div><button id="pause" class="icon-button" aria-label="หยุดชั่วคราว">Ⅱ</button><button id="exit" class="icon-button exit" aria-label="ออกจากเกม">×</button></div>
-    </header>
-    <div class="title"><span id="levelKicker"></span><h1 id="levelTitle"></h1><p id="levelHint"></p></div>
-    <div class="gesture-rail"><div id="gOpen">◉ <b>เปิดมือ</b><small>เล็ง</small></div><div id="gPinch">◎ <b>จีบนิ้ว</b><small>เลือก</small></div><div id="gV">› <b>ท่า V</b><small>ปิด</small></div></div>
-    <div id="content"></div>
-    <div id="cursor" class="cursor"><b>กำลังหา</b></div>
-    <div class="bottom"><div class="progress-text"><span>การเดินทาง</span><strong id="progressText"></strong></div><div class="progress"><i id="progressBar"></i></div><p>ขยับมือเพื่อค้นหา • จีบนิ้วค้างเพื่อเปิด</p></div>
-    <div id="detailLayer" class="panel-layer hidden"></div>
-    <div id="pauseLayer" class="pause-layer hidden"><div class="pause-card"><div class="eyebrow">หยุดพักชั่วคราว</div><h1>พักมือสักครู่</h1><p>กล้องและการนับเวลาถูกหยุดไว้แล้ว</p><div class="pause-guide"><span><b>เปิดมือ</b><small>เล็งตำแหน่ง</small></span><span><b>จีบนิ้ว</b><small>เลือกสิ่งที่สนใจ</small></span><span><b>ท่า V</b><small>ปิดรายละเอียด</small></span></div><button id="resume" class="primary">เล่นต่อ</button></div></div>
-    <div id="transitionLayer" class="transition-layer hidden"><div class="transition-card"><div id="transitionOrb" class="transition-orb"></div><div class="eyebrow">เส้นทางถัดไป</div><h1 id="transitionTitle"></h1><p id="transitionHint"></p><div id="count" class="count">2</div><small>กำลังเปิดหน้าต่างใหม่อัตโนมัติ</small></div></div>
-  </section>
+<!-- Gesture Indicators -->
+<div class="gesture-status hidden" id="gesture-status">
+  <div class="gesture-indicator pinch" id="gi-pinch">🤏 บีบนิ้ว</div>
+  <div class="gesture-indicator open" id="gi-open">🖐️ กางมือ</div>
+  <div class="gesture-indicator fist" id="gi-fist">✌️ วีไซน์</div>
+</div>
 
-  <section id="complete" class="screen complete hidden"><div class="complete-card"><div class="eyebrow">นักสำรวจดอยหล่อ</div><h1>คุณเปิดโลก<br><em>ได้ครบทั้ง 5 เส้นทาง</em></h1><p>ทุกความรู้ที่คุณเก็บไว้ คืออีกหนึ่งมือที่ช่วยให้เรื่องราวของชุมชนเดินทางต่อ</p><div class="final"><small>คะแนนสะสม</small><strong id="finalScore">0</strong><span>คะแนนแห่งการเรียนรู้</span></div><button id="completeExit" class="primary">ออกจากเกม</button></div></section>
+<!-- Progress Bar -->
+<div class="progress-bar-wrap hidden" id="progress-wrap">
+  <div class="progress-info">
+    <span id="progress-text">สะสมแหล่งเรียนรู้</span>
+    <span id="progress-count">0/0</span>
+  </div>
+  <div class="progress-track">
+    <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+  </div>
+</div>
 
-  <script>
-    const img=id=>`https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
-    const levels=[
-      {title:"ร่องรอยของสายน้ำ",kicker:"ธรรมชาติและสิ่งแวดล้อม",hint:"ค้นหาเสาดินที่ลมฝนปั้นขึ้นจากทางเดินแม่น้ำปิง",tone:"#d6a842",places:[{id:"pacho",name:"ผาช่อ อุทยานแห่งชาติแม่วาง",tambon:"สันติสุข",category:"ธรรมชาติและสิ่งแวดล้อม",owner:"อุทยานแห่งชาติแม่วาง",contact:"053-106759",points:120,img:img("1V--4Ezj1k_fybZdlRi1tiWZV3TRb3n9_"),desc:"ผาช่อเกิดจากการกัดเซาะของลมฝน บริเวณนี้เคยเป็นทางเดินของแม่น้ำปิง สังเกตได้จากก้อนกรวดหินกลมมน กลายเป็นหน้าผาและเสาดินรูปร่างแปลกตาสูงราว 30 เมตร จนได้รับสมญานามว่า แกรนด์แคนยอนเมืองไทย"}]},
-      {title:"เมล็ดพันธุ์แห่งวันพรุ่งนี้",kicker:"เกษตรกรรม",hint:"เรียนรู้การปลูกพืชที่ใช้น้ำน้อย และข้าวที่ดูแลด้วยหัวใจ",tone:"#7ebd74",places:[
-        {id:"hydro",name:"แหล่งเรียนรู้การปลูกผักไฮโดรโปนิกส์",tambon:"สันติสุข",category:"เกษตรกรรม",owner:"นางสาวรุ่งรวิภา โปธิวงค์",contact:"088-4160279",points:120,img:img("1Tw_SqJnG2WYUmudFlOJLQLUKc-eI_Idx"),desc:"การปลูกผักแบบไฮโดรโปนิกส์ไม่ใช้ดิน ช่วยให้ปลูกผักได้ในพื้นที่จำกัด ใช้น้ำน้อย และให้ผลผลิตสูง ถ่ายทอดความรู้เกษตรสมัยใหม่ สร้างอาชีพและรายได้ให้ชุมชน"},
-        {id:"rice",name:"การปลูกข้าวอินทรีย์ (นายอร่าม)",tambon:"ดอยหล่อ",category:"เกษตรกรรม",owner:"นายอร่าม หล้าทิพย์",contact:"084-0427612",points:120,img:img("1kZ7Jhj8AvISez0vbStky7ygkA5qXW-eE"),desc:"นายอร่ามนำองค์ความรู้เกษตรทฤษฎีใหม่มาทดลองจนประสบผลสำเร็จ ได้รับรางวัลรองชนะเลิศชาวนาดีเด่นจังหวัดเชียงใหม่ ปี 2559 และเป็นวิทยากรการปลูกข้าวอินทรีย์"}]},
-      {title:"พื้นที่แห่งศรัทธา",kicker:"พระพุทธศาสนา",hint:"เปิดหน้าต่างสู่เรื่องเล่าของวัดปากทางเจริญ",tone:"#d88461",places:[{id:"temple",name:"วัดปากทางเจริญ",tambon:"ดอยหล่อ",category:"พระพุทธศาสนา",owner:"พระอธิการบรรยงค์ อภิวฒโน",contact:"094-6365437",points:120,img:img("1gAnXe1BcQDeFHiOkP_iUx8f5Jyt-7Uy9"),desc:"วัดหลอด (ปากทางเจริญ) ยกฐานะจากวัดร้างเมื่อ พ.ศ. 2534 มีการสร้างศาลาการเปรียญเพื่อประกอบศาสนพิธี เป็นพื้นที่เรียนรู้ประวัติศาสตร์และศรัทธาของชุมชน"}]},
-      {title:"มือที่สานเรื่องราว",kicker:"หัตถกรรมและภูมิปัญญา",hint:"ชมความรู้ที่ส่งต่อจากรุ่นสู่รุ่นผ่านงานฝีมือ",tone:"#b58bce",places:[{id:"craft",name:"งานฝีมือ ประเภทต่างๆ",tambon:"ดอยหล่อ",category:"หัตถกรรม",owner:"นางฟองจันทร์ เขียวหน่อเมือง",contact:"094-6365437",points:160,img:img("12ojM7PeweWBBvWUVO-ftw-Vy4dhR3N09"),desc:"นางฟองจันทร์ ข้าราชการเกษียณผู้ต้องการอนุรักษ์และถ่ายทอดภูมิปัญญาท้องถิ่น พัฒนาทักษะศิลปะและหัตถกรรม สืบทอดความรู้จากรุ่นสู่รุ่น สร้างอาชีพและต่อยอดนวัตกรรมงานฝีมือ"}]},
-      {title:"นักเล่าเรื่องดอยหล่อ",kicker:"ทบทวนความรู้",hint:"ตอบคำถามจากสิ่งที่คุณได้พบระหว่างทาง",tone:"#55a9bd",places:[]}
-    ];
-    const questions=[
-      {q:"ผาช่อเกิดจากปรากฏการณ์ใดเป็นสำคัญ?",o:["การกัดเซาะของลมและฝน","ภูเขาไฟระเบิด","การขุดเหมืองแร่","การสร้างเขื่อน"],a:0,img:levels[0].places[0].img},
-      {q:"ไฮโดรโปนิกส์เป็นการปลูกพืชแบบใด?",o:["ปลูกโดยไม่ใช้ดิน","ปลูกในป่าธรรมชาติ","ปลูกใต้ทะเล","ปลูกด้วยหินเท่านั้น"],a:0,img:levels[1].places[0].img},
-      {q:"ภูมิปัญญางานฝีมือมีคุณค่าอย่างไร?",o:["ส่งต่อความรู้จากรุ่นสู่รุ่น","ใช้ได้เฉพาะในพิพิธภัณฑ์","ทำให้ไม่ต้องเรียนรู้สิ่งใหม่","เป็นการแข่งขันเท่านั้น"],a:0,img:levels[3].places[0].img}
-    ];
-    const $=id=>document.getElementById(id), show=id=>document.querySelectorAll(".screen").forEach(x=>x.classList.toggle("hidden",x.id!==id));
-    levels.forEach((l,i)=>$("routes").insertAdjacentHTML("beforeend",`<span style="border-color:${l.tone}"><b>0${i+1}</b><small>${l.kicker}</small></span>`));
-    let level=0,score=0,collected=new Set(),quiz=0,answer=null,detail=null,paused=false,transition=null,hover=null,dwellStart=0,dwell=0,gesture="none",cameraStream=null,hands=null,cameraLoop=null,lock=false;
-    let cursor={x:50,y:50};
-    $("start").onclick=()=>show("permission");$("back").onclick=()=>show("welcome");$("allow").onclick=startCamera;
-    $("pause").onclick=()=>{paused=!paused;$("pauseLayer").classList.toggle("hidden",!paused);$("pause").textContent=paused?"▶":"Ⅱ"};$("resume").onclick=()=>{paused=false;$("pauseLayer").classList.add("hidden");$("pause").textContent="Ⅱ"};
-    $("exit").onclick=reset;$("completeExit").onclick=reset;
-    function reset(){stopCamera();level=0;score=0;collected=new Set();quiz=0;answer=null;detail=null;paused=false;transition=null;show("welcome")}
-    function loadScript(src){return new Promise((res,rej)=>{if(document.querySelector(`script[src="${src}"]`))return res();const s=document.createElement("script");s.src=src;s.crossOrigin="anonymous";s.onload=res;s.onerror=()=>rej(new Error("โหลดระบบติดตามมือไม่สำเร็จ"));document.head.appendChild(s)})}
-    async function startCamera(){
-      $("allow").disabled=true;$("error").classList.add("hidden");
-      try{if(!navigator.mediaDevices?.getUserMedia)throw Error("เบราว์เซอร์นี้ไม่รองรับกล้อง");cameraStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"user",width:{ideal:1280},height:{ideal:720}},audio:false});await Promise.all([loadScript("https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"),loadScript("https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js")]);if(!window.Hands)throw Error("ไม่พบระบบติดตามมือ");$("camera").srcObject=cameraStream;await $("camera").play();hands=new window.Hands({locateFile:f=>`https://cdn.jsdelivr.net/npm/@mediapipe/hands/${f}`});hands.setOptions({maxNumHands:1,modelComplexity:1,minDetectionConfidence:.65,minTrackingConfidence:.6});hands.onResults(onHand);if(window.Camera){const c=new window.Camera($("camera"),{width:1280,height:720,onFrame:()=>hands.send({image:$("camera")})});cameraLoop=c;await c.start()}else{const tick=async()=>{if(!paused)await hands.send({image:$("camera")});cameraLoop=requestAnimationFrame(tick)};tick()}show("game");render()}
-      catch(e){$("error").textContent=e.message||"ไม่สามารถเปิดกล้องได้";$("error").classList.remove("hidden");if(cameraStream)cameraStream.getTracks().forEach(t=>t.stop())}finally{$("allow").disabled=false}
+<!-- AR Cards Container -->
+<div id="ar-cards-container"></div>
+
+<!-- ===== DETAIL MODAL ===== -->
+<div id="detail-modal">
+  <div class="modal-card" id="modal-card-content"></div>
+</div>
+
+<!-- ===== QUIZ OVERLAY ===== -->
+<div class="quiz-overlay" id="quiz-overlay">
+  <div class="quiz-card" id="quiz-card-content"></div>
+</div>
+
+<!-- ===== LEVEL COMPLETE ===== -->
+<div class="screen hidden" id="level-complete">
+  <div class="lc-card">
+    <div class="lc-icon" id="lc-icon">🎉</div>
+    <div class="lc-title" id="lc-title">เลเวลผ่าน!</div>
+    <div class="lc-subtitle" id="lc-subtitle">สุดยอด!</div>
+    <div class="lc-stats">
+      <div class="lc-stat">
+        <div class="lc-stat-value" id="lc-collected">0</div>
+        <div class="lc-stat-label">แหล่งที่สะสม</div>
+      </div>
+      <div class="lc-stat">
+        <div class="lc-stat-value" id="lc-points">0</div>
+        <div class="lc-stat-label">คะแนนรวม</div>
+      </div>
+    </div>
+    <button class="btn-next-level hand-clickable" id="btn-next-level">ถัดไป →</button>
+    <p style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:14px">เลเวลถัดไปจะเริ่มอัตโนมัติใน <span id="lc-countdown">4</span> วินาที<br>หรือชี้มือค้าง/บีบนิ้วที่ปุ่มเพื่อไปทันที</p>
+  </div>
+</div>
+
+<!-- ===== GAME COMPLETE ===== -->
+<div class="screen hidden" id="game-complete">
+  <div class="gc-card">
+    <div class="gc-crown">👑</div>
+    <div class="gc-title">เก่งมาก!</div>
+    <div class="gc-subtitle">สำรวจแหล่งเรียนรู้ดอยหล่อครบทุกแห่ง!</div>
+    <div class="gc-score-display">
+      <div class="gc-score-label">คะแนนรวมทั้งหมด</div>
+      <div class="gc-score-value" id="gc-score">0</div>
+      <div class="gc-rank" id="gc-rank">🏆 ปราชญ์ดอยหล่อ</div>
+    </div>
+    <button class="btn-play-again hand-clickable" id="btn-play-again">🔄 เล่นอีกครั้ง</button>
+  </div>
+</div>
+
+<!-- TRANSITION OVERLAY -->
+<div id="transition-overlay">
+  <div class="transition-content">
+    <div class="transition-level-icon" id="tr-icon">🌿</div>
+    <div class="transition-title" id="tr-title">เลเวล 2</div>
+    <div class="transition-sub" id="tr-sub">เกษตรกรรม</div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+// ============================================================
+// DATA — แหล่งเรียนรู้และภูมิปัญญา อำเภอดอยหล่อ 34 แห่ง
+// ============================================================
+const PLACES = [
+  {id:"RES202602192",name:"ผาช่อ อุทยานแห่งชาติแม่วาง",type:"Learning Resource",tambon:"สันติสุข",owner:"อุทยานแห่งชาติแม่วาง",desc:"ผาช่อ ตั้งอยู่ในอำเภอดอยหล่อ เป็นปรากฏการณ์ตามธรรมชาติที่เกิดจากการกัดเซาะของลมฝน แผ่นดินบริเวณนี้เคยเป็นทางเดินของแม่น้ำปิงซึ่งสังเกตได้จากก้อนกรวดหินกลมมน กลายเป็นหน้าผาและเสาดินรูปร่างแปลกตา สูงราว 30 เมตร กว้างนับร้อยเมตร ได้รับสมญานามว่า แกรนด์แคนยอนเมืองไทย ที่ตั้ง: หมู่บ้านโป่งจ้อ หมู่ที่ 7 ต.สันติสุข อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5179,lng:98.7371,category:"ธรรมชาติและสิ่งแวดล้อม",img:"https://drive.google.com/thumbnail?id=1V--4Ezj1k_fybZdlRi1tiWZV3TRb3n9_&sz=w1000",video:"https://www.canva.com/design/DAGzOsQXT0U/zqafAC7jTW6x-MMNidzqfQ/watch",contact:"053-106759",gallery:["https://drive.google.com/thumbnail?id=1WJJlY4Xm9AhGZxDFwGJUB_uM9XDK3xrn&sz=w1000","https://drive.google.com/thumbnail?id=1xKFx94ozdeuJE-xdnUzu1A5eS33hKGme&sz=w1000","https://drive.google.com/thumbnail?id=196y7n7yvQxC-NNgQnRUDjrb1xm3_aqE_&sz=w1000"],level:1},
+  {id:"RES202602203",name:"แหล่งเรียนรู้การปลูกผักไฮโดรโปนิกส์",type:"Learning Resource",tambon:"สันติสุข",owner:"นางสาวรุ่งรวิภา โปธิวงค์",desc:"เป็นแหล่งเรียนรู้การปลูกผักแบบไฮโดรโปนิกส์ (ไม่ใช้ดิน) ที่ช่วยให้สามารถปลูกผักได้ในพื้นที่จำกัด ใช้น้ำน้อย และให้ผลผลิตสูง ถ่ายทอดความรู้ด้านเกษตรสมัยใหม่ สร้างอาชีพและรายได้ให้ชุมชน ส่งเสริมการบริโภคอาหารปลอดสารพิษ ที่ตั้ง: บ้านหนองหียง บ้านเลขที่ 77/2 หมู่ที่ 2 ต.สันติสุข อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5198,lng:98.8297,category:"เกษตรกรรม",img:"https://drive.google.com/thumbnail?id=1Tw_SqJnG2WYUmudFlOJLQLUKc-eI_Idx&sz=w1000",video:"",contact:"088-4160279",gallery:[],level:2},
+  {id:"RES202602204",name:"งานฝีมือ ประเภทต่างๆ",type:"Local Wisdom",tambon:"ดอยหล่อ",owner:"นางฟองจันทร์ เขียวหน่อเมือง",desc:"นางฟองจันทร์ เขียวหน่อเมือง ข้าราชการเกษียณ ที่ต้องการอนุรักษ์และถ่ายทอดภูมิปัญญาท้องถิ่น พัฒนาทักษะด้านศิลปะและหัตถกรรม สืบทอดความรู้จากรุ่นสู่รุ่น สร้างอาชีพและต่อยอดนวัตกรรมงานฝีมือ ที่ตั้ง: บ้านดอยน้อย บ้านเลขที่ 139 หมู่ที่ 11 ต.ดอยหล่อ อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.4704,lng:98.7965,category:"หัตถกรรม",img:"https://drive.google.com/thumbnail?id=12ojM7PeweWBBvWUVO-ftw-Vy4dhR3N09&sz=w1000",video:"",contact:"094-6365437",gallery:[],level:4},
+  {id:"RES202602205",name:"วัดปากทางเจริญ",type:"Learning Resource",tambon:"ดอยหล่อ",owner:"พระอธิการบรรยงค์ อภิวฒโน",desc:"วัดหลอด (ปากทางเจริญ) ยกฐานะจากวัดร้างเมื่อ พ.ศ.2534 มีการสร้างศาลาการเปรียญเพื่อประกอบศาสนพิธี ที่ตั้ง: เลขที่ 358 หมู่ที่ 4 บ้านปากทางเจริญ ต.ดอยหล่อ อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.4828,lng:98.8086,category:"พระพุทธศาสนา",img:"https://drive.google.com/thumbnail?id=1gAnXe1BcQDeFHiOkP_iUx8f5Jyt-7Uy9&sz=w1000",video:"",contact:"094-6365437",gallery:[],level:3},
+  {id:"RES202602206",name:"การปลูกข้าวอินทรีย์ (นายอร่าม)",type:"Learning Resource",tambon:"ดอยหล่อ",owner:"นายอร่าม หล้าทิพย์",desc:"นายอร่าม หล้าทิพย์ นำองค์ความรู้เกษตรทฤษฎีใหม่มาทดลองประสบผลสำเร็จ ได้รับรางวัลรองชนะเลิศ ชาวนาดีเด่นจังหวัดเชียงใหม่ ปี 2559 เป็นวิทยากรการปลูกข้าวอินทรีย์ ที่ตั้ง: 259 ม.21 ต.ดอยหล่อ อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.4946,lng:98.7773,category:"เกษตรกรรม",img:"https://drive.google.com/thumbnail?id=1kZ7Jhj8AvISez0vbStky7ygkA5qXW-eE&sz=w1000",video:"",contact:"084-0427612",gallery:[],level:2},
+  {id:"RES202602237",name:"การจักสาน (งานฝีมือ)",type:"Local Wisdom",tambon:"สองแคว",owner:"นางหลง วันวา",desc:"นางหลง วันวา เริ่มเรียนรู้การสานตะกร้า (ก๋วย) จากพ่อแม่ตั้งแต่อายุ 6 ขวบ งานจักสานเป็นหัตถกรรมสำคัญที่ใช้ไม้ไผ่ หวาย ปอมาขัดสานเป็นชิ้นงาน สร้างรายได้ให้ครอบครัว ที่ตั้ง: บ้านท่ามะโอ บ้านเลขที่ 146 หมู่ที่ 3 ต.สองแคว อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5100,lng:98.8523,category:"หัตถกรรม",img:"https://drive.google.com/thumbnail?id=1ih4326qKASMNqAT4JYQI5tzlHo4uwoaz&sz=w1000",video:"https://youtu.be/MGo1kPlVM9k",contact:"088-6416487",gallery:[],level:4},
+  {id:"RES202602238",name:"วัดหัวข่วง",type:"Learning Resource",tambon:"สองแคว",owner:"พระปรเมศ ฐิตเมธี",desc:"วัดหัวข่วง ชื่อตามลานกว้าง (ข่วง) ริมแม่น้ำปิง ที่พระภิกษุจากวัดแสนเมืองมาหลวงมาสร้าง ตั้งแต่โบราณ ได้รับอนุญาตตั้งเป็นวัดตาม ร.ศ.121 ที่ตั้ง: บ้านหัวข่วง เลขที่ 60 หมู่ 6 ต.สองแคว อ.ดอยหล่อ จ.เชียงใหม่",lat:18.4944,lng:98.8425,category:"พระพุทธศาสนา",img:"https://drive.google.com/thumbnail?id=1tkX0OszTAOeDpmZG00CzF3wPYp-nqDeC&sz=w1000",video:"",contact:"088-6416487",gallery:[],level:3},
+  {id:"RES202602239",name:"การปลูกผักไฮโดรโปรนิกส์ (สองแคว)",type:"Local Wisdom",tambon:"สองแคว",owner:"นายธัญนพพัทธ์ ล้อมเวียง",desc:"นายธัญนพพัทธ์ ล้อมเวียง ผันตัวมาทำเกษตรปลูกผักสลัดหลายชนิด เช่น กรีนโอ๊ค เรดโอ๊ค ได้รับมาตรฐาน GAP ส่งออกให้ห้างสรรพสินค้า และเป็นวิทยากรให้ความรู้เรื่องปลูกผักไฮโดรโปนิกส์ ที่ตั้ง: บ้านทุ่งท้อ ม.2 ต.สองแคว อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5155,lng:98.8547,category:"เกษตรกรรม",img:"https://drive.google.com/thumbnail?id=173qY8i6VGiEsU7xwsX38U9-y7iJnpWxU&sz=w1000",video:"",contact:"085-5346141",gallery:[],level:2},
+  {id:"RES2026022310",name:"วัดทุ่งท้อ",type:"Learning Resource",tambon:"สองแคว",owner:"พระครูสาธุกิจจานันท์",desc:"วัดทุ่งท้อ สร้างเมื่อ พ.ศ.2410 โดยครูบาเทพ สังกัดมหานิกาย มีวิหาร ศาลาการเปรียญ กุฏิ และอุโบสถ ที่ตั้ง: บ้านทุ่งท้อ ต.สองแคว อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5160,lng:98.8549,category:"พระพุทธศาสนา",img:"https://drive.google.com/thumbnail?id=10bt7Ws63OExtmyvENe1CQmU3DDCumC8T&sz=w1000",video:"",contact:"",gallery:[],level:3},
+  {id:"RES2026022311",name:"วัดหลังถ้ำ",type:"Learning Resource",tambon:"สองแคว",owner:"พระครูประภัสสรโสภฌ",desc:"วัดหลังถ้ำ สร้างเมื่อ พ.ศ.2481 สังกัดมหานิกาย มีวิหาร กุฏิสงฆ์ ศาลาบาตร พระประธานปางมารวิชัย และกลองหลวงแบบล้านนา ที่ตั้ง: บ้านแม่ขาน บ้านเลขที่ 240 ต.สองแคว อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5246,lng:98.8558,category:"พระพุทธศาสนา",img:"https://drive.google.com/thumbnail?id=1IB4VTxLUYIQ30BdDMzl1HaL-f_AoIRdG&sz=w1000",video:"",contact:"",gallery:[],level:3},
+  {id:"WIS2026022312",name:"การทำผ้ามัดย้อม",type:"Local Wisdom",tambon:"สองแคว",owner:"นางจันทร์เพ็ญ ธรรมใจ",desc:"นางจันทร์เพ็ญ ธรรมใจ เริ่มสนใจย้อมผ้า 5 ปี และเป็นวิทยากรให้ สกร.อำเภอดอยหล่อ การย้อมผ้าช่วยเพิ่มมูลค่าสินค้าและสร้างรายได้ให้ตนเองและครอบครัว ที่ตั้ง: บ้านสามหลัง บ้านที่ 159 หมู่ที่ 8 ต.สองแคว อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5150,lng:98.8450,category:"หัตถกรรม",img:"https://drive.google.com/thumbnail?id=1sOQH3w9dkE18p-OZep_WIT045nCP9-ZU&sz=w1000",video:"",contact:"",gallery:[],level:4},
+  {id:"WIS2026022313",name:"การทำไส้อั๋วสมุนไพร",type:"Local Wisdom",tambon:"สองแคว",owner:"นางแดงต้อย ผัดใจ",desc:"นางแดงต้อย ผัดใจ ทำไส้อั่วตั้งแต่ปี 2559 ไส้อั่วสมุนไพรพิเศษผสมตะไคร้ ใบมะกรูด รสอร่อย สะอาด มีประโยชน์ต่อสุขภาพ ที่ตั้ง: บ้านหัวข่วง เลขที่ 50 หมู่ที่ 6 ต.สองแคว อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.4950,lng:98.8421,category:"อาหารและเครื่องดื่ม",img:"https://drive.google.com/thumbnail?id=1U92p2TAquKQHQbOLlg75_Wb3QWGsOImc&sz=w1000",video:"",contact:"085-7066635",gallery:[],level:5},
+  {id:"RES2026022314",name:"สวนพฤกษาสมุนไพรหัวใจรักสุขภาพ",type:"Learning Resource",tambon:"สองแคว",owner:"เทศบาลตำบลสองแคว",desc:"สวนพฤกษาสมุนไพร รวบรวมพันธุ์พืชสมุนไพร เป็นแหล่งเรียนรู้ แลกเปลี่ยนสมุนไพร ปลูกผักอินทรีย์ เลี้ยงไส้เดือนดิน เลี้ยงกบ ผลิตปุ๋ยชีวภาพ สนับสนุนกิจกรรมเศรษฐกิจผู้สูงอายุ ที่ตั้ง: บ้านสามหลัง หมู่ที่ 8 ต.สองแคว อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5193,lng:98.8479,category:"เกษตรกรรม",img:"https://drive.google.com/thumbnail?id=1YMPDKsne9I1LQR7CtIOoUWiKIbb4i-r4&sz=w1000",video:"https://youtu.be/zpZlPMyQupw",contact:"",gallery:[],level:2},
+  {id:"WIS2026022315",name:"การปลูกข้าวอินทรีย์ (ภูมิปัญญา)",type:"Local Wisdom",tambon:"ดอยหล่อ",owner:"นายอร่าม หล้าทิพย์",desc:"ภูมิปัญญาการปลูกข้าวอินทรีย์แบบเกษตรทฤษฎีใหม่ ได้รับรางวัลรองชนะเลิศชาวนาดีเด่น เชียงใหม่ ปี 2559 เป็นวิทยากรให้ความรู้แก่ผู้สนใจ ที่ตั้ง: 259 ม.21 ต.ดอยหล่อ อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.4946,lng:98.7772,category:"เกษตรกรรม",img:"https://drive.google.com/thumbnail?id=1XLyodXoF4KDiDpwKIKqaIVIK6Ppxn_HW&sz=w1000",video:"",contact:"084-0427612",gallery:["https://drive.google.com/thumbnail?id=1oF1Dd2q3u8CKmt235PJB_o5d8TRHnc3V&sz=w1000"],level:2},
+  {id:"RES2026022316",name:"วัดม่อนห้วยแก้ว",type:"Learning Resource",tambon:"ดอยหล่อ",owner:"พระครูกัลยาณปราโมทย์",desc:"เดิมชื่อสำนักสงฆ์รัตนาราม ก่อตั้งปี พ.ศ.2537 ได้รับการยกขึ้นเป็นวัดโดยสมบูรณ์ พ.ศ.2542 ในนาม วัดม่อนห้วยแก้ว ที่ตั้ง: บ้านเลขที่ 889 หมู่ที่ 25 ต.ดอยหล่อ อ.ดอยหล่อ 50160",lat:18.4657,lng:98.7769,category:"พระพุทธศาสนา",img:"https://drive.google.com/thumbnail?id=1xSj65XtuVCecA2NPTYkUK1dLusKaIW0t&sz=w1000",video:"",contact:"",gallery:[],level:3},
+  {id:"RES2026022317",name:"วัดฟ้าหลั่ง",type:"Learning Resource",tambon:"ดอยหล่อ",owner:"พระครูปิยกิจปรีชา ดวงมาลา",desc:"วัดเก่าแก่กว่า 400 ปี สมัยพระเมืองแก้ว เคยร้างในยุคสงคราม ฟื้นฟูขึ้นมาอีกครั้งในปี พ.ศ.2504 ที่ตั้ง: บ้านเลขที่ 191 ต.ดอยหล่อ อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5127,lng:98.8368,category:"พระพุทธศาสนา",img:"https://drive.google.com/thumbnail?id=1MuEn27-p2IH4wWEF7Tz0BzN8-nMIX0gz&sz=w1000",video:"",contact:"",gallery:[],level:3},
+  {id:"RES2026022318",name:"วัดพระธาตุดอยน้อย",type:"Learning Resource",tambon:"ดอยหล่อ",owner:"พระครูสาธุกิจจานันท์",desc:"สร้างโดยพระนางจามเทวี พ.ศ.1201 เสด็จจากลพบุรีมาครองเมืองหริภุญชัย บรรจุพระบรมสารีริกธาตุ สถาปัตยกรรมแบบล้านนา มีจุดชมวิวครอบคลุมถึงลำพูน ที่ตั้ง: บ้านดอยน้อย หมู่ที่ 11 ต.ดอยหล่อ อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.4649,lng:98.8038,category:"พระพุทธศาสนา",img:"https://drive.google.com/thumbnail?id=1a1z8gh5CHS4aEnBiRv2fULJKhdvNp3GT&sz=w1000",video:"https://youtu.be/tFOIv4gMHoM",contact:"",gallery:["https://drive.google.com/thumbnail?id=13nVwaLuhk1RR_WOcNfdpPSOkZzGEz8X3&sz=w1000"],level:3},
+  {id:"WIS2026022319",name:"กองทุนและธุรกิจชุมชน (บ้านเหล่าเป้า)",type:"Local Wisdom",tambon:"ดอยหล่อ",owner:"นางเพียรศรี ประทุมทา",desc:"นางเพียรศรี ประทุมทา ประธานกลุ่มแปรรูปอาหารบ้านเหล่าเป้า ผลิตแหนม จิ้นส้ม และไข่เค็ม เป็นสินค้า OTOP ของตำบลดอยหล่อ ที่ตั้ง: บ้านเหล่าเป้า บ้านเลขที่ 139 ต.ดอยหล่อ อ.ดอยหล่อ จ.เชียงใหม่",lat:18.4885,lng:98.8155,category:"เกษตรกรรม",img:"https://drive.google.com/thumbnail?id=1btuqyXrLmIPH7K8yk16gKImdhyW1hoWW&sz=w1000",video:"",contact:"",gallery:["https://drive.google.com/thumbnail?id=1F-uQEdAekHVVlMmcJApat48dft4hnjtH&sz=w1000"],level:2},
+  {id:"WIS2026022320",name:"ภาษาและวรรณกรรม",type:"Local Wisdom",tambon:"ดอยหล่อ",owner:"นายณัฐกฤชา คำเสน",desc:"นายณัฐกฤชา คำเสน หรือ พ่อน้อยทองคำ นักจัดรายการวิทยุ ค่าวฮ่ำลำนำเพลง ปู๋จ๋านพิธีศาสนาล้านนา ผู้รู้ตัวหนังสือล้านนา ปราชญ์ชาวบ้านที่มีชื่อเสียง ที่ตั้ง: บ้านศิริมังคลาจารย์ บ้านเลขที่ 577 ต.ดอยหล่อ อ.ดอยหล่อ จ.เชียงใหม่",lat:18.4817,lng:98.8014,category:"ภาษาและวรรณกรรม",img:"https://drive.google.com/thumbnail?id=1ts-C8fwD9NJImhYoLDyDm9pRvmIle75e&sz=w1000",video:"",contact:"",gallery:["https://drive.google.com/thumbnail?id=1hPymLVVjOuCuSIUlMwddAdByAVnnGyiN&sz=w1000"],level:5},
+  {id:"WIS2026022321",name:"การปลูกผักหวานป่าในสวนลำไย",type:"Local Wisdom",tambon:"ดอยหล่อ",owner:"นายวิโรจน์ พรมปัญญา",desc:"นายวิโรจน์ พรมปัญญา ภูมิปัญญาการปลูกผักหวานป่าในสวนลำไยและผักสวนครัว เหลือกินนำไปจำหน่ายส่งออกห้างสรรพสินค้าและร้านค้าต่างๆ ที่ตั้ง: บ้านโทกเสือ หมู่ที่ 18 ต.ดอยหล่อ อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5119,lng:98.7927,category:"เกษตรกรรม",img:"https://drive.google.com/thumbnail?id=1eE_Xo1gd4hv_CpxAcXh21kkA9sunmWxl&sz=w1000",video:"",contact:"086-1151144",gallery:[],level:2},
+  {id:"WIS2026022322",name:"การปลูกผักไฮโดรโปนิกส์ (ผู้พิการ)",type:"Local Wisdom",tambon:"สันติสุข",owner:"นางสาวรุ่งรวิภา โปธิวงค์",desc:"นางสาวรุ่งรวิภา โปธิวงค์ ผู้พิการที่ประสบอุบัติเหตุ ผันตัวมาปลูกผักไฮโดรโปนิกส์ เพาะเห็ด และเลี้ยงจิ้งหรีด ปัจจุบันเป็นวิทยากรให้ความรู้แก่ผู้พิการและประชาชนทั่วไป ที่ตั้ง: บ้านหนองหียง 77/2 ม.2 ต.สันติสุข อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5199,lng:98.8298,category:"เกษตรกรรม",img:"https://drive.google.com/thumbnail?id=1ZDS3U6IFVHX1VAKkuE5XdDxf5AEJt_xq&sz=w1000",video:"",contact:"088-4160279",gallery:["https://drive.google.com/thumbnail?id=1TWBM_DVYw8xY7nNk95JkfkzjcFx30CQm&sz=w1000"],level:2},
+  {id:"WIS2026022323",name:"กองทุนและธุรกิจชุมชน (คนพิการ)",type:"Local Wisdom",tambon:"สันติสุข",owner:"นายสมบูรณ์ อิ่นนวล",desc:"นายสมบูรณ์ อิ่นนวล หัวหน้าศูนย์บริการอาชีพอิสระคนพิการ ดูแล 8 อำเภอ ส่งเสริมการฝึกอาชีพ: เพาะเลี้ยงจิ้งหรีด เพาะเห็ดนางฟ้าภูฐาน และปลูกผักไฮโดรโปนิกส์ ที่ตั้ง: บ้านใหม่หนองหอย ม.6 ต.สันติสุข อ.ดอยหล่อ จ.เชียงใหม่",lat:18.5288,lng:98.7905,category:"เกษตรกรรม",img:"https://drive.google.com/thumbnail?id=1o0M8tW5OyRzCg7cwoorNqqIdnXbEP3Mt&sz=w1000",video:"",contact:"",gallery:[],level:2},
+  {id:"RES2026022324",name:"วัดหนองเหียง",type:"Learning Resource",tambon:"สันติสุข",owner:"พระครูวรธรรมนาถ",desc:"วัดหนองเหียง สร้างเมื่อ 19 มีนาคม พ.ศ.2519 ได้รับอนุญาตสร้างวัด พ.ศ.2532 ประกาศตั้งเป็นวัด พ.ศ.2533 ได้รับพระราชทานวิสุงคามสีมา พ.ศ.2541 ที่ตั้ง: บ้านหนองหียง เลขที่ 22 หมู่ที่ 2 ต.สันติสุข อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5195,lng:98.8302,category:"พระพุทธศาสนา",img:"https://drive.google.com/thumbnail?id=1GOuxNS4IXUb61lE2jWpZD60BeCeBbEY6&sz=w1000",video:"",contact:"",gallery:[],level:3},
+  {id:"WIS2026022325",name:"พิธีกรรมและประเพณีทางศาสนา",type:"Local Wisdom",tambon:"สันติสุข",owner:"พระครูวรธรรมนาถ (สมศักดิ์)",desc:"พระครูวรธรรมนาถ เจ้าอาวาสวัดหนองเหียง ผู้เชี่ยวชาญพิธีกรรมและประเพณีทางพระพุทธศาสนาล้านนา ที่ตั้ง: วัดหนองเหียง เลขที่ 22 หมู่ที่ 2 ต.สันติสุข อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5195,lng:98.8302,category:"ศาสนาและประเพณี",img:"https://drive.google.com/thumbnail?id=1kpvLoeUMsJu6Svof4g7u0h45XX34DR7i&sz=w1000",video:"",contact:"087-1774469",gallery:[],level:5},
+  {id:"WIS2026022326",name:"ไส้อั๋วป้าตุ๋ยยาวที่สุดในโลก",type:"Local Wisdom",tambon:"สันติสุข",owner:"นางศรีสมร วรรณใหม่",desc:"ป้าตุ๋ย เริ่มทำไส้อั่วตั้งแต่ปี 2540 รางวัลเชิดชูเกียรติผู้มีผลงานดีเด่น 2544 รางวัลชนะเลิศภูมิปัญญาล้านนา 2554 OTOP 5 ดาว ทำไส้อั่วยาวที่สุดในโลก 1,011 เมตร ถวายสมเด็จพระเทพฯ ที่ตั้ง: หมู่ที่ 9 ต.สันติสุข อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5160,lng:98.8352,category:"อาหารและเครื่องดื่ม",img:"https://drive.google.com/thumbnail?id=1t0rhhdtRTN8vOZHawa7-xHpaDxJg84in&sz=w1000",video:"https://youtu.be/rPszP-iMYg0",contact:"053-367584",gallery:["https://drive.google.com/thumbnail?id=1yzXB5Nyk3pgfZWbfqK8eSxAE5Yg2r45P&sz=w1000"],level:5},
+  {id:"RES2026022327",name:"การทอผ้าบ้านใหม่หนองหอย",type:"Local Wisdom",tambon:"สันติสุข",owner:"นางซอน วงศ์ศรี",desc:"กลุ่มทอผ้าบ้านใหม่หนองหอย ก่อตั้งปี พ.ศ.2535 ทอผ้าแบบล้านนา 9 ชั้น สินค้าOTOP รางวัลสิ่งทอยอดเยี่ยมกรมส่งเสริมส่งออก และรางวัล OTOP 4 ดาว ผ้าคลุมไหล่พระ ที่ตั้ง: บ้านใหม่หนองหอย หมู่ที่ 6 ต.สันติสุข อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5341,lng:98.7989,category:"หัตถกรรม",img:"https://drive.google.com/thumbnail?id=1-dgMPS5LegSUHlMT6CHrP-hwOlwB1ne-&sz=w1000",video:"",contact:"",gallery:["https://drive.google.com/thumbnail?id=1W-M9QdaPv2cQJ2FmF6wJRA9feZ9MfLDH&sz=w1000","https://drive.google.com/thumbnail?id=1FiClhSfHXDbM2GMdB6KZCXHv27-r_tfQ&sz=w1000"],level:4},
+  {id:"RES2026022328",name:"วัดหนองหลั้ว",type:"Learning Resource",tambon:"ยางคราม",owner:"พระพงค์เทพ วชิรานนฺโท",desc:"วัดหนองหลั้ว สร้างเมื่อ พ.ศ.2415 เก่าแก่มีศรัทธา 3 หมู่บ้าน มีโรงเรียนพระปริยัติธรรม แผนกธรรม เปิดสอนตั้งแต่ พ.ศ.2512 และห้องสมุดบริการชุมชน ที่ตั้ง: เลขที่ 103 หมู่ที่ 4 ต.ยางคราม อ.ดอยหล่อ จ.เชียงใหม่",lat:18.5395,lng:98.8310,category:"พระพุทธศาสนา",img:"https://drive.google.com/thumbnail?id=1ns1u4cLErlIvcQohGyCYp9tvDcplwdsf&sz=w1000",video:"",contact:"096-9654248",gallery:[],level:3},
+  {id:"WIS2026022329",name:"การจักสาน (ยางคราม)",type:"Local Wisdom",tambon:"ยางคราม",owner:"นางใส อุ้ยอ้าย",desc:"นางใส อุ้ยอ้าย อายุ 83 ปี สืบทอดการจักสานจากพ่อ สามารถสานก๋วย สานเปล ทำไม้กวาดทางมะพร้าว ขายที่บ้านสร้างรายได้ครอบครัว ที่ตั้ง: บ้านเลขที่ 68 หมู่ 7 ต.ยางคราม อ.ดอยหล่อ จ.เชียงใหม่",lat:18.5461,lng:98.8472,category:"หัตถกรรม",img:"https://drive.google.com/thumbnail?id=1fpLpqZdSGtmecAkBTuIm47FXpSAL5tOG&sz=w1000",video:"https://youtu.be/TQpuI48n48o",contact:"",gallery:[],level:4},
+  {id:"WIS2026022330",name:"การปักผ้าลวดลายผ้าทอชนเผ่า",type:"Local Wisdom",tambon:"ยางคราม",owner:"นายธรรมนูญ จันทร์สีมุ่ย",desc:"สืบทอดภูมิปัญญาชนเผ่าลัวะ การแต่งกายแบบร่วมสมัยผสมผสานกับเอกลักษณ์ชนเผ่า เพื่อสร้างความรักและภูมิใจในชาติพันธุ์ ที่ตั้ง: บ้านยางคราม ม.3 ต.ยางคราม อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5464,lng:98.8391,category:"หัตถกรรม",img:"https://drive.google.com/thumbnail?id=1lv2xOtI_ZfOInaxKxdfIuxKCUna4XdEO&sz=w1000",video:"https://youtu.be/2RdcNXg4UnQ",contact:"089-9559201",gallery:[],level:4},
+  {id:"RES2026022331",name:"วัดศรีทรายมูล-วัดกู่ลายมือ",type:"Learning Resource",tambon:"ยางคราม",owner:"พระอธิการดวง ฐิตตวโร",desc:"วัดศรีทรายมูล (กู่ลายมือ) วัดเก่าแก่สมัยล้านนา สันนิษฐานว่าสร้างในช่วงที่เชียงใหม่ตกเป็นเมืองขึ้นพม่า พ.ศ.2110-2317 ชาวลัวะได้ล่องมาตามน้ำปิงและพบกู่โบราณ ที่ตั้ง: บ้านผะนัง ต.ยางคราม อ.ดอยหล่อ จ.เชียงใหม่",lat:18.5619,lng:98.8271,category:"พระพุทธศาสนา",img:"https://drive.google.com/thumbnail?id=1d9vObWn1KyGL9OVFAYh33E1WA84HCx84&sz=w1000",video:"",contact:"",gallery:[],level:3},
+  {id:"RES2026022332",name:"วัดใหม่พัฒนา",type:"Learning Resource",tambon:"ยางคราม",owner:"พระครูสถาพรพัฒนรังษี",desc:"วัดใหม่พัฒนา ก่อตั้งปี พ.ศ.2514 เดิมชื่อสำนักสงฆ์แสงอรุณ เปลี่ยนชื่อโดยหลวงปู่ครูบาอินเป็นวัดอินทาราม แล้วประกาศเป็นวัดใหม่พัฒนา 31 สิงหาคม พ.ศ.2531 ที่ตั้ง: บ้านใหม่พัฒนา ต.ยางคราม อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5470,lng:98.8182,category:"พระพุทธศาสนา",img:"https://drive.google.com/thumbnail?id=1IBFjMiVx59hMZgFvERGFVOALq420P-bZ&sz=w1000",video:"",contact:"",gallery:[],level:3},
+  {id:"RES2026022333",name:"วัดดอนชัย",type:"Learning Resource",tambon:"ยางคราม",owner:"พระอธิการสุรสีห์ ญาณาสโย",desc:"วัดดอนชัย เลขที่ 137 ม.5 ต.ยางคราม ตั้งชื่อตามดอนที่ดินของพ่อหนานจัย มีสำนักเรียนพระปริยัติธรรมตั้งแต่ พ.ศ.2480 เป็นโรงเรียนประชาบาลแห่งแรกของตำบลยางคราม ที่ตั้ง: บ้านดอนชัย ต.ยางคราม อ.ดอยหล่อ จ.เชียงใหม่ 50160",lat:18.5538,lng:98.8341,category:"พระพุทธศาสนา",img:"https://drive.google.com/thumbnail?id=1HTOlpmARFePZWjB90rpd3TGvTWst_iXr&sz=w1000",video:"",contact:"",gallery:[],level:3},
+  {id:"WIS2026022334",name:"การทำโคมล้านนา",type:"Local Wisdom",tambon:"ยางคราม",owner:"นายวัน ยี่ทะรา",desc:"นายวัน ยี่ทะรา ประธานผู้สูงอายุบ้านใหม่พัฒนา ม.2 ต.ยางคราม นำผู้สูงอายุรวมกลุ่มทำโคมล้านนา ก่อให้เกิดรายได้แก่กลุ่มตลอดทั้งปี ที่ตั้ง: บ้านใหม่พัฒนา บ้านเลขที่ 59 ต.ยางคราม อ.ดอยหล่อ 50160",lat:18.5472,lng:98.8181,category:"หัตถกรรม",img:"https://drive.google.com/thumbnail?id=1xFHnec-mnmwT8t7CE_ItA-3uggdQ39WH&sz=w1000",video:"",contact:"093-2630593",gallery:[],level:4},
+  {id:"RES2026051335",name:"บ้านหนังสือชุมชนร้านข้างบ้านคาเฟ่",type:"Learning Resource",tambon:"สันติสุข",owner:"นางสาวเกียรติยาภรณ์ กัญญเทพ",desc:"แหล่งเรียนรู้บ้านหนังสือชุมชน เกี่ยวกับการประกอบอาชีพด้านอาหารและเครื่องดื่ม ให้ความรู้และแลกเปลี่ยนประสบการณ์ด้านการทำอาหารและเครื่องดื่มในชุมชน ที่ตั้ง: ต.สันติสุข อ.ดอยหล่อ จ.เชียงใหม่",lat:18.5221,lng:98.8287,category:"อาหารและเครื่องดื่ม",img:"https://drive.google.com/thumbnail?id=1F83qSWL7GBHGODDEl40nc5BE4T1a_Mz1&sz=w1000",video:"",contact:"095-807-1166",gallery:["https://drive.google.com/thumbnail?id=1PMWYbNLwXwTyCXFiKpQrasG78o-9ZHlX&sz=w1000"],level:5}
+];
+
+// QUIZ QUESTIONS (based on the data)
+const QUIZ_QUESTIONS = [
+  {q:"สถานที่ใดได้รับสมญานามว่า 'แกรนด์แคนยอนเมืองไทย'?",img:"https://drive.google.com/thumbnail?id=1V--4Ezj1k_fybZdlRi1tiWZV3TRb3n9_&sz=w1000",options:["ผาช่อ อุทยานแห่งชาติแม่วาง","วัดพระธาตุดอยน้อย","สวนพฤกษาสมุนไพร","วัดฟ้าหลั่ง"],correct:0},
+  {q:"ไส้อั๋วป้าตุ๋ยทำสถิติโลกอะไร?",img:"https://drive.google.com/thumbnail?id=1t0rhhdtRTN8vOZHawa7-xHpaDxJg84in&sz=w1000",options:["ไส้อั่วยาวที่สุดในโลก 1,011 เมตร","ไส้อั่วเผ็ดที่สุดในโลก","ไส้อั่วหนักที่สุดในโลก","ไส้อั่วแพงที่สุดในโลก"],correct:0},
+  {q:"วัดพระธาตุดอยน้อยสร้างโดยใคร?",img:"https://drive.google.com/thumbnail?id=1a1z8gh5CHS4aEnBiRv2fULJKhdvNp3GT&sz=w1000",options:["พระนางจามเทวี","พระเมืองแก้ว","ครูบาศรีวิชัย","พ่อขุนมังราย"],correct:0},
+  {q:"วัดฟ้าหลั่งมีอายุกี่ปีโดยประมาณ?",img:"https://drive.google.com/thumbnail?id=1MuEn27-p2IH4wWEF7Tz0BzN8-nMIX0gz&sz=w1000",options:["มากกว่า 400 ปี","มากกว่า 200 ปี","มากกว่า 100 ปี","มากกว่า 50 ปี"],correct:0},
+  {q:"กลุ่มทอผ้าบ้านใหม่หนองหอยก่อตั้งในปีใด?",img:"https://drive.google.com/thumbnail?id=1-dgMPS5LegSUHlMT6CHrP-hwOlwB1ne-&sz=w1000",options:["พ.ศ. 2535","พ.ศ. 2510","พ.ศ. 2550","พ.ศ. 2500"],correct:0},
+  {q:"นางใส อุ้ยอ้าย เชี่ยวชาญงานอะไร?",img:"https://drive.google.com/thumbnail?id=1fpLpqZdSGtmecAkBTuIm47FXpSAL5tOG&sz=w1000",options:["การจักสานก๋วยและสานเปล","การทอผ้าล้านนา","การทำโคมล้านนา","การมัดย้อมผ้า"],correct:0}
+];
+
+// LEVELS CONFIG
+const LEVELS = [
+  {id:1,name:"ธรรมชาติ",icon:"🌿",color1:"#2ECC71",color2:"#1ABC9C",desc:"สำรวจสถานที่ทางธรรมชาติ"},
+  {id:2,name:"เกษตรกรรม",icon:"🌾",color1:"#F5C842",color2:"#FF9500",desc:"แหล่งเรียนรู้ด้านการเกษตร"},
+  {id:3,name:"พระพุทธศาสนา",icon:"⛩️",color1:"#FF6B35",color2:"#E74C3C",desc:"วัดและสถานที่ศักดิ์สิทธิ์"},
+  {id:4,name:"หัตถกรรม",icon:"🧵",color1:"#9B59B6",color2:"#6C3483",desc:"งานฝีมือและภูมิปัญญา"},
+  {id:5,name:"ภูมิปัญญารวม",icon:"🏆",color1:"#3498DB",color2:"#1A5276",desc:"ความรู้และประเพณีท้องถิ่น"}
+];
+
+// CATEGORY EMOJI MAP
+const CAT_EMOJI = {
+  "ธรรมชาติและสิ่งแวดล้อม":"🌿","เกษตรกรรม":"🌾","สาขา เกษตรกรรม":"🌾",
+  "พระพุทธศาสนา":"⛩️","แหล่งการเรียนรู้ด้านทางพระพุทธศาสนา":"⛩️","ด้านพระพุทธศาสนา":"⛩️",
+  "แหล่งการเรียนรู้ ด้านทางพระพุทธศาสนา":"⛩️","แหล่งเรียนรู้ด้านพระพุทธศาสนา":"⛩️",
+  "หัตถกรรม":"🧵","ศิลปกรรมด้านหัตถกรรม (งานฝีมือ)":"🧵","สาขา หัตถกรรม":"🧵",
+  "ภูมิปัญญา สาขา ศิลปกรรมด้าน  หัตถกรรม (งานฝีมือ)":"🧵",
+  "สาขาอุตสาหกรรมและหัตกรรม (ด้านการผลิตและการบริโภค)":"🏺",
+  "อาหารและเครื่องดื่ม":"🍜","สาขา การแปรรูปอาหาร":"🍜",
+  "ภาษาและวรรณกรรม":"📜","สาขา ภาษาและวรรณกรรม":"📜",
+  "ศาสนาและประเพณี":"🙏","สาขา ศาสนาและประเพณี":"🙏",
+  "สาขา กองทุนและธุรกิจชุมชน":"💰","ด้านการจักสาน":"🧺",
+  "สาขาศิลปกรรม (ด้านงานประดิษฐ์)":"🏮"
+};
+
+// ============================================================
+// GAME STATE
+// ============================================================
+const state = {
+  score: 0,
+  currentLevel: 1,
+  collectedIds: new Set(),
+  levelCollected: 0,
+  currentLevelItems: [],
+  cameraReady: false,
+  handActive: false,
+  handX: 0, handY: 0,
+  pinching: false,
+  gestureVic: false,
+  gestureOpen: false,
+  hoveredCard: null,
+  dwellTimer: null,
+  dwellProgress: 0,
+  dwellStartTime: null,
+  activeCards: [],
+  gameRunning: false,
+  quizIndex: 0,
+  quizScore: 0,
+  levelCompleted: false,
+  hoveredUI: null,
+  uiDwellTimer: null,
+  uiDwellStart: null,
+  autoAdvanceTimer: null,
+  autoAdvanceCountdown: null,
+};
+
+// ============================================================
+// DOM REFS
+// ============================================================
+const $ = id => document.getElementById(id);
+const videoBg = $('video-bg');
+const canvasOverlay = $('canvas-overlay');
+const ctx = canvasOverlay.getContext('2d');
+const handCursor = $('hand-cursor');
+const arContainer = $('ar-cards-container');
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('DOMContentLoaded', () => {
+  createStars();
+  createLevelPreview();
+  setTimeout(() => {
+    $('loading-screen').classList.add('hidden');
+    // ขอสิทธิ์กล้อง + เริ่มตรวจจับมือโดยอัตโนมัติ ก่อนเข้าหน้าเริ่มเกม
+    // เพื่อให้ปุ่ม "เริ่มเล่น" ควบคุมด้วยมือได้ตั้งแต่ต้น
+    initCameraAndHands();
+  }, 1200);
+});
+
+function createStars() {
+  const bg = $('welcome-bg-art');
+  for (let i=0; i<60; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.cssText = `
+      left:${Math.random()*100}%;
+      top:${Math.random()*70}%;
+      --d:${2+Math.random()*4}s;
+      animation-delay:${Math.random()*3}s;
+      width:${Math.random()>0.8?4:2}px;
+      height:${Math.random()>0.8?4:2}px;
+    `;
+    bg.appendChild(star);
+  }
+}
+
+function createLevelPreview() {
+  const wrap = $('level-preview');
+  LEVELS.forEach(lv => {
+    const dot = document.createElement('div');
+    dot.className = 'level-dot';
+    dot.innerHTML = `
+      <div class="level-dot-circle" style="background:rgba(${hexToRgb(lv.color1)},0.15);border-color:${lv.color1};color:${lv.color1}">
+        ${lv.icon}
+      </div>
+      <div class="level-dot-label">${lv.name}</div>
+    `;
+    wrap.appendChild(dot);
+  });
+}
+
+function hexToRgb(hex) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return `${r},${g},${b}`;
+}
+
+// ============================================================
+// SCREEN NAVIGATION
+// ============================================================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+  if (id) $(id)?.classList.remove('hidden');
+}
+
+// btn-start-game is hand-clickable (dwell/pinch) — this listener fires either way,
+// since triggerUIClick() calls the real el.click()
+$('btn-start-game').addEventListener('click', () => {
+  showScreen(null);
+  startLevel(1);
+});
+
+// btn-play-again is hand-clickable too
+$('btn-play-again').addEventListener('click', () => {
+  state.score = 0;
+  state.currentLevel = 1;
+  state.collectedIds.clear();
+  showScreen('welcome-screen');
+});
+
+// btn-retry-camera is the ONE unavoidable mouse-only control besides stop/exit:
+// without an active camera stream there is no hand signal to detect yet.
+$('btn-retry-camera').addEventListener('click', initCameraAndHands);
+
+// btn-stop-exit is ALWAYS mouse-only, by design (never marked hand-clickable)
+$('btn-stop-exit').addEventListener('click', stopAndExitGame);
+
+// ============================================================
+// CAMERA + MEDIAPIPE
+// ============================================================
+async function initCameraAndHands() {
+  showScreen('permission-screen');
+  $('perm-spinner').style.display = 'block';
+  $('btn-retry-camera').classList.add('hidden');
+  $('perm-title').textContent = 'กำลังขอสิทธิ์ใช้กล้อง';
+  $('perm-desc').innerHTML = 'เกมนี้ใช้กล้องหน้าเพื่อจับการเคลื่อนไหวของฝ่ามือในการควบคุมทั้งหมด<br>กรุณากด "อนุญาต" ที่หน้าต่างเบราว์เซอร์';
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } }
+    });
+    videoBg.srcObject = stream;
+    videoBg.style.display = 'block';
+    canvasOverlay.style.display = 'block';
+    videoBg.onloadedmetadata = () => {
+      canvasOverlay.width = window.innerWidth;
+      canvasOverlay.height = window.innerHeight;
+      state.cameraReady = true;
+      initMediaPipe();
+      $('btn-stop-exit').classList.remove('hidden');
+      showScreen('welcome-screen');
+    };
+  } catch(e) {
+    $('perm-spinner').style.display = 'none';
+    $('perm-title').textContent = 'ไม่สามารถเปิดกล้องได้';
+    $('perm-desc').innerHTML = 'กรุณาอนุญาตการใช้กล้องในเบราว์เซอร์ แล้วลองอีกครั้ง<br>(ขั้นตอนนี้ต้องใช้เมาส์/แตะเท่านั้น เพราะยังตรวจจับมือไม่ได้จนกว่าจะมีสัญญาณกล้อง)';
+    $('btn-retry-camera').classList.remove('hidden');
+    showToast('❌ ไม่สามารถเปิดกล้องได้ กรุณาอนุญาตการใช้กล้อง');
+  }
+}
+
+// ============================================================
+// STOP / EXIT (mouse-only) — leaves the AR game and resets state
+// ============================================================
+function stopAndExitGame() {
+  if (!confirm('ต้องการหยุดและออกจากเกมใช่หรือไม่?')) return;
+
+  clearTimeout(state.autoAdvanceTimer);
+  clearInterval(state.autoAdvanceCountdown);
+  stopDwell();
+  stopUIDwell();
+
+  state.gameRunning = false;
+  state.score = 0;
+  state.currentLevel = 1;
+  state.collectedIds.clear();
+
+  try {
+    const stream = videoBg.srcObject;
+    if (stream) stream.getTracks().forEach(t => t.stop());
+  } catch(e) {}
+  videoBg.srcObject = null;
+
+  $('hud').classList.add('hidden');
+  $('gesture-status').classList.add('hidden');
+  $('progress-wrap').classList.add('hidden');
+  $('detail-modal').classList.remove('visible');
+  $('quiz-overlay').classList.remove('visible');
+  $('transition-overlay').classList.remove('active');
+  $('btn-stop-exit').classList.add('hidden');
+  arContainer.innerHTML = '';
+
+  showScreen('welcome-screen');
+  showToast('⏹ ออกจากเกมแล้ว');
+  // ต้องขอสิทธิ์กล้องใหม่เพื่อเริ่มควบคุมด้วยมืออีกครั้ง
+  initCameraAndHands();
+}
+
+function initMediaPipe() {
+  const hands = new Hands({
+    locateFile: f => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${f}`
+  });
+  hands.setOptions({
+    maxNumHands: 1,
+    modelComplexity: 1,
+    minDetectionConfidence: 0.7,
+    minTrackingConfidence: 0.5
+  });
+  hands.onResults(onHandResults);
+
+  const camera = new Camera(videoBg, {
+    onFrame: async () => { await hands.send({ image: videoBg }); },
+    width: 1280, height: 720
+  });
+  camera.start();
+}
+
+// ============================================================
+// HAND RESULTS PROCESSING
+// ============================================================
+function onHandResults(results) {
+  ctx.clearRect(0, 0, canvasOverlay.width, canvasOverlay.height);
+
+  if (!results.multiHandLandmarks || !results.multiHandLandmarks.length) {
+    state.handActive = false;
+    handCursor.style.display = 'none';
+    updateGestureUI(null);
+    if (state.hoveredCard) { stopDwell(); }
+    return;
+  }
+
+  state.handActive = true;
+  const lm = results.multiHandLandmarks[0];
+
+  // Mirror X for display (video is mirrored)
+  const palmX = (1 - lm[9].x) * window.innerWidth;
+  const palmY = lm[9].y * window.innerHeight;
+
+  state.handX = palmX;
+  state.handY = palmY;
+
+  // Gesture detection
+  const pinchDist = dist(lm[4], lm[8]);
+  const isPinching = pinchDist < 0.06;
+  const isOpen = isOpenPalm(lm);
+  const isVic = isVictory(lm);
+
+  const prevPinch = state.pinching;
+  state.pinching = isPinching;
+  state.gestureOpen = isOpen;
+  state.gestureVic = isVic;
+
+  // Update cursor
+  handCursor.style.display = 'block';
+  handCursor.style.left = palmX + 'px';
+  handCursor.style.top = palmY + 'px';
+  handCursor.classList.toggle('cursor-pinch', isPinching);
+
+  // Draw hand skeleton
+  drawHand(lm, results.multiHandedness);
+
+  updateGestureUI(isPinching ? 'pinch' : isVic ? 'vic' : isOpen ? 'open' : null);
+
+  // Victory gesture = close modal / next level
+  if (isVic && !prevPinch) {
+    const modal = $('detail-modal');
+    if (modal.classList.contains('visible')) closeModal();
+  }
+
+  // Check card hover / pinch interactions (skip if a modal/quiz overlay is covering the cards)
+  const modalOpen = $('detail-modal').classList.contains('visible');
+  const quizOpen = $('quiz-overlay').classList.contains('visible');
+  if (state.gameRunning && !modalOpen && !quizOpen) {
+    checkCardInteractions(palmX, palmY, isPinching, prevPinch);
+  } else if (state.hoveredCard) {
+    stopDwell();
+  }
+
+  // Generic hand-controlled UI (buttons, quiz options, modal actions, etc.)
+  checkUIInteractions(palmX, palmY, isPinching, prevPinch);
+}
+
+// ============================================================
+// GENERIC HAND-CONTROLLED UI (dwell-to-click for any .hand-clickable element)
+// ============================================================
+function isElementInteractable(el) {
+  if (el.disabled) return false;
+  const style = getComputedStyle(el);
+  if (style.display === 'none' || style.visibility === 'hidden') return false;
+  if (parseFloat(style.opacity) === 0) return false;
+  if (style.pointerEvents === 'none') return false;
+  let node = el;
+  while (node) {
+    if (node.classList && node.classList.contains('hidden')) return false;
+    node = node.parentElement;
+  }
+  const rect = el.getBoundingClientRect();
+  return rect.width > 0 && rect.height > 0;
+}
+
+function getHandClickTargets() {
+  return Array.from(document.querySelectorAll('.hand-clickable')).filter(isElementInteractable);
+}
+
+function checkUIInteractions(px, py, isPinching, prevPinch) {
+  const targets = getHandClickTargets();
+  let nearest = null;
+  let nearestDist = 130;
+
+  targets.forEach(el => {
+    const rect = el.getBoundingClientRect();
+    const dx = Math.max(rect.left - px, 0, px - rect.right);
+    const dy = Math.max(rect.top - py, 0, py - rect.bottom);
+    const d = Math.hypot(dx, dy);
+    if (d < nearestDist) { nearestDist = d; nearest = el; }
+  });
+
+  if (nearest !== state.hoveredUI) {
+    if (state.hoveredUI) stopUIDwell();
+    state.hoveredUI = nearest;
+    if (nearest) {
+      nearest.classList.add('dwelling');
+      startUIDwell(nearest);
     }
-    function stopCamera(){cameraLoop?.stop?.();hands?.close?.();if(typeof cameraLoop==="number")cancelAnimationFrame(cameraLoop);cameraStream?.getTracks().forEach(t=>t.stop());cameraStream=null;hands=null}
-    function onHand(r){if(paused||transition!==null)return;const h=r.multiHandLandmarks?.[0];if(!h){setGesture("none");return}cursor={x:Math.max(5,Math.min(95,(1-h[8].x)*100)),y:Math.max(8,Math.min(92,h[8].y*100))};const pin=Math.hypot(h[8].x-h[4].x,h[8].y-h[4].y)<.065,ex=[8,12,16,20].filter(t=>h[t].y<h[t-2].y).length,v=h[8].y<h[6].y&&h[12].y<h[10].y&&h[16].y>h[14].y&&h[20].y>h[18].y;setGesture(pin?"pinch":v?"v":ex>=3?"open":"none");}
-    function setGesture(g){gesture=g;["gOpen","gPinch","gV"].forEach(x=>$(x).classList.remove("active"));if(g==="open")$("gOpen").classList.add("active");if(g==="pinch")$("gPinch").classList.add("active");if(g==="v"){$("gV").classList.add("active");if(detail){detail=null;$("detailLayer").classList.add("hidden");render()}}$("cursor").className="cursor"+(g==="pinch"?" pinch":"");$("cursor").style.left=cursor.x+"%";$("cursor").style.top=cursor.y+"%";$("cursor").querySelector("b").textContent=g==="pinch"?"เลือก":g==="open"?"เล็ง":g==="v"?"ปิด":"กำลังหา"}
-    function render(){const l=levels[level];document.documentElement.style.setProperty("--tone",l.tone);$("levelName").innerHTML=`<span>เส้นทางที่ ${level+1} / 5</span><b>${l.kicker}</b>`;$("levelKicker").textContent=l.kicker;$("levelTitle").textContent=l.title;$("levelHint").textContent=l.hint;$("score").textContent=score.toLocaleString();if(level<4){$("content").innerHTML=`<section class="field">${l.places.map((p,i)=>`<article class="card ${collected.has(p.id)?"collected":""}" data-place="${p.id}" style="--tone:${l.tone};--delay:${i*100}ms"><div class="card-image"><img src="${p.img}" alt=""><span class="card-num">0${i+1}</span>${collected.has(p.id)?'<span class="tag">เก็บแล้ว</span>':''}</div><div class="card-body"><small>${p.category}</small><h2>${p.name}</h2><p>ตำบล${p.tambon}</p><div class="card-foot"><span>จีบนิ้วเพื่อเปิด</span><b>+${p.points}</b></div></div></article>`).join("")}</section>`}else{const q=questions[quiz];$("content").innerHTML=`<section class="quiz-layer"><div class="quiz"><div class="quiz-top"><span>ภารกิจสุดท้าย • คำถาม ${quiz+1} / ${questions.length}</span><span>ทบทวนความรู้</span></div><h1>${q.q}</h1><div class="options">${q.o.map((o,i)=>`<div class="option" data-option="${i}"><span>${String.fromCharCode(65+i)}</span><b>${o}</b></div>`).join("")}</div><p class="quiz-hint">เลื่อนมือไปที่คำตอบ • จีบนิ้วค้างเพื่อยืนยัน</p></div></section>`}updateProgress()}
-    function updateProgress(){const total=level<4?levels[level].places.length:questions.length,current=level<4?collected.size:quiz;$("progressText").textContent=`${current} / ${total}`;$("progressBar").style.width=(current/total*100)+"%"}
-    function hitTest(){const x=cursor.x/100*innerWidth,y=cursor.y/100*innerHeight;return [...document.querySelectorAll("[data-place],[data-option]")].find(el=>{const r=el.getBoundingClientRect();return x>r.left&&x<r.right&&y>r.top&&y<r.bottom})}
-    function interaction(){if(paused||detail||transition!==null||lock)return;const el=hitTest(),key=el?.dataset.place||("q"+el?.dataset.option)||null;if(key!==hover){hover=key;dwellStart=performance.now();dwell=0;document.querySelectorAll(".target,.option.target").forEach(x=>x.classList.remove("target","choice-target"));if(el)el.classList.add("target");return}if(!el)return;dwell=Math.min(1,(performance.now()-dwellStart)/1050);const bar=el.querySelector(".dwell");if(bar)bar.style.width=dwell*100+"%";if(dwell>=1&&gesture==="pinch"){if(level<4)collectPlace(el.dataset.place);else answerQuiz(Number(el.dataset.option))}}
-    function collectPlace(id){const p=levels[level].places.find(x=>x.id===id);if(!p||collected.has(id))return;lock=true;collected.add(id);score+=p.points;detail=p;showDetail(p);setTimeout(()=>lock=false,700);render();showDetail(p);if(collected.size>=levels[level].places.length)setTimeout(()=>nextLevel(),1200)}
-    function showDetail(p){$("detailLayer").innerHTML=`<article class="detail" style="--tone:${levels[level].tone}"><div class="detail-hero"><img src="${p.img}" alt=""><label>${p.category}</label><div class="detail-close">ทำท่า V เพื่อปิด</div></div><div class="detail-content"><div class="meta">ตำบล${p.tambon} • ดอยหล่อ เชียงใหม่</div><h1>${p.name}</h1><div class="meta">ผู้ดูแลแหล่งเรียนรู้: ${p.owner}</div><h3>เรื่องเล่าจากพื้นที่</h3><p class="desc">${p.desc}</p><div class="detail-grid"><div><small>หมวดหมู่</small><b>${p.category}</b></div><div><small>ติดต่อ</small><b>${p.contact||"ชุมชนดอยหล่อ"}</b></div></div></div></article>`;$("detailLayer").classList.remove("hidden")}
-    function answerQuiz(i){if(answer!==null)return;answer=i;if(i===questions[quiz].a)score+=200;render();setTimeout(()=>{if(quiz>=questions.length-1){nextLevel()}else{quiz++;answer=null;render()}},1200)}
-    function nextLevel(){if(transition!==null)return;transition=2;$("transitionTitle").textContent=level<4?levels[level+1].title:"เส้นทางสำเร็จ";$("transitionHint").textContent=level<4?levels[level+1].hint:"กำลังสรุปการเดินทางของคุณ";$("transitionOrb").style.background=level<4?levels[level+1].tone:levels[level].tone;$("transitionLayer").classList.remove("hidden");$("count").textContent=transition;const t=setInterval(()=>{if(paused)return;transition--;$("count").textContent=transition;if(transition<=0){clearInterval(t);$("transitionLayer").classList.add("hidden");if(level>=4){stopCamera();$("finalScore").textContent=score.toLocaleString();show("complete")}else{level++;collected=new Set();detail=null;hover=null;render()}}},1000)}
-    setInterval(()=>{if(document.getElementById("game").classList.contains("hidden"))return;interaction()},80);
-  </script>
+  }
+
+  // Pinch to select immediately, same as AR card collection
+  if (isPinching && !prevPinch && nearest) {
+    triggerUIClick(nearest);
+  }
+}
+
+function startUIDwell(el) {
+  state.uiDwellStart = Date.now();
+  const DWELL_TIME = 1200;
+
+  function tick() {
+    if (!state.hoveredUI || state.hoveredUI !== el) return;
+    const elapsed = Date.now() - state.uiDwellStart;
+    const pct = Math.min(1, elapsed / DWELL_TIME);
+    el.style.setProperty('--dwell-pct', pct);
+    if (pct >= 1) {
+      triggerUIClick(el);
+      return;
+    }
+    state.uiDwellTimer = requestAnimationFrame(tick);
+  }
+  state.uiDwellTimer = requestAnimationFrame(tick);
+}
+
+function stopUIDwell() {
+  if (state.uiDwellTimer) cancelAnimationFrame(state.uiDwellTimer);
+  if (state.hoveredUI) {
+    state.hoveredUI.classList.remove('dwelling');
+    state.hoveredUI.style.setProperty('--dwell-pct', 0);
+  }
+  state.hoveredUI = null;
+  state.uiDwellStart = null;
+}
+
+function triggerUIClick(el) {
+  stopUIDwell();
+  el.click();
+}
+
+function dist(a, b) {
+  return Math.hypot(a.x - b.x, a.y - b.y);
+}
+function isOpenPalm(lm) {
+  const tips = [8, 12, 16, 20];
+  const bases = [6, 10, 14, 18];
+  return tips.every((tip, i) => lm[tip].y < lm[bases[i]].y);
+}
+function isVictory(lm) {
+  const ixUp = lm[8].y < lm[6].y;
+  const mxUp = lm[12].y < lm[10].y;
+  const ringDown = lm[16].y > lm[14].y;
+  const pinkyDown = lm[20].y > lm[18].y;
+  return ixUp && mxUp && ringDown && pinkyDown;
+}
+
+function drawHand(lm, handedness) {
+  const w = canvasOverlay.width;
+  const h = canvasOverlay.height;
+  const mirrorX = x => (1 - x) * w;
+
+  ctx.strokeStyle = 'rgba(245,200,66,0.5)';
+  ctx.lineWidth = 2;
+
+  const connections = [[0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[5,9],[9,10],[10,11],[11,12],[9,13],[13,14],[14,15],[15,16],[13,17],[17,18],[18,19],[19,20],[0,17]];
+
+  connections.forEach(([a,b]) => {
+    ctx.beginPath();
+    ctx.moveTo(mirrorX(lm[a].x), lm[a].y * h);
+    ctx.lineTo(mirrorX(lm[b].x), lm[b].y * h);
+    ctx.stroke();
+  });
+
+  lm.forEach((point, i) => {
+    ctx.beginPath();
+    ctx.arc(mirrorX(point.x), point.y * h, i===0?8:5, 0, Math.PI*2);
+    ctx.fillStyle = i===4||i===8 ? '#F5C842' : 'rgba(245,200,66,0.6)';
+    ctx.fill();
+  });
+}
+
+function updateGestureUI(gesture) {
+  $('gi-pinch').classList.toggle('active', gesture === 'pinch');
+  $('gi-open').classList.toggle('active', gesture === 'open');
+  $('gi-fist').classList.toggle('active', gesture === 'vic');
+}
+
+// ============================================================
+// CARD INTERACTIONS
+// ============================================================
+function checkCardInteractions(px, py, isPinching, prevPinch) {
+  let nearestCard = null;
+  let nearestDist = 120;
+
+  document.querySelectorAll('.ar-card:not(.collected)').forEach(card => {
+    const rect = card.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const d = Math.hypot(px - cx, py - cy);
+    if (d < nearestDist) { nearestDist = d; nearestCard = card; }
+  });
+
+  if (nearestCard !== state.hoveredCard) {
+    if (state.hoveredCard) stopDwell();
+    state.hoveredCard = nearestCard;
+    if (nearestCard) {
+      nearestCard.classList.add('hovering');
+      startDwell(nearestCard);
+    }
+  }
+
+  // Pinch to immediately collect
+  if (isPinching && !prevPinch && nearestCard) {
+    collectCard(nearestCard);
+  }
+}
+
+function startDwell(card) {
+  state.dwellStartTime = Date.now();
+  const fill = card.querySelector('.dwell-fill');
+  const DWELL_TIME = 1500;
+
+  function tick() {
+    if (!state.hoveredCard || state.hoveredCard !== card) return;
+    const elapsed = Date.now() - state.dwellStartTime;
+    const pct = Math.min(100, (elapsed / DWELL_TIME) * 100);
+    if (fill) fill.style.width = pct + '%';
+    if (pct >= 100) {
+      collectCard(card);
+      return;
+    }
+    state.dwellTimer = requestAnimationFrame(tick);
+  }
+  state.dwellTimer = requestAnimationFrame(tick);
+}
+
+function stopDwell() {
+  if (state.dwellTimer) cancelAnimationFrame(state.dwellTimer);
+  if (state.hoveredCard) {
+    state.hoveredCard.classList.remove('hovering');
+    const fill = state.hoveredCard.querySelector('.dwell-fill');
+    if (fill) fill.style.width = '0%';
+  }
+  state.hoveredCard = null;
+  state.dwellStartTime = null;
+}
+
+function collectCard(card) {
+  stopDwell();
+  const placeId = card.dataset.placeId;
+  if (state.collectedIds.has(placeId)) return;
+
+  state.collectedIds.add(placeId);
+  state.levelCollected++;
+
+  const place = PLACES.find(p => p.id === placeId);
+  const points = getPlacePoints(place);
+  state.score += points;
+
+  // Collect animation
+  card.classList.add('collected');
+
+  // Burst effect
+  const rect = card.getBoundingClientRect();
+  const cx = rect.left + rect.width/2;
+  const cy = rect.top + rect.height/2;
+  createBurst(cx, cy);
+  createScorePop(cx, cy, `+${points}`);
+
+  // Update HUD
+  updateHUD();
+
+  // Show detail modal after brief delay
+  setTimeout(() => {
+    if (place) showDetail(place, points);
+  }, 600);
+
+  // Remove card from DOM after animation
+  setTimeout(() => { card.remove(); }, 600);
+}
+
+function getPlacePoints(place) {
+  if (!place) return 100;
+  const base = { 1: 100, 2: 150, 3: 150, 4: 200, 5: 250 };
+  return base[place.level] || 100;
+}
+
+function createBurst(x, y) {
+  const burst = document.createElement('div');
+  burst.className = 'collect-burst';
+  burst.style.left = x + 'px';
+  burst.style.top = y + 'px';
+  document.body.appendChild(burst);
+  setTimeout(() => burst.remove(), 700);
+}
+
+function createScorePop(x, y, text) {
+  const pop = document.createElement('div');
+  pop.className = 'score-pop';
+  pop.textContent = text;
+  pop.style.left = x + 'px';
+  pop.style.top = y + 'px';
+  document.body.appendChild(pop);
+  setTimeout(() => pop.remove(), 1300);
+}
+
+// ============================================================
+// LEVEL SYSTEM
+// ============================================================
+function getLevelItems(levelId) {
+  return PLACES.filter(p => p.level === levelId);
+}
+
+function startLevel(levelId) {
+  const lv = LEVELS[levelId - 1];
+  if (!lv) { showGameComplete(); return; }
+
+  state.currentLevel = levelId;
+  state.levelCollected = 0;
+  state.levelCompleted = false;
+  state.gameRunning = false;
+
+  // Update CSS vars for level colors
+  document.documentElement.style.setProperty('--lv-c1', lv.color1);
+  document.documentElement.style.setProperty('--lv-c2', lv.color2);
+
+  // Show transition
+  $('tr-icon').textContent = lv.icon;
+  $('tr-title').textContent = `เลเวล ${levelId}: ${lv.name}`;
+  $('tr-sub').textContent = lv.desc;
+  $('transition-overlay').classList.add('active');
+
+  setTimeout(() => {
+    $('transition-overlay').classList.remove('active');
+    if (levelId === 5) {
+      startQuizLevel();
+    } else {
+      startARLevel(levelId);
+    }
+  }, 2000);
+}
+
+function startARLevel(levelId) {
+  const lv = LEVELS[levelId - 1];
+  const items = getLevelItems(levelId);
+  state.currentLevelItems = items;
+
+  // Show HUD
+  $('hud').classList.remove('hidden');
+  $('gesture-status').classList.remove('hidden');
+  $('progress-wrap').classList.remove('hidden');
+
+  $('level-badge').textContent = `${lv.icon} เลเวล ${levelId}`;
+  $('level-name-hud').textContent = lv.name;
+  $('level-icon-hud').textContent = lv.icon;
+
+  updateHUD();
+  spawnARCards(items);
+  state.gameRunning = true;
+}
+
+function spawnARCards(items) {
+  arContainer.innerHTML = '';
+  const lv = LEVELS[state.currentLevel - 1];
+
+  items.forEach((place, i) => {
+    const card = createARCard(place, lv);
+
+    // Staggered positions - spread across screen
+    const cols = Math.min(3, items.length);
+    const col = i % cols;
+    const row = Math.floor(i / cols);
+    const baseX = (col + 1) / (cols + 1) * window.innerWidth;
+    const baseY = 150 + row * 260 + (i % 2 ? -30 : 30);
+    const jitter = () => (Math.random() - 0.5) * 80;
+
+    card.style.left = Math.max(110, Math.min(window.innerWidth - 110, baseX + jitter())) + 'px';
+    card.style.top = Math.max(130, Math.min(window.innerHeight - 200, baseY + jitter())) + 'px';
+    card.style.setProperty('--float-d', (2.5 + Math.random() * 2) + 's');
+    card.style.animationDelay = (i * 0.3) + 's';
+    card.style.opacity = '0';
+    card.dataset.placeId = place.id;
+
+    arContainer.appendChild(card);
+
+    // Fade in staggered
+    setTimeout(() => { card.style.opacity = '1'; card.style.transition = 'opacity 0.5s ease'; }, i * 200);
+  });
+}
+
+function createARCard(place, lv) {
+  const card = document.createElement('div');
+  card.className = 'ar-card';
+
+  const emoji = CAT_EMOJI[place.category] || '📍';
+  const borderColor = lv.color1;
+  const catColor = lv.color1;
+
+  card.innerHTML = `
+    <div class="dwell-ring"></div>
+    <div class="ar-card-inner" style="border-color:${borderColor}40;background:rgba(13,27,42,0.9)">
+      <img class="ar-card-img" src="${place.img}" alt="${place.name}" onerror="this.style.background='#1A2A3A';this.style.display='flex';this.style.alignItems='center';this.style.justifyContent='center';this.innerHTML='${emoji}';this.style.fontSize='40px'">
+      <div class="ar-card-cat" style="color:${catColor}">${emoji} ${place.category.replace('สาขา ','').replace('สาขา','').substring(0,20)}</div>
+      <div class="ar-card-name">${place.name}</div>
+      <div class="ar-card-tambon">📍 ${place.tambon}</div>
+      <div class="dwell-progress"><div class="dwell-fill"></div></div>
+    </div>
+  `;
+  return card;
+}
+
+function updateHUD() {
+  $('hud-score').textContent = state.score.toLocaleString();
+  const total = state.currentLevel < 5 ? state.currentLevelItems.length : QUIZ_QUESTIONS.length;
+  $('hud-collected').textContent = `${state.levelCollected}/${total}`;
+  $('progress-count').textContent = `${state.levelCollected}/${total}`;
+  const pct = total > 0 ? (state.levelCollected / total * 100) : 0;
+  $('progress-fill').style.width = pct + '%';
+
+  // Check level complete
+  if (state.levelCollected >= total && !state.levelCompleted) {
+    state.levelCompleted = true;
+    state.gameRunning = false;
+    setTimeout(() => showLevelComplete(), 1000);
+  }
+}
+
+// ============================================================
+// DETAIL MODAL
+// ============================================================
+function showDetail(place, points) {
+  const modal = $('detail-modal');
+  const content = $('modal-card-content');
+  const lv = LEVELS[state.currentLevel - 1] || LEVELS[0];
+  const emoji = CAT_EMOJI[place.category] || '📍';
+  const typeBadge = place.type === 'Local Wisdom'
+    ? {text:'ภูมิปัญญา',bg:'rgba(155,89,182,0.8)'}
+    : {text:'แหล่งเรียนรู้',bg:'rgba(52,152,219,0.8)'};
+
+  const galleryHTML = place.gallery.length ? `
+    <div class="modal-section-title">🖼️ รูปภาพเพิ่มเติม</div>
+    <div class="gallery-scroll">
+      ${place.gallery.map(url=>`<img class="gallery-img" src="${url}" alt="gallery">`).join('')}
+    </div>
+  ` : '';
+
+  const videoHTML = place.video ? `
+    <div style="margin-top:12px">
+      <a href="${place.video}" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:rgba(231,76,60,0.15);border:1px solid rgba(231,76,60,0.3);border-radius:50px;padding:10px 20px;color:#E74C3C;font-family:'Kanit',sans-serif;font-weight:600;font-size:14px;text-decoration:none">
+        ▶ ดูวิดีโอเพิ่มเติม
+      </a>
+    </div>
+  ` : '';
+
+  // Break desc into bullet points if long
+  const desc = place.desc;
+  const descShort = desc.length > 300 ? desc.substring(0,300) + '...' : desc;
+
+  content.innerHTML = `
+    <div class="modal-hero">
+      <img class="modal-hero-img" src="${place.img}" alt="${place.name}" onerror="this.style.background='linear-gradient(135deg,${lv.color1},${lv.color2})';this.innerHTML='<div style=font-size:60px;text-align:center;padding:70px>${emoji}</div>'">
+      <div class="modal-hero-overlay"></div>
+      <div class="modal-type-badge" style="background:${typeBadge.bg}">${typeBadge.text}</div>
+      <button class="modal-close hand-clickable" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-points-banner">
+        <div style="font-size:30px">${emoji}</div>
+        <div>
+          <div class="modal-points-text">คะแนนที่ได้รับ</div>
+          <div class="modal-points-value">+${points} คะแนน</div>
+        </div>
+      </div>
+      <div class="modal-cat-label" style="color:${lv.color1}">${emoji} ${place.category}</div>
+      <div class="modal-name">${place.name}</div>
+      <div class="modal-tambon">📍 ตำบล${place.tambon} · อำเภอดอยหล่อ · เชียงใหม่</div>
+
+      <div class="modal-section-title">📖 ข้อมูล</div>
+      <div class="modal-desc">${descShort}</div>
+
+      ${videoHTML}
+
+      <div class="info-grid" style="margin-top:20px">
+        <div class="info-item">
+          <div class="info-item-label">👤 ผู้รับผิดชอบ</div>
+          <div class="info-item-value">${place.owner || '-'}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-label">📞 ติดต่อ</div>
+          <div class="info-item-value">${place.contact || '-'}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-label">🗺️ ตำบล</div>
+          <div class="info-item-value">${place.tambon}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-label">🏷️ ประเภท</div>
+          <div class="info-item-value">${place.type === 'Local Wisdom' ? 'ภูมิปัญญา' : 'แหล่งเรียนรู้'}</div>
+        </div>
+      </div>
+
+      ${galleryHTML}
+
+      <div class="modal-btn-group" style="margin-top:20px">
+        <button class="btn-modal btn-modal-primary hand-clickable" onclick="closeModal()">✓ รับทราบ</button>
+        ${place.video ? `<button class="btn-modal btn-modal-secondary hand-clickable" onclick="window.open('${place.video}','_blank')">▶ วิดีโอ</button>` : ''}
+      </div>
+    </div>
+  `;
+
+  modal.classList.add('visible');
+}
+
+function closeModal() {
+  const modal = $('detail-modal');
+  modal.classList.remove('visible');
+}
+
+// ============================================================
+// LEVEL COMPLETE
+// ============================================================
+function showLevelComplete() {
+  $('hud').classList.add('hidden');
+  $('gesture-status').classList.add('hidden');
+  $('progress-wrap').classList.add('hidden');
+  arContainer.innerHTML = '';
+
+  const lv = LEVELS[state.currentLevel - 1];
+  $('lc-icon').textContent = lv.icon;
+  $('lc-title').textContent = `เลเวล ${state.currentLevel} ผ่าน!`;
+  $('lc-subtitle').textContent = `${lv.name} — ${lv.desc}`;
+  $('lc-collected').textContent = state.levelCollected;
+  $('lc-points').textContent = state.score.toLocaleString();
+
+  const nextLv = LEVELS[state.currentLevel];
+  $('btn-next-level').textContent = nextLv
+    ? `${nextLv.icon} เลเวล ${state.currentLevel + 1}: ${nextLv.name} →`
+    : '🏆 ดูผลการเล่น';
+
+  showScreen('level-complete');
+
+  // เลื่อนเลเวลถัดไปอัตโนมัติ — ผู้เล่นไม่จำเป็นต้องกดปุ่ม (จะกดด้วยมือให้ไปทันทีก็ได้)
+  const AUTO_ADVANCE_MS = 4000;
+  let remaining = Math.ceil(AUTO_ADVANCE_MS / 1000);
+  $('lc-countdown').textContent = remaining;
+  clearInterval(state.autoAdvanceCountdown);
+  state.autoAdvanceCountdown = setInterval(() => {
+    remaining--;
+    if (remaining >= 0) $('lc-countdown').textContent = remaining;
+  }, 1000);
+
+  clearTimeout(state.autoAdvanceTimer);
+  state.autoAdvanceTimer = setTimeout(() => {
+    $('btn-next-level').click();
+  }, AUTO_ADVANCE_MS);
+}
+
+$('btn-next-level').addEventListener('click', () => {
+  clearTimeout(state.autoAdvanceTimer);
+  clearInterval(state.autoAdvanceCountdown);
+  showScreen(null);
+  const next = state.currentLevel + 1;
+  if (next > LEVELS.length) {
+    showGameComplete();
+  } else {
+    startLevel(next);
+  }
+});
+
+// ============================================================
+// QUIZ LEVEL (Level 5)
+// ============================================================
+function startQuizLevel() {
+  const lv = LEVELS[4];
+  state.currentLevelItems = QUIZ_QUESTIONS;
+  state.levelCollected = 0;
+  state.quizIndex = 0;
+  state.quizScore = 0;
+
+  $('hud').classList.remove('hidden');
+  $('gesture-status').classList.add('hidden');
+  $('progress-wrap').classList.remove('hidden');
+  $('progress-text').textContent = 'คำถาม';
+
+  $('level-badge').textContent = `${lv.icon} เลเวล 5`;
+  $('level-name-hud').textContent = 'ทดสอบความรู้';
+  $('level-icon-hud').textContent = '🧠';
+
+  updateHUD();
+  showNextQuiz();
+}
+
+function showNextQuiz() {
+  if (state.quizIndex >= QUIZ_QUESTIONS.length) {
+    $('quiz-overlay').classList.remove('visible');
+    showLevelComplete();
+    return;
+  }
+
+  const q = QUIZ_QUESTIONS[state.quizIndex];
+  const qc = $('quiz-card-content');
+
+  qc.innerHTML = `
+    <div class="quiz-q-num">คำถามที่ ${state.quizIndex+1} / ${QUIZ_QUESTIONS.length}</div>
+    <img class="quiz-img" src="${q.img}" alt="question">
+    <div class="quiz-question">${q.q}</div>
+    <div class="quiz-options">
+      ${q.options.map((opt, i) => `
+        <div class="quiz-option hand-clickable" onclick="answerQuiz(${i}, ${q.correct}, this)">${opt}</div>
+      `).join('')}
+    </div>
+  `;
+  $('quiz-overlay').classList.add('visible');
+}
+
+function answerQuiz(selected, correct, el) {
+  // Disable all options
+  document.querySelectorAll('.quiz-option').forEach(o => {
+    o.style.pointerEvents = 'none';
+    o.onclick = null;
+  });
+
+  const allOptions = document.querySelectorAll('.quiz-option');
+  allOptions[correct].classList.add('correct');
+
+  if (selected === correct) {
+    el.classList.add('correct');
+    const points = 200;
+    state.score += points;
+    state.quizScore++;
+    createScorePop(window.innerWidth/2, window.innerHeight/2, `+${points} 🎉`);
+    showToast('✅ ถูกต้อง! +200 คะแนน');
+  } else {
+    el.classList.add('wrong');
+    showToast(`❌ ไม่ถูก — คำตอบคือ: ${QUIZ_QUESTIONS[state.quizIndex].options[correct]}`);
+  }
+
+  state.levelCollected = state.quizIndex + 1;
+  state.quizIndex++;
+  updateHUD();
+
+  setTimeout(() => {
+    $('quiz-overlay').classList.remove('visible');
+    setTimeout(showNextQuiz, 300);
+  }, 1800);
+}
+
+// ============================================================
+// GAME COMPLETE
+// ============================================================
+function showGameComplete() {
+  $('quiz-overlay').classList.remove('visible');
+  $('hud').classList.add('hidden');
+  $('gesture-status').classList.add('hidden');
+  $('progress-wrap').classList.add('hidden');
+
+  $('gc-score').textContent = state.score.toLocaleString();
+
+  let rank = '🌱 นักสำรวจดอยหล่อ';
+  if (state.score >= 3000) rank = '👑 ปราชญ์แห่งดอยหล่อ';
+  else if (state.score >= 2000) rank = '🏆 ผู้เชี่ยวชาญภูมิปัญญา';
+  else if (state.score >= 1000) rank = '⭐ นักสำรวจผู้กล้า';
+  $('gc-rank').textContent = rank;
+
+  // Fireworks
+  createFireworks();
+  showScreen('game-complete');
+}
+
+function createFireworks() {
+  const gc = $('game-complete');
+  const colors = ['#F5C842','#FF6B35','#2ECC71','#3498DB','#9B59B6','#E74C3C'];
+  for (let i = 0; i < 60; i++) {
+    const fw = document.createElement('div');
+    fw.className = 'gc-firework';
+    const angle = Math.random() * Math.PI * 2;
+    const r = 80 + Math.random() * 180;
+    fw.style.cssText = `
+      left:${50 + (Math.random()-0.5)*60}%;
+      top:${40 + (Math.random()-0.5)*40}%;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      --tx:${Math.cos(angle)*r}px;
+      --ty:${Math.sin(angle)*r}px;
+      --d:${0.3+Math.random()*0.8}s;
+      animation-delay:${Math.random()*1}s;
+    `;
+    gc.appendChild(fw);
+  }
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+let toastTimer;
+function showToast(msg) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ============================================================
+// WINDOW RESIZE
+// ============================================================
+window.addEventListener('resize', () => {
+  canvasOverlay.width = window.innerWidth;
+  canvasOverlay.height = window.innerHeight;
+});
+</script>
 </body>
 </html>
