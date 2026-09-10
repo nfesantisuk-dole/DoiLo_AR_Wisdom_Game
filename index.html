@@ -919,80 +919,6 @@ body {
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ===== QUIZ MODE (Level 5) ===== */
-.quiz-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(13,27,42,0.97);
-  backdrop-filter: blur(20px);
-  z-index: 60;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.4s;
-}
-.quiz-overlay.visible {
-  opacity: 1;
-  pointer-events: auto;
-}
-.quiz-card {
-  max-width: 600px;
-  width: 100%;
-  background: linear-gradient(135deg, #0D1B2A, #1A2A3A);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 24px;
-  padding: 32px;
-}
-.quiz-q-num {
-  font-size: 12px;
-  color: rgba(255,255,255,0.4);
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  margin-bottom: 12px;
-  font-family: 'Kanit', sans-serif;
-  font-weight: 600;
-}
-.quiz-img {
-  width: 100%;
-  height: 160px;
-  object-fit: cover;
-  border-radius: 16px;
-  margin-bottom: 20px;
-}
-.quiz-question {
-  font-family: 'Kanit', sans-serif;
-  font-size: 22px;
-  font-weight: 700;
-  color: white;
-  margin-bottom: 24px;
-  line-height: 1.4;
-}
-.quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.quiz-option {
-  background: rgba(255,255,255,0.06);
-  border: 2px solid rgba(255,255,255,0.1);
-  border-radius: 14px;
-  padding: 16px;
-  text-align: center;
-  cursor: pointer;
-  font-family: 'Sarabun', sans-serif;
-  font-size: 15px;
-  font-weight: 600;
-  color: white;
-  transition: all 0.2s;
-  min-height: 70px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1.3;
-}
-.quiz-option:hover { background: rgba(245,200,66,0.1); border-color: rgba(245,200,66,0.4); transform: translateY(-2px); }
-.quiz-option.correct { background: rgba(46,204,113,0.2); border-color: #2ECC71; color: #2ECC71; }
-.quiz-option.wrong { background: rgba(231,76,60,0.2); border-color: #E74C3C; color: #E74C3C; }
-
 /* ===== HAND-CLICKABLE UI (dwell-to-click for all non-mouse buttons) ===== */
 .hand-clickable { position: relative; }
 .hand-clickable.dwelling {
@@ -1044,7 +970,6 @@ body {
   .gesture-guide { gap: 12px; }
   .gesture-item { min-width: 90px; padding: 12px; }
   .info-grid { grid-template-columns: 1fr; }
-  .quiz-options { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -1099,13 +1024,17 @@ body {
         <div class="gesture-label">ค้างไว้<br>1.5 วิ เปิดอ่าน</div>
       </div>
       <div class="gesture-item">
+        <div class="gesture-emoji">☝️</div>
+        <div class="gesture-label">ชี้นิ้วเลื่อนขึ้น/ลง<br>เพื่ออ่านการ์ด</div>
+      </div>
+      <div class="gesture-item">
         <div class="gesture-emoji">✌️</div>
         <div class="gesture-label">วีคือ<br>ปิด/ถัดไป</div>
       </div>
     </div>
 
     <button class="btn-start hand-clickable" id="btn-start-game">🎮 เริ่มเล่น</button>
-    <p style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:12px">ชี้มือมาที่ปุ่มค้างไว้ หรือบีบนิ้วเพื่อเริ่ม</p>
+    <p style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:12px">ชี้มือมาที่ปุ่มค้างไว้ หรือบีบนิ้วเพื่อเริ่ม (รองรับ 2 มือพร้อมกัน)</p>
 
     <div class="level-preview" id="level-preview"></div>
   </div>
@@ -1174,11 +1103,6 @@ body {
 <!-- ===== DETAIL MODAL ===== -->
 <div id="detail-modal">
   <div class="modal-card" id="modal-card-content"></div>
-</div>
-
-<!-- ===== QUIZ OVERLAY ===== -->
-<div class="quiz-overlay" id="quiz-overlay">
-  <div class="quiz-card" id="quiz-card-content"></div>
 </div>
 
 <!-- ===== LEVEL COMPLETE ===== -->
@@ -1270,16 +1194,6 @@ const PLACES = [
   {id:"RES2026051335",name:"บ้านหนังสือชุมชนร้านข้างบ้านคาเฟ่",type:"Learning Resource",tambon:"สันติสุข",owner:"นางสาวเกียรติยาภรณ์ กัญญเทพ",desc:"แหล่งเรียนรู้บ้านหนังสือชุมชน เกี่ยวกับการประกอบอาชีพด้านอาหารและเครื่องดื่ม ให้ความรู้และแลกเปลี่ยนประสบการณ์ด้านการทำอาหารและเครื่องดื่มในชุมชน ที่ตั้ง: ต.สันติสุข อ.ดอยหล่อ จ.เชียงใหม่",lat:18.5221,lng:98.8287,category:"อาหารและเครื่องดื่ม",img:"https://drive.google.com/thumbnail?id=1F83qSWL7GBHGODDEl40nc5BE4T1a_Mz1&sz=w1000",video:"",contact:"095-807-1166",gallery:["https://drive.google.com/thumbnail?id=1PMWYbNLwXwTyCXFiKpQrasG78o-9ZHlX&sz=w1000"],level:5}
 ];
 
-// QUIZ QUESTIONS (based on the data)
-const QUIZ_QUESTIONS = [
-  {q:"สถานที่ใดได้รับสมญานามว่า 'แกรนด์แคนยอนเมืองไทย'?",img:"https://drive.google.com/thumbnail?id=1V--4Ezj1k_fybZdlRi1tiWZV3TRb3n9_&sz=w1000",options:["ผาช่อ อุทยานแห่งชาติแม่วาง","วัดพระธาตุดอยน้อย","สวนพฤกษาสมุนไพร","วัดฟ้าหลั่ง"],correct:0},
-  {q:"ไส้อั๋วป้าตุ๋ยทำสถิติโลกอะไร?",img:"https://drive.google.com/thumbnail?id=1t0rhhdtRTN8vOZHawa7-xHpaDxJg84in&sz=w1000",options:["ไส้อั่วยาวที่สุดในโลก 1,011 เมตร","ไส้อั่วเผ็ดที่สุดในโลก","ไส้อั่วหนักที่สุดในโลก","ไส้อั่วแพงที่สุดในโลก"],correct:0},
-  {q:"วัดพระธาตุดอยน้อยสร้างโดยใคร?",img:"https://drive.google.com/thumbnail?id=1a1z8gh5CHS4aEnBiRv2fULJKhdvNp3GT&sz=w1000",options:["พระนางจามเทวี","พระเมืองแก้ว","ครูบาศรีวิชัย","พ่อขุนมังราย"],correct:0},
-  {q:"วัดฟ้าหลั่งมีอายุกี่ปีโดยประมาณ?",img:"https://drive.google.com/thumbnail?id=1MuEn27-p2IH4wWEF7Tz0BzN8-nMIX0gz&sz=w1000",options:["มากกว่า 400 ปี","มากกว่า 200 ปี","มากกว่า 100 ปี","มากกว่า 50 ปี"],correct:0},
-  {q:"กลุ่มทอผ้าบ้านใหม่หนองหอยก่อตั้งในปีใด?",img:"https://drive.google.com/thumbnail?id=1-dgMPS5LegSUHlMT6CHrP-hwOlwB1ne-&sz=w1000",options:["พ.ศ. 2535","พ.ศ. 2510","พ.ศ. 2550","พ.ศ. 2500"],correct:0},
-  {q:"นางใส อุ้ยอ้าย เชี่ยวชาญงานอะไร?",img:"https://drive.google.com/thumbnail?id=1fpLpqZdSGtmecAkBTuIm47FXpSAL5tOG&sz=w1000",options:["การจักสานก๋วยและสานเปล","การทอผ้าล้านนา","การทำโคมล้านนา","การมัดย้อมผ้า"],correct:0}
-];
-
 // LEVELS CONFIG
 const LEVELS = [
   {id:1,name:"ธรรมชาติ",icon:"🌿",color1:"#2ECC71",color2:"#1ABC9C",desc:"สำรวจสถานที่ทางธรรมชาติ"},
@@ -1314,23 +1228,9 @@ const state = {
   levelCollected: 0,
   currentLevelItems: [],
   cameraReady: false,
-  handActive: false,
-  handX: 0, handY: 0,
-  pinching: false,
-  gestureVic: false,
-  gestureOpen: false,
-  hoveredCard: null,
-  dwellTimer: null,
-  dwellProgress: 0,
-  dwellStartTime: null,
-  activeCards: [],
+  hands: [], // multi-hand tracked state: [{handX,handY,pinching,open,vic,hoveredCard,dwellTimer,dwellStartTime,hoveredUI,uiDwellTimer,uiDwellStart,pointing,cursorEl}]
   gameRunning: false,
-  quizIndex: 0,
-  quizScore: 0,
   levelCompleted: false,
-  hoveredUI: null,
-  uiDwellTimer: null,
-  uiDwellStart: null,
   autoAdvanceTimer: null,
   autoAdvanceCountdown: null,
 };
@@ -1344,6 +1244,8 @@ const canvasOverlay = $('canvas-overlay');
 const ctx = canvasOverlay.getContext('2d');
 const handCursor = $('hand-cursor');
 const arContainer = $('ar-cards-container');
+
+const HAND_COLORS = ['#F5C842', '#3498DB'];
 
 // ============================================================
 // INIT
@@ -1436,7 +1338,7 @@ async function initCameraAndHands() {
   $('perm-spinner').style.display = 'block';
   $('btn-retry-camera').classList.add('hidden');
   $('perm-title').textContent = 'กำลังขอสิทธิ์ใช้กล้อง';
-  $('perm-desc').innerHTML = 'เกมนี้ใช้กล้องหน้าเพื่อจับการเคลื่อนไหวของฝ่ามือในการควบคุมทั้งหมด<br>กรุณากด "อนุญาต" ที่หน้าต่างเบราว์เซอร์';
+  $('perm-desc').innerHTML = 'เกมนี้ใช้กล้องหน้าเพื่อจับการเคลื่อนไหวของฝ่ามือในการควบคุมทั้งหมด (รองรับสูงสุด 2 มือพร้อมกัน)<br>กรุณากด "อนุญาต" ที่หน้าต่างเบราว์เซอร์';
   try {
     const stream = await navigator.mediaDevices.getUserMedia({
       video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } }
@@ -1469,8 +1371,7 @@ function stopAndExitGame() {
 
   clearTimeout(state.autoAdvanceTimer);
   clearInterval(state.autoAdvanceCountdown);
-  stopDwell();
-  stopUIDwell();
+  resetAllHandTracking();
 
   state.gameRunning = false;
   state.score = 0;
@@ -1487,7 +1388,6 @@ function stopAndExitGame() {
   $('gesture-status').classList.add('hidden');
   $('progress-wrap').classList.add('hidden');
   $('detail-modal').classList.remove('visible');
-  $('quiz-overlay').classList.remove('visible');
   $('transition-overlay').classList.remove('active');
   $('btn-stop-exit').classList.add('hidden');
   arContainer.innerHTML = '';
@@ -1503,7 +1403,7 @@ function initMediaPipe() {
     locateFile: f => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${f}`
   });
   hands.setOptions({
-    maxNumHands: 1,
+    maxNumHands: 2,
     modelComplexity: 1,
     minDetectionConfidence: 0.7,
     minTrackingConfidence: 0.5
@@ -1518,68 +1418,182 @@ function initMediaPipe() {
 }
 
 // ============================================================
-// HAND RESULTS PROCESSING
+// MULTI-HAND CURSOR MANAGEMENT
+// ============================================================
+function ensureHandCursors(count) {
+  // hand-cursor #1 is the original element in the DOM; create more as needed
+  const cursors = [handCursor];
+  for (let i = 1; i < count; i++) {
+    let el = $('hand-cursor-' + i);
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'hand-cursor-' + i;
+      el.className = handCursor.className;
+      el.innerHTML = '<div class="cursor-inner"></div>';
+      document.body.appendChild(el);
+    }
+    cursors.push(el);
+  }
+  return cursors;
+}
+
+function hideExtraCursors(fromIndex) {
+  let i = fromIndex;
+  let el;
+  while ((el = $('hand-cursor-' + i))) {
+    el.style.display = 'none';
+    i++;
+  }
+}
+
+function resetAllHandTracking() {
+  state.hands.forEach(h => {
+    stopDwellForHand(h);
+    stopUIDwellForHand(h);
+  });
+  state.hands = [];
+  handCursor.style.display = 'none';
+  hideExtraCursors(1);
+  updateGestureUI(null);
+}
+
+// ============================================================
+// HAND RESULTS PROCESSING (multi-hand)
 // ============================================================
 function onHandResults(results) {
   ctx.clearRect(0, 0, canvasOverlay.width, canvasOverlay.height);
 
-  if (!results.multiHandLandmarks || !results.multiHandLandmarks.length) {
-    state.handActive = false;
-    handCursor.style.display = 'none';
-    updateGestureUI(null);
-    if (state.hoveredCard) { stopDwell(); }
+  const landmarksList = results.multiHandLandmarks || [];
+
+  if (!landmarksList.length) {
+    resetAllHandTracking();
     return;
   }
 
-  state.handActive = true;
-  const lm = results.multiHandLandmarks[0];
+  const numHands = landmarksList.length;
+  const cursors = ensureHandCursors(numHands);
+  hideExtraCursors(numHands);
 
-  // Mirror X for display (video is mirrored)
-  const palmX = (1 - lm[9].x) * window.innerWidth;
-  const palmY = lm[9].y * window.innerHeight;
-
-  state.handX = palmX;
-  state.handY = palmY;
-
-  // Gesture detection
-  const pinchDist = dist(lm[4], lm[8]);
-  const isPinching = pinchDist < 0.06;
-  const isOpen = isOpenPalm(lm);
-  const isVic = isVictory(lm);
-
-  const prevPinch = state.pinching;
-  state.pinching = isPinching;
-  state.gestureOpen = isOpen;
-  state.gestureVic = isVic;
-
-  // Update cursor
-  handCursor.style.display = 'block';
-  handCursor.style.left = palmX + 'px';
-  handCursor.style.top = palmY + 'px';
-  handCursor.classList.toggle('cursor-pinch', isPinching);
-
-  // Draw hand skeleton
-  drawHand(lm, results.multiHandedness);
-
-  updateGestureUI(isPinching ? 'pinch' : isVic ? 'vic' : isOpen ? 'open' : null);
-
-  // Victory gesture = close modal / next level
-  if (isVic && !prevPinch) {
-    const modal = $('detail-modal');
-    if (modal.classList.contains('visible')) closeModal();
+  // Sync state.hands array length to numHands, preserving per-hand dwell state where possible
+  while (state.hands.length < numHands) {
+    state.hands.push({
+      handX: 0, handY: 0, pinching: false, open: false, vic: false, pointing: false,
+      hoveredCard: null, dwellTimer: null, dwellStartTime: null,
+      hoveredUI: null, uiDwellTimer: null, uiDwellStart: null,
+      cursorEl: null, prevPinch: false, prevVic: false,
+      pointAnchorY: null, scrollTarget: null
+    });
+  }
+  while (state.hands.length > numHands) {
+    const removed = state.hands.pop();
+    stopDwellForHand(removed);
+    stopUIDwellForHand(removed);
   }
 
-  // Check card hover / pinch interactions (skip if a modal/quiz overlay is covering the cards)
+  let anyGestureForIndicator = null;
+
+  landmarksList.forEach((lm, i) => {
+    const hs = state.hands[i];
+    hs.cursorEl = cursors[i];
+
+    // Mirror X for display (video is mirrored)
+    const palmX = (1 - lm[9].x) * window.innerWidth;
+    const palmY = lm[9].y * window.innerHeight;
+    hs.handX = palmX;
+    hs.handY = palmY;
+
+    // Gesture detection
+    const pinchDist = dist(lm[4], lm[8]);
+    const isPinching = pinchDist < 0.06;
+    const isOpen = isOpenPalm(lm);
+    const isVic = isVictory(lm);
+    const isPointing = isPointingFinger(lm);
+
+    hs.prevPinch = hs.pinching;
+    hs.prevVic = hs.vic;
+    hs.pinching = isPinching;
+    hs.open = isOpen;
+    hs.vic = isVic;
+    hs.pointing = isPointing;
+
+    // Update cursor
+    const cursorEl = hs.cursorEl;
+    cursorEl.style.display = 'block';
+    cursorEl.style.left = palmX + 'px';
+    cursorEl.style.top = palmY + 'px';
+    cursorEl.classList.toggle('cursor-pinch', isPinching);
+    cursorEl.style.borderColor = HAND_COLORS[i % HAND_COLORS.length];
+
+    // Draw hand skeleton (color-coded per hand)
+    drawHand(lm, HAND_COLORS[i % HAND_COLORS.length]);
+
+    const gestureLabel = isPinching ? 'pinch' : isVic ? 'vic' : isPointing ? 'point' : isOpen ? 'open' : null;
+    if (gestureLabel) anyGestureForIndicator = gestureLabel;
+
+    // Victory gesture = close modal / next level (any hand can trigger)
+    if (isVic && !hs.prevVic) {
+      const modal = $('detail-modal');
+      if (modal.classList.contains('visible')) closeModal();
+    }
+
+    // Pointing-to-scroll: works while the detail modal is open, scrolls the card content
+    const modalOpenForScroll = $('detail-modal').classList.contains('visible');
+    if (modalOpenForScroll && isPointing) {
+      handlePointScroll(hs, palmY, lm);
+    } else {
+      hs.pointAnchorY = null;
+    }
+  });
+
+  updateGestureUI(anyGestureForIndicator);
+
+  // Check card hover / pinch interactions per-hand (skip if a modal is covering the cards)
   const modalOpen = $('detail-modal').classList.contains('visible');
-  const quizOpen = $('quiz-overlay').classList.contains('visible');
-  if (state.gameRunning && !modalOpen && !quizOpen) {
-    checkCardInteractions(palmX, palmY, isPinching, prevPinch);
-  } else if (state.hoveredCard) {
-    stopDwell();
+  if (state.gameRunning && !modalOpen) {
+    state.hands.forEach(hs => {
+      checkCardInteractionsForHand(hs);
+    });
+  } else {
+    state.hands.forEach(hs => {
+      if (hs.hoveredCard) stopDwellForHand(hs);
+    });
   }
 
-  // Generic hand-controlled UI (buttons, quiz options, modal actions, etc.)
-  checkUIInteractions(palmX, palmY, isPinching, prevPinch);
+  // Generic hand-controlled UI (buttons, modal actions, etc.) — every hand can help click
+  state.hands.forEach(hs => {
+    checkUIInteractionsForHand(hs);
+  });
+}
+
+// ============================================================
+// POINT-TO-SCROLL (reading detail cards with index finger)
+// ============================================================
+function handlePointScroll(hs, palmY, lm) {
+  const scrollEl = document.querySelector('#modal-card-content') ;
+  if (!scrollEl) return;
+  // Use the index fingertip's vertical position, relative to an anchor set on first point,
+  // so moving the finger up/down scrolls the card content up/down.
+  const fingertipY = lm[8].y * window.innerHeight;
+  if (hs.pointAnchorY === null) {
+    hs.pointAnchorY = fingertipY;
+    return;
+  }
+  const deltaY = fingertipY - hs.pointAnchorY;
+  const DEAD_ZONE = 10;
+  if (Math.abs(deltaY) > DEAD_ZONE) {
+    const SCROLL_SPEED = 1.4;
+    scrollEl.scrollTop += deltaY * SCROLL_SPEED * 0.05;
+  }
+  hs.pointAnchorY = fingertipY;
+}
+
+function isPointingFinger(lm) {
+  // Index finger extended, middle/ring/pinky curled, thumb not pinching
+  const indexUp = lm[8].y < lm[6].y;
+  const middleDown = lm[12].y > lm[10].y;
+  const ringDown = lm[16].y > lm[14].y;
+  const pinkyDown = lm[20].y > lm[18].y;
+  return indexUp && middleDown && ringDown && pinkyDown;
 }
 
 // ============================================================
@@ -1604,7 +1618,8 @@ function getHandClickTargets() {
   return Array.from(document.querySelectorAll('.hand-clickable')).filter(isElementInteractable);
 }
 
-function checkUIInteractions(px, py, isPinching, prevPinch) {
+function checkUIInteractionsForHand(hs) {
+  const px = hs.handX, py = hs.handY;
   const targets = getHandClickTargets();
   let nearest = null;
   let nearestDist = 130;
@@ -1617,51 +1632,59 @@ function checkUIInteractions(px, py, isPinching, prevPinch) {
     if (d < nearestDist) { nearestDist = d; nearest = el; }
   });
 
-  if (nearest !== state.hoveredUI) {
-    if (state.hoveredUI) stopUIDwell();
-    state.hoveredUI = nearest;
+  if (nearest !== hs.hoveredUI) {
+    if (hs.hoveredUI) stopUIDwellForHand(hs);
+    hs.hoveredUI = nearest;
     if (nearest) {
       nearest.classList.add('dwelling');
-      startUIDwell(nearest);
+      startUIDwellForHand(hs, nearest);
     }
   }
 
   // Pinch to select immediately, same as AR card collection
-  if (isPinching && !prevPinch && nearest) {
-    triggerUIClick(nearest);
+  if (hs.pinching && !hs.prevPinch && nearest) {
+    triggerUIClick(hs, nearest);
   }
 }
 
-function startUIDwell(el) {
-  state.uiDwellStart = Date.now();
+function startUIDwellForHand(hs, el) {
+  hs.uiDwellStart = Date.now();
   const DWELL_TIME = 1200;
 
   function tick() {
-    if (!state.hoveredUI || state.hoveredUI !== el) return;
-    const elapsed = Date.now() - state.uiDwellStart;
+    if (!hs.hoveredUI || hs.hoveredUI !== el) return;
+    const elapsed = Date.now() - hs.uiDwellStart;
     const pct = Math.min(1, elapsed / DWELL_TIME);
     el.style.setProperty('--dwell-pct', pct);
     if (pct >= 1) {
-      triggerUIClick(el);
+      triggerUIClick(hs, el);
       return;
     }
-    state.uiDwellTimer = requestAnimationFrame(tick);
+    hs.uiDwellTimer = requestAnimationFrame(tick);
   }
-  state.uiDwellTimer = requestAnimationFrame(tick);
+  hs.uiDwellTimer = requestAnimationFrame(tick);
 }
 
-function stopUIDwell() {
-  if (state.uiDwellTimer) cancelAnimationFrame(state.uiDwellTimer);
-  if (state.hoveredUI) {
-    state.hoveredUI.classList.remove('dwelling');
-    state.hoveredUI.style.setProperty('--dwell-pct', 0);
+function stopUIDwellForHand(hs) {
+  if (hs.uiDwellTimer) cancelAnimationFrame(hs.uiDwellTimer);
+  if (hs.hoveredUI) {
+    // Only clear the visual dwelling state if no OTHER hand is also hovering this same element
+    const stillHovered = state.hands.some(other => other !== hs && other.hoveredUI === hs.hoveredUI);
+    if (!stillHovered) {
+      hs.hoveredUI.classList.remove('dwelling');
+      hs.hoveredUI.style.setProperty('--dwell-pct', 0);
+    }
   }
-  state.hoveredUI = null;
-  state.uiDwellStart = null;
+  hs.hoveredUI = null;
+  hs.uiDwellStart = null;
 }
 
-function triggerUIClick(el) {
-  stopUIDwell();
+function triggerUIClick(hs, el) {
+  stopUIDwellForHand(hs);
+  // Any other hands currently dwelling/targeting this same element should also release cleanly
+  state.hands.forEach(other => {
+    if (other !== hs && other.hoveredUI === el) stopUIDwellForHand(other);
+  });
   el.click();
 }
 
@@ -1681,12 +1704,12 @@ function isVictory(lm) {
   return ixUp && mxUp && ringDown && pinkyDown;
 }
 
-function drawHand(lm, handedness) {
+function drawHand(lm, color) {
   const w = canvasOverlay.width;
   const h = canvasOverlay.height;
   const mirrorX = x => (1 - x) * w;
 
-  ctx.strokeStyle = 'rgba(245,200,66,0.5)';
+  ctx.strokeStyle = color ? hexToRgba(color, 0.5) : 'rgba(245,200,66,0.5)';
   ctx.lineWidth = 2;
 
   const connections = [[0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[5,9],[9,10],[10,11],[11,12],[9,13],[13,14],[14,15],[15,16],[13,17],[17,18],[18,19],[19,20],[0,17]];
@@ -1701,9 +1724,13 @@ function drawHand(lm, handedness) {
   lm.forEach((point, i) => {
     ctx.beginPath();
     ctx.arc(mirrorX(point.x), point.y * h, i===0?8:5, 0, Math.PI*2);
-    ctx.fillStyle = i===4||i===8 ? '#F5C842' : 'rgba(245,200,66,0.6)';
+    ctx.fillStyle = (i===4||i===8) ? (color || '#F5C842') : hexToRgba(color || '#F5C842', 0.6);
     ctx.fill();
   });
+}
+
+function hexToRgba(hex, a) {
+  return `rgba(${hexToRgb(hex)},${a})`;
 }
 
 function updateGestureUI(gesture) {
@@ -1713,9 +1740,10 @@ function updateGestureUI(gesture) {
 }
 
 // ============================================================
-// CARD INTERACTIONS
+// CARD INTERACTIONS (per-hand — any hand can collect any card)
 // ============================================================
-function checkCardInteractions(px, py, isPinching, prevPinch) {
+function checkCardInteractionsForHand(hs) {
+  const px = hs.handX, py = hs.handY;
   let nearestCard = null;
   let nearestDist = 120;
 
@@ -1727,53 +1755,61 @@ function checkCardInteractions(px, py, isPinching, prevPinch) {
     if (d < nearestDist) { nearestDist = d; nearestCard = card; }
   });
 
-  if (nearestCard !== state.hoveredCard) {
-    if (state.hoveredCard) stopDwell();
-    state.hoveredCard = nearestCard;
+  if (nearestCard !== hs.hoveredCard) {
+    if (hs.hoveredCard) stopDwellForHand(hs);
+    hs.hoveredCard = nearestCard;
     if (nearestCard) {
       nearestCard.classList.add('hovering');
-      startDwell(nearestCard);
+      startDwellForHand(hs, nearestCard);
     }
   }
 
   // Pinch to immediately collect
-  if (isPinching && !prevPinch && nearestCard) {
-    collectCard(nearestCard);
+  if (hs.pinching && !hs.prevPinch && nearestCard) {
+    collectCard(nearestCard, hs);
   }
 }
 
-function startDwell(card) {
-  state.dwellStartTime = Date.now();
+function startDwellForHand(hs, card) {
+  hs.dwellStartTime = Date.now();
   const fill = card.querySelector('.dwell-fill');
   const DWELL_TIME = 1500;
 
   function tick() {
-    if (!state.hoveredCard || state.hoveredCard !== card) return;
-    const elapsed = Date.now() - state.dwellStartTime;
+    if (!hs.hoveredCard || hs.hoveredCard !== card) return;
+    const elapsed = Date.now() - hs.dwellStartTime;
     const pct = Math.min(100, (elapsed / DWELL_TIME) * 100);
     if (fill) fill.style.width = pct + '%';
     if (pct >= 100) {
-      collectCard(card);
+      collectCard(card, hs);
       return;
     }
-    state.dwellTimer = requestAnimationFrame(tick);
+    hs.dwellTimer = requestAnimationFrame(tick);
   }
-  state.dwellTimer = requestAnimationFrame(tick);
+  hs.dwellTimer = requestAnimationFrame(tick);
 }
 
-function stopDwell() {
-  if (state.dwellTimer) cancelAnimationFrame(state.dwellTimer);
-  if (state.hoveredCard) {
-    state.hoveredCard.classList.remove('hovering');
-    const fill = state.hoveredCard.querySelector('.dwell-fill');
-    if (fill) fill.style.width = '0%';
+function stopDwellForHand(hs) {
+  if (hs.dwellTimer) cancelAnimationFrame(hs.dwellTimer);
+  if (hs.hoveredCard) {
+    // Only remove the visual hover state if no other hand is also dwelling on this card
+    const stillHovered = state.hands.some(other => other !== hs && other.hoveredCard === hs.hoveredCard);
+    if (!stillHovered) {
+      hs.hoveredCard.classList.remove('hovering');
+      const fill = hs.hoveredCard.querySelector('.dwell-fill');
+      if (fill) fill.style.width = '0%';
+    }
   }
-  state.hoveredCard = null;
-  state.dwellStartTime = null;
+  hs.hoveredCard = null;
+  hs.dwellStartTime = null;
 }
 
-function collectCard(card) {
-  stopDwell();
+function collectCard(card, hs) {
+  // Release this card from every hand that was tracking it (two hands can "help" — first one wins)
+  state.hands.forEach(other => {
+    if (other.hoveredCard === card) stopDwellForHand(other);
+  });
+
   const placeId = card.dataset.placeId;
   if (state.collectedIds.has(placeId)) return;
 
@@ -1859,11 +1895,7 @@ function startLevel(levelId) {
 
   setTimeout(() => {
     $('transition-overlay').classList.remove('active');
-    if (levelId === 5) {
-      startQuizLevel();
-    } else {
-      startARLevel(levelId);
-    }
+    startARLevel(levelId);
   }, 2000);
 }
 
@@ -1876,6 +1908,7 @@ function startARLevel(levelId) {
   $('hud').classList.remove('hidden');
   $('gesture-status').classList.remove('hidden');
   $('progress-wrap').classList.remove('hidden');
+  $('progress-text').textContent = 'สะสมแหล่งเรียนรู้';
 
   $('level-badge').textContent = `${lv.icon} เลเวล ${levelId}`;
   $('level-name-hud').textContent = lv.name;
@@ -1938,7 +1971,7 @@ function createARCard(place, lv) {
 
 function updateHUD() {
   $('hud-score').textContent = state.score.toLocaleString();
-  const total = state.currentLevel < 5 ? state.currentLevelItems.length : QUIZ_QUESTIONS.length;
+  const total = state.currentLevelItems.length;
   $('hud-collected').textContent = `${state.levelCollected}/${total}`;
   $('progress-count').textContent = `${state.levelCollected}/${total}`;
   const pct = total > 0 ? (state.levelCollected / total * 100) : 0;
@@ -2036,11 +2069,15 @@ function showDetail(place, points) {
   `;
 
   modal.classList.add('visible');
+  modal.querySelector('.modal-card').scrollTop = 0;
+  // Reset per-hand scroll anchors so pointing starts fresh for this card
+  state.hands.forEach(hs => { hs.pointAnchorY = null; });
 }
 
 function closeModal() {
   const modal = $('detail-modal');
   modal.classList.remove('visible');
+  state.hands.forEach(hs => { hs.pointAnchorY = null; });
 }
 
 // ============================================================
@@ -2095,88 +2132,9 @@ $('btn-next-level').addEventListener('click', () => {
 });
 
 // ============================================================
-// QUIZ LEVEL (Level 5)
-// ============================================================
-function startQuizLevel() {
-  const lv = LEVELS[4];
-  state.currentLevelItems = QUIZ_QUESTIONS;
-  state.levelCollected = 0;
-  state.quizIndex = 0;
-  state.quizScore = 0;
-
-  $('hud').classList.remove('hidden');
-  $('gesture-status').classList.add('hidden');
-  $('progress-wrap').classList.remove('hidden');
-  $('progress-text').textContent = 'คำถาม';
-
-  $('level-badge').textContent = `${lv.icon} เลเวล 5`;
-  $('level-name-hud').textContent = 'ทดสอบความรู้';
-  $('level-icon-hud').textContent = '🧠';
-
-  updateHUD();
-  showNextQuiz();
-}
-
-function showNextQuiz() {
-  if (state.quizIndex >= QUIZ_QUESTIONS.length) {
-    $('quiz-overlay').classList.remove('visible');
-    showLevelComplete();
-    return;
-  }
-
-  const q = QUIZ_QUESTIONS[state.quizIndex];
-  const qc = $('quiz-card-content');
-
-  qc.innerHTML = `
-    <div class="quiz-q-num">คำถามที่ ${state.quizIndex+1} / ${QUIZ_QUESTIONS.length}</div>
-    <img class="quiz-img" src="${q.img}" alt="question">
-    <div class="quiz-question">${q.q}</div>
-    <div class="quiz-options">
-      ${q.options.map((opt, i) => `
-        <div class="quiz-option hand-clickable" onclick="answerQuiz(${i}, ${q.correct}, this)">${opt}</div>
-      `).join('')}
-    </div>
-  `;
-  $('quiz-overlay').classList.add('visible');
-}
-
-function answerQuiz(selected, correct, el) {
-  // Disable all options
-  document.querySelectorAll('.quiz-option').forEach(o => {
-    o.style.pointerEvents = 'none';
-    o.onclick = null;
-  });
-
-  const allOptions = document.querySelectorAll('.quiz-option');
-  allOptions[correct].classList.add('correct');
-
-  if (selected === correct) {
-    el.classList.add('correct');
-    const points = 200;
-    state.score += points;
-    state.quizScore++;
-    createScorePop(window.innerWidth/2, window.innerHeight/2, `+${points} 🎉`);
-    showToast('✅ ถูกต้อง! +200 คะแนน');
-  } else {
-    el.classList.add('wrong');
-    showToast(`❌ ไม่ถูก — คำตอบคือ: ${QUIZ_QUESTIONS[state.quizIndex].options[correct]}`);
-  }
-
-  state.levelCollected = state.quizIndex + 1;
-  state.quizIndex++;
-  updateHUD();
-
-  setTimeout(() => {
-    $('quiz-overlay').classList.remove('visible');
-    setTimeout(showNextQuiz, 300);
-  }, 1800);
-}
-
-// ============================================================
 // GAME COMPLETE
 // ============================================================
 function showGameComplete() {
-  $('quiz-overlay').classList.remove('visible');
   $('hud').classList.add('hidden');
   $('gesture-status').classList.add('hidden');
   $('progress-wrap').classList.add('hidden');
@@ -2236,4 +2194,4 @@ window.addEventListener('resize', () => {
 });
 </script>
 </body>
-</html>
+</html> 
